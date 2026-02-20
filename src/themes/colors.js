@@ -1,0 +1,72 @@
+// App colors
+const LightColor = {
+  light: 'light',
+  dark: false,
+  backgroundColor: '#FFFFFF',
+  textColor: '#171717',
+  stepBackgroundColor: '#F1F5F9',
+  grayScale400: '#A3A3A3',
+  inputBg: '#e2e1df',
+  grayScale200: '#E5E5E5',
+  iconColor: '#171717',
+  bColor: '#EEEEEE',
+  inputBackground: '#F8F9FD',
+  grayScale600: '#525252',
+  bgColor: '#EDF0F4',
+  transparent: '#F0F0F052',
+};
+const DarkColor = {
+  dark: 'dark',
+  light: false,
+  backgroundColor: '#20202C',
+  stepBackgroundColor: '#334155',
+  textColor: '#FAFAFA',
+  inputBg: '#404040',
+  iconColor: '#FAFAFA',
+  grayScale800: '#262626',
+  bColor: '#35383F',
+  inputBackground: '#1E293B',
+  grayScale50: '#B7BBC1',
+  bgColor: '#EDF0F4',
+  transparent: 'rgba(15,23,42,0.8)',
+};
+// common colors
+export const commonColor = {
+  alertColor: '#E82C81',
+  white: '#FFFFFF',
+  primary: '#6B39F4',
+  primary2: '#B59CFA',
+  gradient1: 'rgba(107,57,244,1)',
+  gradient2: 'rgba(159,3,242,1)',
+  green: '#1DCE5C',
+  textColor1: '#525252',
+  inputBg: '#e2e1df',
+  placeHolderColor: '#9E9E9E',
+  borderColor: '#35383F',
+  grayScale60: '#F8F5FF',
+  primary50: '#F8F5FF',
+  iconBackgroundColor: '#ECEEFE',
+  grayScale200: '#E2E8F0',
+  modalBackground: 'rgba(118,118,118,0.7)',
+  grayScale700: '#334155',
+  grayScale500: '#64748B',
+  grayScale400: '#94A3B8',
+  gradientBackground: 'rgba(255,255,255,0.2)',
+  grayScale100: '#F1F5F9',
+  blue: '#0153FF',
+  black: '#0F172A',
+  grayScale600: '#475569',
+  primary4: '#7A4DF5',
+  green1: '#E9FCEF',
+};
+
+export const colors = {
+  light: {
+    ...LightColor,
+    ...commonColor,
+  },
+  dark: {
+    ...DarkColor,
+    ...commonColor,
+  },
+};
