@@ -2,8 +2,10 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   page: {
-    padding: 20,
-    paddingTop: 30,
+    padding: 10,
+    paddingTop: 50,
     gap: 10,
+    backgroundColor: '#F9FAFB',
+    height: '100%',
   },
 });

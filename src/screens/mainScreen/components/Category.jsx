@@ -59,7 +59,7 @@ export const Category = () => {
                 <View style={localStyled.imgWrapper}>
                   <Image style={localStyled.img} source={elm.image} />
                 </View>
-                <Text>{elm.title}</Text>
+                <Text style={styles.captionPrimary}>{elm.title}</Text>
               </TouchableOpacity>
             );
           })}
@@ -84,6 +84,7 @@ const localStyled = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
+    gap: 7,
   },
   imgWrapper: {
     width: 65,

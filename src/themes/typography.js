@@ -70,6 +70,11 @@ const typography = {
     fontWeight: '400',
     color: colors.textLight,
   },
+  captionPrimary: {
+    fontSize: moderateScale(12),
+    fontWeight: '400',
+    color: colors.textPrimary,
+  },
   button: {
     fontSize: moderateScale(14),
     fontWeight: '600',
