@@ -1,41 +1,16 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { styles } from '../../themes/index';
+import { View } from 'react-native';
+import { styles } from '../../themes';
+
+import { Header } from './components/Header';
+import { ProAccessBanner } from './components/ProAccessBanner';
+
 const MainScreen = () => {
   return (
     <View style={styles.page}>
-      <View style={localStyles.header}>
-        <View style={localStyles.headerInfo}>
-          <Image
-            style={localStyles.avatar}
-            source={require('../../assets/avatar.png')}
-          />
-          <View>
-            <Text style={styles.caption}>Hello</Text>
-            <Text style={styles.h5}>Musho Poghosyan</Text>
-          </View>
-        </View>
-        <View />
-      </View>
+      <Header />
+      <ProAccessBanner />
     </View>
   );
 };
-
-const localStyles = StyleSheet.create({
-  avatar: {
-    width: 45,
-    height: 45,
-    borderRadius: 30,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  headerInfo: {
-    flexDirection: 'row',
-    gap: 10,
-    alignItems: 'center',
-  },
-});
 
 export default MainScreen;

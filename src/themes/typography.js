@@ -45,6 +45,11 @@ const typography = {
     fontWeight: '600',
     color: colors.textPrimary,
   },
+  whiteTitle: {
+    color: '#fff',
+    fontSize: moderateScale(18),
+    fontWeight: 'bold',
+  },
   body: {
     fontSize: moderateScale(16),
     fontWeight: '400',
@@ -66,9 +71,9 @@ const typography = {
     color: colors.textLight,
   },
   button: {
-    fontSize: moderateScale(16),
+    fontSize: moderateScale(14),
     fontWeight: '600',
-    color: colors.primary,
+    color: colors.textPrimary,
   },
 };
 
