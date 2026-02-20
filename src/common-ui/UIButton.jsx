@@ -1,7 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../themes';
 
-export const UIButton = ({ title, color, backgroundColor }) => {
+export const UIButton = ({
+  title,
+  color = 'black',
+  backgroundColor = 'white',
+}) => {
   return (
     <TouchableOpacity
       style={[localStyles.button, { backgroundColor: backgroundColor }]}

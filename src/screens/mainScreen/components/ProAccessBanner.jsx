@@ -14,7 +14,7 @@ export const ProAccessBanner = () => {
         <Text style={styles.whiteTitle}>Upgrade to Pro</Text>
         <Text style={styles.caption}>Get unlimited access to all features</Text>
         <View style={[styles.alignStart, styles.mt5]}>
-          <UIButton />
+          <UIButton title={'Upgrade now'} />
         </View>
       </View>
     </View>
