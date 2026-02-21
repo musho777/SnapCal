@@ -1,14 +1,16 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { styles } from '../../themes';
 import { Header } from './components/Header';
 import { FireIcon } from '../../assets/Icons';
 import { CaloriesCard } from '../../components/CaloriesCard';
+import { HealthScoreBar } from '../../components/HealthScoreBar';
+import { calculateHealthScore } from '../../utils/healthScore';
 
 const RecipeScreen = () => {
   const data = [
     {
       weight: 48,
-      type: 'Crabs',
+      type: 'Carbs',
     },
     {
       weight: 160,
@@ -19,8 +21,11 @@ const RecipeScreen = () => {
       type: 'Fat',
     },
   ];
+
+  const healthScoreData = calculateHealthScore(data);
+
   return (
-    <View>
+    <ScrollView style={localStyles.scrollView} showsVerticalScrollIndicator={false}>
       <Header />
       <View style={[styles.center, styles.mt15]}>
         <Image
@@ -42,12 +47,16 @@ const RecipeScreen = () => {
             return <CaloriesCard key={i} data={elm} />;
           })}
         </View>
+        <HealthScoreBar score={healthScoreData.score} />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const localStyles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
   img: {
     width: 300,
     height: 300,
@@ -57,6 +66,7 @@ const localStyles = StyleSheet.create({
     borderTopLeftRadius: 30,
     paddingTop: 15,
     paddingHorizontal: 15,
+    paddingBottom: 30,
     borderWidth: 4,
     borderColor: 'white',
     backgroundColor: '#F9FAFB',
@@ -69,7 +79,6 @@ const localStyles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 5,
     gap: 10,
-    height: '100%',
   },
   titleWrapper: {
     flexDirection: 'row',

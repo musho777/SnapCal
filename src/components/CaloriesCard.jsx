@@ -13,7 +13,7 @@ export const CaloriesCard = ({ data }) => {
     <View style={localStyled.container}>
       <View style={styles.alignEnd}>
         <View style={[localStyled.iconWrapper, getBackgroundStyle()]}>
-          {data.type === 'Crabs' && <CarbsIcon />}
+          {data.type === 'Carbs' && <CarbsIcon />}
           {data.type === 'Protein' && <ProteinIcon />}
           {data.type === 'Fat' && <FatIcon />}
         </View>
