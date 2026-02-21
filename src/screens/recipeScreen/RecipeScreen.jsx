@@ -130,7 +130,7 @@ const localStyles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 5,
     gap: 10,
-    paddingBottom: 110,
+    paddingBottom: 90,
   },
   titleWrapper: {
     flexDirection: 'row',

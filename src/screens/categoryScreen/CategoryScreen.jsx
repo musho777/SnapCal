@@ -46,13 +46,14 @@ const CategoryScreen = ({ navigation, route }) => {
   return (
     <View style={styles.page}>
       <ScreenHeader title={category} />
-      {data.length > 0 && (
-        <UIInput placeholder="Search" showSearchIcon={true} />
-      )}
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={localStyled.scrollContent}
       >
+        {data.length > 0 && (
+          <UIInput placeholder="Search" showSearchIcon={true} />
+        )}
         {data.length > 0 ? (
           <View style={localStyled.gridContainer}>
             {data.map((elm, i) => (
@@ -109,6 +110,8 @@ const localStyled = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: 10,
+    paddingBottom: 80,
+    marginTop: 20,
   },
   recipeCardWrapper: {
     marginBottom: 15,
