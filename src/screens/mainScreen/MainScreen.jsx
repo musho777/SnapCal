@@ -27,7 +27,6 @@ const getImageSource = imagePath => {
 };
 
 const MainScreen = ({ navigation }) => {
-  // Map recipes data to match RecipeCard expected format
   const data = recipesData.recipes.map(recipe => ({
     id: recipe.id,
     title: recipe.name,

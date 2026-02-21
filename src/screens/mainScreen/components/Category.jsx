@@ -43,11 +43,16 @@ export const Category = ({ navigation }) => {
   const handleCategoryPress = category => {
     navigation.navigate('Category', { category });
   };
+
+  const handleViewMorePress = () => {
+    navigation.navigate('AllCategories');
+  };
+
   return (
     <View>
       <View style={localStyled.more}>
         <Text style={styles.title}>Categories</Text>
-        <Pressable>
+        <Pressable onPress={handleViewMorePress}>
           <Text style={styles.caption}>View More</Text>
         </Pressable>
       </View>
