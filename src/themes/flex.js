@@ -1,8 +1,12 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   alignStart: {
     alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  alignEnd: {
+    alignItems: 'flex-end',
     justifyContent: 'center',
   },
   center: {
