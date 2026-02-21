@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
-import { getHealthStatus } from '../utils/healthScore';
+import { getHealthStatus } from '../../../utils/healthScore';
 
 export const HealthScoreBar = ({ score }) => {
   const progressAnim = useRef(new Animated.Value(0)).current;
