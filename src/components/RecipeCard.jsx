@@ -2,9 +2,9 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { styles } from '../themes';
 import { UIButton } from '../common-ui/UIButton';
 
-export const RecipeCard = ({ data, onPress }) => {
+export const RecipeCard = ({ data, onPress, width = 200 }) => {
   return (
-    <View style={localStyled.container}>
+    <View style={[localStyled.container, { width: width }]}>
       <View style={styles.gap5}>
         <Text numberOfLines={1} style={styles.title}>
           {data.title}
@@ -30,7 +30,6 @@ export const RecipeCard = ({ data, onPress }) => {
 
 const localStyled = StyleSheet.create({
   container: {
-    width: 200,
     backgroundColor: '#fff',
     shadowColor: '#000000',
     shadowOffset: {
@@ -40,12 +39,12 @@ const localStyled = StyleSheet.create({
     shadowOpacity: 0.17,
     shadowRadius: 3.05,
     padding: 20,
-    gap: 10,
     elevation: 1,
     borderRadius: 30,
   },
   image: {
-    width: 150,
+    maxWidth: 150,
+    width: '100%',
     height: 150,
   },
   kcal: {

@@ -1,4 +1,6 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+
+const { width: screenWidth } = Dimensions.get('window');
 import { styles } from '../../themes';
 import { RecipeCard } from '../../components/RecipeCard';
 import recipesData from '../../data/recipes.json';
@@ -42,20 +44,22 @@ const CategoryScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.page}>
-      <ScreenHeader />
+      <ScreenHeader title={category} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={localStyled.scrollContent}
       >
         {data.length > 0 ? (
-          data.map((elm, i) => (
-            <View style={localStyled.recipeCardWrapper} key={i}>
+          <View style={localStyled.gridContainer}>
+            {data.map((elm, i) => (
               <RecipeCard
+                width={(screenWidth - 30) / 2}
+                key={i}
                 onPress={() => handleShowRecipients(elm.id)}
                 data={elm}
               />
-            </View>
-          ))
+            ))}
+          </View>
         ) : (
           <View style={localStyled.emptyContainer}>
             <Text style={localStyled.emptyText}>
@@ -97,8 +101,13 @@ const localStyled = StyleSheet.create({
     width: 40,
   },
   scrollContent: {
-    paddingHorizontal: 20,
     paddingBottom: 20,
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 10,
   },
   recipeCardWrapper: {
     marginBottom: 15,

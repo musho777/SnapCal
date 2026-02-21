@@ -194,6 +194,146 @@
         "Repeat the layers once more: yogurt, berries, granola.",
         "Top with chopped almonds and serve immediately or refrigerate until ready to eat."
       ]
+    },
+    {
+      "id": 6,
+      "name": "Energy Balls",
+      "image": "../../assets/snack.png",
+      "category": "snack",
+      "mealType": "snack",
+      "totalCalories": 180,
+      "rating": "4.8K",
+      "macros": [
+        {
+          "weight": 42,
+          "type": "Carbs"
+        },
+        {
+          "weight": 65,
+          "type": "Protein"
+        },
+        {
+          "weight": 38,
+          "type": "Fat"
+        }
+      ],
+      "recipeInfo": {
+        "description": "No-bake energy balls packed with oats, dates, and nuts. Perfect for a quick energy boost throughout the day.",
+        "prepTime": "10 min",
+        "cookTime": "0 min",
+        "servings": "12"
+      },
+      "ingredients": [
+        { "name": "Rolled oats", "amount": "200g" },
+        { "name": "Dates", "amount": "150g" },
+        { "name": "Almond butter", "amount": "100g" },
+        { "name": "Honey", "amount": "3 tbsp" },
+        { "name": "Chia seeds", "amount": "2 tbsp" },
+        { "name": "Dark chocolate chips", "amount": "50g" },
+        { "name": "Vanilla extract", "amount": "1 tsp" }
+      ],
+      "cookingSteps": [
+        "Add pitted dates to a food processor and pulse until finely chopped.",
+        "Add rolled oats, almond butter, honey, chia seeds, and vanilla extract.",
+        "Pulse until the mixture comes together and is sticky.",
+        "Fold in chocolate chips by hand.",
+        "Roll the mixture into small balls (about 1 tablespoon each).",
+        "Place on a lined baking sheet.",
+        "Refrigerate for at least 30 minutes to firm up.",
+        "Store in an airtight container in the fridge for up to 1 week."
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Apple Slices with Peanut Butter",
+      "image": "../../assets/pancakes.png",
+      "category": "snack",
+      "mealType": "snack",
+      "totalCalories": 195,
+      "rating": "4.6K",
+      "macros": [
+        {
+          "weight": 38,
+          "type": "Carbs"
+        },
+        {
+          "weight": 48,
+          "type": "Protein"
+        },
+        {
+          "weight": 55,
+          "type": "Fat"
+        }
+      ],
+      "recipeInfo": {
+        "description": "Classic and simple snack combining crisp apple slices with creamy peanut butter. Great for satisfying hunger between meals.",
+        "prepTime": "3 min",
+        "cookTime": "0 min",
+        "servings": "1"
+      },
+      "ingredients": [
+        { "name": "Apple", "amount": "1 pc" },
+        { "name": "Peanut butter", "amount": "2 tbsp" },
+        { "name": "Cinnamon", "amount": "1/4 tsp" },
+        { "name": "Honey", "amount": "1 tsp" }
+      ],
+      "cookingSteps": [
+        "Wash the apple thoroughly and pat dry.",
+        "Core the apple and slice into 8-10 wedges.",
+        "Arrange apple slices on a plate.",
+        "In a small bowl, mix peanut butter with honey until smooth.",
+        "Sprinkle cinnamon over the peanut butter mixture.",
+        "Serve apple slices with the peanut butter dip on the side.",
+        "Enjoy immediately for the best taste and texture."
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Protein Trail Mix",
+      "image": "../../assets/snack.png",
+      "category": "snack",
+      "mealType": "snack",
+      "totalCalories": 220,
+      "rating": "4.9K",
+      "macros": [
+        {
+          "weight": 45,
+          "type": "Carbs"
+        },
+        {
+          "weight": 72,
+          "type": "Protein"
+        },
+        {
+          "weight": 62,
+          "type": "Fat"
+        }
+      ],
+      "recipeInfo": {
+        "description": "Homemade trail mix with nuts, seeds, and dried fruits. Perfect portable snack for on-the-go energy.",
+        "prepTime": "5 min",
+        "cookTime": "0 min",
+        "servings": "8"
+      },
+      "ingredients": [
+        { "name": "Almonds", "amount": "100g" },
+        { "name": "Cashews", "amount": "100g" },
+        { "name": "Pumpkin seeds", "amount": "50g" },
+        { "name": "Dried cranberries", "amount": "75g" },
+        { "name": "Dark chocolate chips", "amount": "50g" },
+        { "name": "Coconut flakes", "amount": "30g" },
+        { "name": "Sea salt", "amount": "Pinch" }
+      ],
+      "cookingSteps": [
+        "In a large bowl, combine almonds, cashews, and pumpkin seeds.",
+        "Add dried cranberries and mix well.",
+        "Fold in dark chocolate chips and coconut flakes.",
+        "Sprinkle a pinch of sea salt over the mixture.",
+        "Toss everything together until evenly distributed.",
+        "Divide into individual portions or store in an airtight container.",
+        "Keep at room temperature for up to 2 weeks.",
+        "Enjoy a handful whenever you need a quick energy boost."
+      ]
     }
   ]
 }

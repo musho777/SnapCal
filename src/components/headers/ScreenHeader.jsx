@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { styles } from '../../themes';
 import { GoBackIcon } from '../../assets/Icons';
 
-export const ScreenHeader = () => {
+export const ScreenHeader = ({ title }) => {
   const navigation = useNavigation();
   const handelGoBack = () => {
     navigation.goBack();
@@ -13,7 +13,7 @@ export const ScreenHeader = () => {
       <TouchableOpacity onPress={handelGoBack} style={localStyles.iconWrapper}>
         <GoBackIcon />
       </TouchableOpacity>
-      <Text style={styles.h4}>Food Details</Text>
+      <Text style={styles.h4}>{title}</Text>
       <View style={localStyles.emptyView} />
     </View>
   );
