@@ -117,7 +117,6 @@ const localStyles = StyleSheet.create({
     borderTopLeftRadius: 30,
     paddingTop: 15,
     paddingHorizontal: 15,
-    paddingBottom: 30,
     minHeight: 300,
     borderWidth: 4,
     borderColor: 'white',
@@ -131,6 +130,7 @@ const localStyles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 5,
     gap: 10,
+    paddingBottom: 110,
   },
   titleWrapper: {
     flexDirection: 'row',
