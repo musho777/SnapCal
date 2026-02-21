@@ -1,4 +1,4 @@
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 import { styles } from '../../themes';

@@ -5,7 +5,7 @@ import { styles } from '../../themes';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-export const AllCategoriesScreen = ({ navigation }) => {
+const AllCategoriesScreen = ({ navigation }) => {
   const categoriesData = [
     {
       title: 'Vegan',
@@ -75,3 +75,5 @@ const localStyled = StyleSheet.create({
     gap: 10,
   },
 });
+
+export default AllCategoriesScreen;

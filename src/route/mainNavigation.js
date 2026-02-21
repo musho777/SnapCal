@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainScreen from '../screens/mainScreen';
 import RecipeScreen from '../screens/recipeScreen';
-import CategoryScreen from '../screens/categoryScreen/CategoryScreen';
-import { AllCategoriesScreen } from '../screens/allCategoriesScreen/AllCategoriesScreen';
+import CategoryScreen from '../screens/categoryScreen';
+import AllCategoriesScreen from '../screens/allCategoriesScreen';
 
 const Stack = createNativeStackNavigator();
 
