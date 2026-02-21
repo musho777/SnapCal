@@ -18,7 +18,7 @@ export const localStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
+    marginBottom: 70,
   },
   image: {
     width: 200,

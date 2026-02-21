@@ -101,6 +101,7 @@ const localStyled = StyleSheet.create({
     width: 40,
   },
   scrollContent: {
+    flexGrow: 1,
     paddingBottom: 20,
   },
   gridContainer: {
