@@ -1,0 +1,191 @@
+{
+  "recipes": [
+    {
+      "id": 1,
+      "name": "Chicken Salad",
+      "image": "../../assets/chicken.png",
+      "totalCalories": 280,
+      "rating": "4.9K",
+      "macros": [
+        {
+          "weight": 48,
+          "type": "Carbs"
+        },
+        {
+          "weight": 160,
+          "type": "Protein"
+        },
+        {
+          "weight": 72,
+          "type": "Fat"
+        }
+      ],
+      "recipeInfo": {
+        "description": "A fresh and healthy chicken salad packed with protein and flavor. Perfect for a light lunch or dinner.",
+        "prepTime": "15 min",
+        "cookTime": "20 min",
+        "servings": "4"
+      },
+      "ingredients": [
+        { "name": "Chicken breast", "amount": "500g" },
+        { "name": "Mixed greens", "amount": "200g" },
+        { "name": "Cherry tomatoes", "amount": "150g" },
+        { "name": "Cucumber", "amount": "1 pc" },
+        { "name": "Olive oil", "amount": "2 tbsp" },
+        { "name": "Lemon juice", "amount": "1 tbsp" },
+        { "name": "Salt & pepper", "amount": "To taste" }
+      ],
+      "cookingSteps": [
+        "Season the chicken breast with salt and pepper on both sides.",
+        "Heat a pan over medium-high heat and add 1 tablespoon of olive oil.",
+        "Cook the chicken for 6-7 minutes on each side until golden brown and fully cooked.",
+        "Remove the chicken from heat and let it rest for 5 minutes, then slice into strips.",
+        "In a large bowl, combine mixed greens, halved cherry tomatoes, and sliced cucumber.",
+        "In a small bowl, whisk together remaining olive oil, lemon juice, salt, and pepper.",
+        "Add the sliced chicken to the salad, drizzle with dressing, and toss gently to combine.",
+        "Serve immediately and enjoy your healthy chicken salad!"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Grilled Salmon Bowl",
+      "image": "../../assets/grilledSalmon.png",
+      "totalCalories": 420,
+      "rating": "5.2K",
+      "macros": [
+        {
+          "weight": 55,
+          "type": "Carbs"
+        },
+        {
+          "weight": 180,
+          "type": "Protein"
+        },
+        {
+          "weight": 95,
+          "type": "Fat"
+        }
+      ],
+      "recipeInfo": {
+        "description": "Nutritious grilled salmon served over quinoa with fresh vegetables and a tangy dressing. Rich in omega-3 fatty acids.",
+        "prepTime": "10 min",
+        "cookTime": "25 min",
+        "servings": "2"
+      },
+      "ingredients": [
+        { "name": "Salmon fillet", "amount": "400g" },
+        { "name": "Quinoa", "amount": "150g" },
+        { "name": "Avocado", "amount": "1 pc" },
+        { "name": "Edamame", "amount": "100g" },
+        { "name": "Red cabbage", "amount": "100g" },
+        { "name": "Sesame seeds", "amount": "1 tbsp" },
+        { "name": "Soy sauce", "amount": "2 tbsp" },
+        { "name": "Lime", "amount": "1 pc" }
+      ],
+      "cookingSteps": [
+        "Cook quinoa according to package instructions and set aside.",
+        "Season salmon with salt, pepper, and a drizzle of olive oil.",
+        "Heat a grill pan over medium-high heat and cook salmon for 4-5 minutes per side.",
+        "While salmon cooks, prepare vegetables: slice avocado, shred cabbage, and cook edamame.",
+        "Divide quinoa between two bowls.",
+        "Top with grilled salmon, avocado slices, edamame, and red cabbage.",
+        "Mix soy sauce with lime juice and drizzle over the bowls.",
+        "Sprinkle with sesame seeds and serve warm."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Protein Pancakes",
+      "image": "../../assets/pancakes.png",
+      "totalCalories": 350,
+      "rating": "4.7K",
+      "macros": [
+        {
+          "weight": 68,
+          "type": "Carbs"
+        },
+        {
+          "weight": 140,
+          "type": "Protein"
+        },
+        {
+          "weight": 58,
+          "type": "Fat"
+        }
+      ],
+      "recipeInfo": {
+        "description": "Fluffy protein-packed pancakes perfect for breakfast. High in protein and delicious with your favorite toppings.",
+        "prepTime": "5 min",
+        "cookTime": "15 min",
+        "servings": "3"
+      },
+      "ingredients": [
+        { "name": "Protein powder", "amount": "2 scoops" },
+        { "name": "Oat flour", "amount": "100g" },
+        { "name": "Eggs", "amount": "3 pc" },
+        { "name": "Banana", "amount": "1 pc" },
+        { "name": "Almond milk", "amount": "150ml" },
+        { "name": "Baking powder", "amount": "1 tsp" },
+        { "name": "Vanilla extract", "amount": "1 tsp" },
+        { "name": "Honey", "amount": "For serving" }
+      ],
+      "cookingSteps": [
+        "Mash the banana in a large bowl until smooth.",
+        "Add eggs, almond milk, and vanilla extract to the bowl and whisk together.",
+        "In a separate bowl, mix protein powder, oat flour, and baking powder.",
+        "Combine wet and dry ingredients and mix until just combined (don't overmix).",
+        "Heat a non-stick pan over medium heat and lightly grease with oil.",
+        "Pour 1/4 cup of batter for each pancake onto the pan.",
+        "Cook for 2-3 minutes until bubbles form, then flip and cook for another 2 minutes.",
+        "Serve warm with honey, berries, or your favorite toppings."
+      ]
+    },
+
+    {
+      "id": 5,
+      "name": "Greek Yogurt Parfait",
+      "image": "../../assets/greekYogurt.png",
+      "totalCalories": 245,
+      "rating": "5.1K",
+      "macros": [
+        {
+          "weight": 52,
+          "type": "Carbs"
+        },
+        {
+          "weight": 95,
+          "type": "Protein"
+        },
+        {
+          "weight": 45,
+          "type": "Fat"
+        }
+      ],
+      "recipeInfo": {
+        "description": "Layered Greek yogurt parfait with fresh berries and granola. Perfect for a quick breakfast or healthy snack.",
+        "prepTime": "5 min",
+        "cookTime": "0 min",
+        "servings": "2"
+      },
+      "ingredients": [
+        { "name": "Greek yogurt", "amount": "400g" },
+        { "name": "Mixed berries", "amount": "200g" },
+        { "name": "Granola", "amount": "60g" },
+        { "name": "Honey", "amount": "2 tbsp" },
+        { "name": "Chia seeds", "amount": "1 tbsp" },
+        { "name": "Almonds", "amount": "30g" },
+        { "name": "Cinnamon", "amount": "1/2 tsp" }
+      ],
+      "cookingSteps": [
+        "In a bowl, mix Greek yogurt with honey and a pinch of cinnamon.",
+        "Wash and prepare mixed berries (strawberries, blueberries, raspberries).",
+        "Chop almonds roughly for added texture.",
+        "In serving glasses or bowls, start with a layer of yogurt mixture.",
+        "Add a layer of mixed berries on top of the yogurt.",
+        "Sprinkle granola and chia seeds over the berries.",
+        "Repeat the layers once more: yogurt, berries, granola.",
+        "Top with chopped almonds and serve immediately or refrigerate until ready to eat."
+      ]
+    }
+  ]
+}

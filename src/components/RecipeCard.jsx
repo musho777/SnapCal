@@ -6,7 +6,9 @@ export const RecipeCard = ({ data, onPress }) => {
   return (
     <View style={localStyled.container}>
       <View style={styles.gap5}>
-        <Text style={styles.title}>{data.title}</Text>
+        <Text numberOfLines={1} style={styles.title}>
+          {data.title}
+        </Text>
         <View style={styles.alignStart}>
           <View style={localStyled.kcal}>
             <Text style={styles.caption}>{data.kcal} Kcal</Text>

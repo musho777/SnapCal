@@ -8,51 +8,35 @@ import { RecipeInfo } from './components/RecipeInfo';
 import { Ingredients } from './components/Ingredients';
 import { CookingSteps } from './components/CookingSteps';
 import { calculateHealthScore } from '../../utils/healthScore';
+import recipesData from '../../data/recipes.json';
 
-const RecipeScreen = () => {
-  const data = [
-    {
-      weight: 48,
-      type: 'Carbs',
-    },
-    {
-      weight: 160,
-      type: 'Protein',
-    },
-    {
-      weight: 72,
-      type: 'Fat',
-    },
-  ];
+const imageMap = {
+  'chicken.png': require('../../assets/chicken.png'),
+  'snack.png': require('../../assets/snack.png'),
+  'grilledSalmon.png': require('../../assets/grilledSalmon.png'),
+  'pancakes.png': require('../../assets/pancakes.png'),
+  'greekYogurt.png': require('../../assets/greekYogurt.png'),
+  'steak.png': require('../../assets/steak.png'),
+  'apple.png': require('../../assets/apple.png'),
+  'drink.png': require('../../assets/drink.png'),
+  'carb.png': require('../../assets/carb.png'),
+  'protein.png': require('../../assets/protein.png'),
+};
 
-  const recipeInfo = {
-    description:
-      'A fresh and healthy chicken salad packed with protein and flavor. Perfect for a light lunch or dinner.',
-    prepTime: '15 min',
-    cookTime: '20 min',
-    servings: '4',
-  };
+const getImageSource = imagePath => {
+  const filename = imagePath.split('/').pop();
+  return imageMap[filename] || imageMap['snack.png'];
+};
 
-  const ingredients = [
-    { name: 'Chicken breast', amount: '500g' },
-    { name: 'Mixed greens', amount: '200g' },
-    { name: 'Cherry tomatoes', amount: '150g' },
-    { name: 'Cucumber', amount: '1 pc' },
-    { name: 'Olive oil', amount: '2 tbsp' },
-    { name: 'Lemon juice', amount: '1 tbsp' },
-    { name: 'Salt & pepper', amount: 'To taste' },
-  ];
+const RecipeScreen = ({ route }) => {
+  const recipeId = route?.params?.recipeId || 1;
+  const recipe =
+    recipesData.recipes.find(r => r.id === recipeId) || recipesData.recipes[0];
 
-  const cookingSteps = [
-    'Season the chicken breast with salt and pepper on both sides.',
-    'Heat a pan over medium-high heat and add 1 tablespoon of olive oil.',
-    'Cook the chicken for 6-7 minutes on each side until golden brown and fully cooked.',
-    'Remove the chicken from heat and let it rest for 5 minutes, then slice into strips.',
-    'In a large bowl, combine mixed greens, halved cherry tomatoes, and sliced cucumber.',
-    'In a small bowl, whisk together remaining olive oil, lemon juice, salt, and pepper.',
-    'Add the sliced chicken to the salad, drizzle with dressing, and toss gently to combine.',
-    'Serve immediately and enjoy your healthy chicken salad!',
-  ];
+  const data = recipe.macros;
+  const recipeInfo = recipe.recipeInfo;
+  const ingredients = recipe.ingredients;
+  const cookingSteps = recipe.cookingSteps;
 
   const healthScoreData = calculateHealthScore(data);
 
@@ -60,10 +44,7 @@ const RecipeScreen = () => {
     <View style={localStyles.container}>
       <Header />
       <View style={localStyles.imageContainer}>
-        <Image
-          style={localStyles.img}
-          source={require('../../assets/snack.png')}
-        />
+        <Image style={localStyles.img} source={getImageSource(recipe.image)} />
       </View>
       <ScrollView
         style={localStyles.scrollView}
@@ -73,11 +54,13 @@ const RecipeScreen = () => {
         <View style={localStyles.spacer} />
         <View style={localStyles.details}>
           <View style={localStyles.titleWrapper}>
-            <Text style={styles.title}>Chicken Salad</Text>
-            <Text style={styles.caption}>4.9K</Text>
+            <Text style={styles.title}>{recipe.name}</Text>
+            <Text style={styles.caption}>{recipe.rating}</Text>
           </View>
           <View style={localStyles.kcal}>
-            <Text style={styles.captionPrimary}>Total 280 Kcal</Text>
+            <Text style={styles.captionPrimary}>
+              Total {recipe.totalCalories} Kcal
+            </Text>
             <FireIcon />
           </View>
           <View style={localStyles.row}>
