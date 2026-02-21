@@ -84,7 +84,7 @@ const localStyles = StyleSheet.create({
     zIndex: 1,
   },
   spacer: {
-    height: 320,
+    height: 300,
   },
   details: {
     borderTopRightRadius: 30,
