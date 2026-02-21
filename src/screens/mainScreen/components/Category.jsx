@@ -3,7 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
 } from 'react-native';
 import { styles } from '../../../themes';
@@ -47,25 +47,36 @@ export const Category = ({ navigation }) => {
     <View>
       <View style={localStyled.more}>
         <Text style={styles.title}>Categories</Text>
-        <TouchableOpacity>
+        <Pressable>
           <Text style={styles.caption}>View More</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <View style={localStyled.categories}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {data.map((elm, i) => {
             return (
-              <TouchableOpacity
-                activeOpacity={0.7}
+              <Pressable
                 key={i}
-                style={localStyled.box}
+                style={({ pressed }) => [
+                  localStyled.box,
+                  pressed && localStyled.boxPressed,
+                ]}
                 onPress={() => handleCategoryPress(elm.title)}
               >
-                <View style={localStyled.imgWrapper}>
-                  <Image style={localStyled.img} source={elm.image} />
-                </View>
-                <Text style={styles.captionPrimary}>{elm.title}</Text>
-              </TouchableOpacity>
+                {({ pressed }) => (
+                  <>
+                    <View
+                      style={[
+                        localStyled.imgWrapper,
+                        pressed && localStyled.imgWrapperPressed,
+                      ]}
+                    >
+                      <Image style={localStyled.img} source={elm.image} />
+                    </View>
+                    <Text style={styles.captionPrimary}>{elm.title}</Text>
+                  </>
+                )}
+              </Pressable>
             );
           })}
         </ScrollView>
@@ -91,6 +102,9 @@ const localStyled = StyleSheet.create({
     marginRight: 15,
     gap: 7,
   },
+  boxPressed: {
+    transform: [{ scale: 0.95 }],
+  },
   imgWrapper: {
     width: 65,
     height: 65,
@@ -106,6 +120,9 @@ const localStyled = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 1,
     borderRadius: 45,
+  },
+  imgWrapperPressed: {
+    backgroundColor: '#f0f0f0',
   },
   img: {
     width: 45,
