@@ -40,6 +40,8 @@ const localStyles = StyleSheet.create({
   notificationWrapper: {
     width: 40,
     height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 10,
     backgroundColor: 'white',
     shadowColor: '#000000',
