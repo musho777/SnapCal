@@ -60,10 +60,7 @@ const TabButton = ({ route, isFocused, onPress, onLongPress }) => {
       <Text
         style={[
           localStyles.tabLabel,
-          {
-            color: isFocused ? ACTIVE_COLOR : INACTIVE_COLOR,
-            fontWeight: isFocused ? '700' : '400',
-          },
+          isFocused ? localStyles.tabLabelActive : localStyles.tabLabelInactive,
         ]}
       >
         {getLabel()}
@@ -189,6 +186,14 @@ const localStyles = StyleSheet.create({
   tabLabel: {
     fontSize: 11,
     marginTop: 4,
+  },
+  tabLabelActive: {
+    color: ACTIVE_COLOR,
+    fontWeight: '700',
+  },
+  tabLabelInactive: {
+    color: INACTIVE_COLOR,
+    fontWeight: '400',
   },
   centerPlaceholder: {
     flex: 1,

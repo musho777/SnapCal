@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import ExploreScreen from '../screens/exploreScreen';
@@ -10,9 +11,11 @@ import HomeStack from './homeStack';
 const Tab = createBottomTabNavigator();
 
 export const MainNavigation = () => {
+  const renderTabBar = useCallback((props) => <CustomTabBar {...props} />, []);
+
   return (
     <Tab.Navigator
-      tabBar={props => <CustomTabBar {...props} />}
+      tabBar={renderTabBar}
       screenOptions={{
         headerShown: false,
       }}
