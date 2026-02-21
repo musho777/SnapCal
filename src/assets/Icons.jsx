@@ -1,5 +1,6 @@
 import Svg, {
   Circle,
+  ClipPath,
   Defs,
   G,
   LinearGradient,
@@ -156,6 +157,38 @@ export const FatIcon = () => {
       <Circle cx={9.5} cy={6.5} r={0.5} stroke="#fff" />
       <Circle cx={16.5} cy={8.5} r={0.5} stroke="#fff" />
       <Circle cx={13.5} cy={5.5} r={0.5} stroke="#fff" />
+    </Svg>
+  );
+};
+
+export const SearchIcon = () => {
+  return (
+    <Svg
+      width="25px"
+      height="25px"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <G clipPath="url(#clip0_15_152)">
+        <Path fill="#fff" d="M0 0H24V24H0z" />
+        <Circle
+          cx={10.5}
+          cy={10.5}
+          r={6.5}
+          stroke="#000"
+          strokeLinejoin="round"
+        />
+        <Path
+          d="M19.646 20.354a.5.5 0 00.708-.708l-.708.708zm.708-.708l-5-5-.708.708 5 5 .708-.708z"
+          fill="#000"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_15_152">
+          <Path fill="#fff" d="M0 0H24V24H0z" />
+        </ClipPath>
+      </Defs>
     </Svg>
   );
 };

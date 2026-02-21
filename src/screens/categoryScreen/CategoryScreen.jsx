@@ -5,7 +5,8 @@ import { styles } from '../../themes';
 import { RecipeCard } from '../../components/RecipeCard';
 import recipesData from '../../data/recipes.json';
 import { ScreenHeader } from '../../components/headers/ScreenHeader';
-
+import UIInput from '../../common-ui/uIInput';
+import NoResult from '../../components/noResult';
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
   'snack.png': require('../../assets/snack.png'),
@@ -45,6 +46,9 @@ const CategoryScreen = ({ navigation, route }) => {
   return (
     <View style={styles.page}>
       <ScreenHeader title={category} />
+      {data.length > 0 && (
+        <UIInput placeholder="Search" showSearchIcon={true} />
+      )}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={localStyled.scrollContent}
@@ -61,11 +65,7 @@ const CategoryScreen = ({ navigation, route }) => {
             ))}
           </View>
         ) : (
-          <View style={localStyled.emptyContainer}>
-            <Text style={localStyled.emptyText}>
-              No recipes found for "{category}"
-            </Text>
-          </View>
+          <NoResult text={`No recipes found for ${category}`} />
         )}
       </ScrollView>
     </View>
