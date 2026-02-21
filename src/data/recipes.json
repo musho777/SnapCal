@@ -4,6 +4,8 @@
       "id": 1,
       "name": "Chicken Salad",
       "image": "../../assets/chicken.png",
+      "category": "salad",
+      "mealType": "lunch",
       "totalCalories": 280,
       "rating": "4.9K",
       "macros": [
@@ -50,6 +52,8 @@
       "id": 2,
       "name": "Grilled Salmon Bowl",
       "image": "../../assets/grilledSalmon.png",
+      "category": "main course",
+      "mealType": "dinner",
       "totalCalories": 420,
       "rating": "5.2K",
       "macros": [
@@ -97,6 +101,8 @@
       "id": 3,
       "name": "Protein Pancakes",
       "image": "../../assets/pancakes.png",
+      "category": "breakfast",
+      "mealType": "breakfast",
       "totalCalories": 350,
       "rating": "4.7K",
       "macros": [
@@ -145,6 +151,8 @@
       "id": 5,
       "name": "Greek Yogurt Parfait",
       "image": "../../assets/greekYogurt.png",
+      "category": "snack",
+      "mealType": "breakfast",
       "totalCalories": 245,
       "rating": "5.1K",
       "macros": [
