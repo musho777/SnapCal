@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { styles } from '../themes';
 import { UIButton } from '../common-ui/UIButton';
 
-export const RecipeCard = ({ data }) => {
+export const RecipeCard = ({ data, onPress }) => {
   return (
     <View style={localStyled.container}>
       <View style={styles.gap5}>
@@ -18,6 +18,7 @@ export const RecipeCard = ({ data }) => {
         <UIButton
           backgroundColor={'#272727'}
           color={'white'}
+          onPress={onPress}
           title={'Tell me Recipe'}
         />
       </View>

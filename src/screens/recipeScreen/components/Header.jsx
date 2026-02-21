@@ -1,13 +1,24 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { GoBackIcon, SaveIcon } from '../../../assets/Icons';
 import { styles } from '../../../themes';
+import { useNavigation } from '@react-navigation/native';
 
 export const Header = () => {
+  const navigation = useNavigation();
+  const handelGoBack = () => {
+    navigation.goBack();
+  };
   return (
     <View style={localStyles.container}>
-      <View style={localStyles.iconWrapper}>
+      <TouchableOpacity onPress={handelGoBack} style={localStyles.iconWrapper}>
         <GoBackIcon />
-      </View>
+      </TouchableOpacity>
       <Text style={styles.h4}>Food Details</Text>
       <View style={localStyles.iconWrapper}>
         <SaveIcon />
@@ -22,7 +33,9 @@ const localStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    paddingTop: Platform.OS === 'ios' ? 50 : 30,
+    paddingTop: Platform.OS === 'ios' ? 50 : 50,
+    zIndex: 10,
+    position: 'relative',
   },
   iconWrapper: {
     width: 50,

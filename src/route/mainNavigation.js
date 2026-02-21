@@ -1,0 +1,20 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MainScreen from '../screens/mainScreen';
+import RecipeScreen from '../screens/recipeScreen';
+
+const Stack = createNativeStackNavigator();
+
+export const MainNavigation = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+      }}
+      initialRouteName="Main"
+    >
+      <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="Recipient" component={RecipeScreen} />
+    </Stack.Navigator>
+  );
+};

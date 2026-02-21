@@ -1,17 +1,18 @@
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-// import MainScreen from './src/screens/mainScreen';
-import RecipeScreen from './src/screens/recipeScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { MainNavigation } from './src/route/mainNavigation';
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider>
-      <View style={styles.container}>
-        {/* <MainScreen /> */}
-        <RecipeScreen />
-      </View>
+      <NavigationContainer>
+        <View style={styles.container}>
+          <MainNavigation />
+        </View>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
