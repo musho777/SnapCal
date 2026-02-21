@@ -4,9 +4,9 @@ import RecipeScreen from '../screens/recipeScreen';
 import CategoryScreen from '../screens/categoryScreen';
 import AllCategoriesScreen from '../screens/allCategoriesScreen';
 
-const Stack = createNativeStackNavigator();
+const HomeStack = () => {
+  const Stack = createNativeStackNavigator();
 
-export const MainNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -22,3 +22,5 @@ export const MainNavigation = () => {
     </Stack.Navigator>
   );
 };
+
+export default HomeStack;
