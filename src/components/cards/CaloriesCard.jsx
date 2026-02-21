@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { CarbsIcon, FatIcon, ProteinIcon } from '../assets/Icons';
-import { styles } from '../themes';
+import { CarbsIcon, FatIcon, ProteinIcon } from '../../assets/Icons';
+import { styles } from '../../themes';
 
 export const CaloriesCard = ({ data }) => {
   const getBackgroundStyle = () => {

@@ -4,7 +4,7 @@ import { styles } from '../../themes';
 import { Header } from './components/Header';
 import { ProAccessBanner } from './components/ProAccessBanner';
 import { Category } from './components/Category';
-import { RecipeCard } from '../../components/RecipeCard';
+import { RecipeCard } from '../../components/cards/RecipeCard';
 import recipesData from '../../data/recipes.json';
 
 // Image mapping - Metro bundler requires static paths

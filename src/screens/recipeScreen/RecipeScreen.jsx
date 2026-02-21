@@ -2,7 +2,7 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { styles } from '../../themes';
 import { Header } from './components/Header';
 import { FireIcon } from '../../assets/Icons';
-import { CaloriesCard } from '../../components/CaloriesCard';
+import { CaloriesCard } from '../../components/cards/CaloriesCard';
 import { HealthScoreBar } from './components/HealthScoreBar';
 import { RecipeInfo } from './components/RecipeInfo';
 import { Ingredients } from './components/Ingredients';

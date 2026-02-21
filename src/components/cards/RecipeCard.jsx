@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { styles } from '../themes';
-import { UIButton } from '../common-ui/UIButton';
+import { styles } from '../../themes';
+import { UIButton } from '../../common-ui/UIButton';
 
 export const RecipeCard = ({ data, onPress, width = 200 }) => {
   return (

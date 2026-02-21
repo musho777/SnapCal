@@ -2,7 +2,7 @@ import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 
 const { width: screenWidth } = Dimensions.get('window');
 import { styles } from '../../themes';
-import { RecipeCard } from '../../components/RecipeCard';
+import { RecipeCard } from '../../components/cards/RecipeCard';
 import recipesData from '../../data/recipes.json';
 import { ScreenHeader } from '../../components/headers/ScreenHeader';
 import UIInput from '../../common-ui/uIInput';
