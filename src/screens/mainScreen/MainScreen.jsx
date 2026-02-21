@@ -42,7 +42,7 @@ const MainScreen = ({ navigation }) => {
     <View style={styles.page}>
       <Header />
       <ProAccessBanner />
-      <Category />
+      <Category navigation={navigation} />
 
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {data.map((elm, i) => {

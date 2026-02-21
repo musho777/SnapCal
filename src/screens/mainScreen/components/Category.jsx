@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { styles } from '../../../themes';
 
-export const Category = () => {
+export const Category = ({ navigation }) => {
   const data = [
     {
       title: 'Vegan',
@@ -39,6 +39,10 @@ export const Category = () => {
       image: require('../../../assets/apple.png'),
     },
   ];
+
+  const handleCategoryPress = category => {
+    navigation.navigate('Category', { category });
+  };
   return (
     <View>
       <View style={localStyled.more}>
@@ -52,9 +56,10 @@ export const Category = () => {
           {data.map((elm, i) => {
             return (
               <TouchableOpacity
-                activeOpacity={1}
+                activeOpacity={0.7}
                 key={i}
                 style={localStyled.box}
+                onPress={() => handleCategoryPress(elm.title)}
               >
                 <View style={localStyled.imgWrapper}>
                   <Image style={localStyled.img} source={elm.image} />
