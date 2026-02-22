@@ -48,8 +48,15 @@ const MainScreen = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
       >
         {data.map((elm, i) => {
+          console.log(i === data.length - 1);
           return (
-            <View style={localStyled.recipeCardWrapper} key={i}>
+            <View
+              style={[
+                localStyled.recipeCardWrapper,
+                i === data.length - 1 && localStyled.marginLeft,
+              ]}
+              key={i}
+            >
               <RecipeCard
                 onPress={() => handleShowRecipients(elm.id)}
                 data={elm}
@@ -74,6 +81,9 @@ const localStyled = StyleSheet.create({
   },
   paddingLeft: {
     paddingLeft: 5,
+  },
+  marginLeft: {
+    marginLeft: 0,
   },
 });
 
