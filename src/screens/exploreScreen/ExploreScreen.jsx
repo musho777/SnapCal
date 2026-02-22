@@ -6,21 +6,7 @@ import recipesData from '../../data/recipes.json';
 import { calculateHealthScore } from '../../utils/healthScore';
 import { getRecipeImage } from '../../utils/imageMapper';
 
-// Helper function to get emoji based on meal type and category
-const getMealEmoji = (mealType, category) => {
-  const emojiMap = {
-    breakfast: '🥞',
-    lunch: '🥗',
-    dinner: '🍽️',
-    snack: '🍎',
-    'main course': '🍖',
-    salad: '🥗',
-  };
-  return emojiMap[mealType] || emojiMap[category] || '🍴';
-};
-
-// Helper function to get background color based on meal type
-const getBgColor = (mealType) => {
+const getBgColor = mealType => {
   const colorMap = {
     breakfast: '#FFF4CC',
     lunch: '#E8F5E9',
@@ -30,12 +16,9 @@ const getBgColor = (mealType) => {
   return colorMap[mealType] || '#F7F8FA';
 };
 
-// Transform recipes data to match FoodCard format
-const transformRecipesToFoodData = (recipes) => {
+const transformRecipesToFoodData = recipes => {
   return recipes.map(recipe => {
-    // Calculate health score using the macros data
     const healthData = calculateHealthScore(recipe.macros);
-
     return {
       id: recipe.id.toString(),
       name: recipe.name,
@@ -43,7 +26,6 @@ const transformRecipesToFoodData = (recipes) => {
       category: recipe.mealType,
       health: healthData.score,
       tag: recipe.category,
-      emoji: getMealEmoji(recipe.mealType, recipe.category),
       bgColor: getBgColor(recipe.mealType),
       image: getRecipeImage(recipe.image),
       rating: recipe.rating,
