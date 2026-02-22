@@ -36,6 +36,7 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: 7,
     alignItems: 'center',
+    paddingLeft: 5,
   },
   notificationWrapper: {
     width: 40,

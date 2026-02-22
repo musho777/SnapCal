@@ -2,7 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { UIButton } from '../../common-ui/UIButton';
 
-export const FoodCard = ({ item, isSaved = false, onToggleSave, onPress }) => {
+export const FoodCard = ({
+  item,
+  isSaved = false,
+  onToggleSave,
+  onRecipePress,
+}) => {
   const getHealthBarColor = score => {
     if (score >= 8) return '#22C55E';
     if (score >= 6) return '#F59E0B';
@@ -48,7 +53,7 @@ export const FoodCard = ({ item, isSaved = false, onToggleSave, onPress }) => {
         <UIButton
           backgroundColor={'#272727'}
           color={'white'}
-          onPress={onPress}
+          onPress={onRecipePress}
           title={'Tell me Recipe'}
         />
       </View>

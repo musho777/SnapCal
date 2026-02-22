@@ -24,3 +24,13 @@ export function moderateScale(size) {
   const newSize = size * scale;
   return Math.round(newSize);
 }
+
+export const getBgColor = mealType => {
+  const colorMap = {
+    breakfast: '#FFF4CC',
+    lunch: '#E8F5E9',
+    dinner: '#FFE8E8',
+    snack: '#F5E8D3',
+  };
+  return colorMap[mealType] || '#F7F8FA';
+};

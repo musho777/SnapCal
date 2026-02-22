@@ -50,21 +50,25 @@ export const Category = ({ navigation }) => {
 
   return (
     <View>
-      <View style={localStyled.more}>
+      <View style={localStyles.more}>
         <Text style={styles.title}>Categories</Text>
         <Pressable onPress={handleViewMorePress}>
           <Text style={styles.caption}>View More</Text>
         </Pressable>
       </View>
-      <View style={localStyled.categories}>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <View style={localStyles.categories}>
+        <ScrollView
+          style={localStyles.paddingLeft}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
           {data.map((elm, i) => {
             return (
               <Pressable
                 key={i}
                 style={({ pressed }) => [
-                  localStyled.box,
-                  pressed && localStyled.boxPressed,
+                  localStyles.box,
+                  pressed && localStyles.boxPressed,
                 ]}
                 onPress={() => handleCategoryPress(elm.title)}
               >
@@ -72,11 +76,11 @@ export const Category = ({ navigation }) => {
                   <>
                     <View
                       style={[
-                        localStyled.imgWrapper,
-                        pressed && localStyled.imgWrapperPressed,
+                        localStyles.imgWrapper,
+                        pressed && localStyles.imgWrapperPressed,
                       ]}
                     >
-                      <Image style={localStyled.img} source={elm.image} />
+                      <Image style={localStyles.img} source={elm.image} />
                     </View>
                     <Text style={styles.captionPrimary}>{elm.title}</Text>
                   </>
@@ -90,7 +94,7 @@ export const Category = ({ navigation }) => {
   );
 };
 
-const localStyled = StyleSheet.create({
+const localStyles = StyleSheet.create({
   more: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -99,7 +103,6 @@ const localStyled = StyleSheet.create({
   categories: {
     justifyContent: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 1,
   },
   box: {
     justifyContent: 'center',
@@ -132,5 +135,8 @@ const localStyled = StyleSheet.create({
   img: {
     width: 45,
     height: 35,
+  },
+  paddingLeft: {
+    paddingLeft: 5,
   },
 });

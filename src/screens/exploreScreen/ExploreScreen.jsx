@@ -7,16 +7,7 @@ import { calculateHealthScore } from '../../utils/healthScore';
 import { getRecipeImage } from '../../utils/imageMapper';
 import { styles } from '../../themes';
 import NoResult from '../../components/noResult';
-
-const getBgColor = mealType => {
-  const colorMap = {
-    breakfast: '#FFF4CC',
-    lunch: '#E8F5E9',
-    dinner: '#FFE8E8',
-    snack: '#F5E8D3',
-  };
-  return colorMap[mealType] || '#F7F8FA';
-};
+import { getBgColor } from '../../utils/themesUtils';
 
 const transformRecipesToFoodData = recipes => {
   return recipes.map(recipe => {

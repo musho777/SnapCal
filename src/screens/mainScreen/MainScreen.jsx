@@ -43,7 +43,11 @@ const MainScreen = ({ navigation }) => {
       <ProAccessBanner />
       <Category navigation={navigation} />
 
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        style={localStyled.paddingLeft}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      >
         {data.map((elm, i) => {
           return (
             <View style={localStyled.recipeCardWrapper} key={i}>
@@ -68,6 +72,9 @@ const localStyled = StyleSheet.create({
   recipeCardWrapper: {
     marginRight: 15,
     paddingBottom: 10,
+  },
+  paddingLeft: {
+    paddingLeft: 5,
   },
 });
 
