@@ -1,7 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { BarChart } from 'react-native-gifted-charts';
 
 const WeeklyChart = ({ weeklyData, activeDay, goalKcal }) => {
+  const screenWidth = Dimensions.get('window').width;
+  const chartWidth = screenWidth - 100; // Account for card padding (16*2) + container padding (20*2)
+
+  // Calculate spacing to fill full width
+  const barWidth = 8;
+  const numberOfBars = weeklyData.length;
+  const totalBarsWidth = barWidth * numberOfBars;
+  const availableSpace = chartWidth - totalBarsWidth - 20; // 20 for initial spacing
+  const spacing = availableSpace / (numberOfBars - 1);
+
+  // Transform data for BarChart
+  const barData = weeklyData.map(day => {
+    const isActive = activeDay === day.id;
+    const hasData = day.calories > 0;
+
+    return {
+      value: hasData ? day.calories : 0,
+      label: day.day,
+      frontColor: isActive ? '#272727' : hasData ? '#E5E7EB' : '#F3F4F6',
+      labelTextStyle: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: isActive ? '#272727' : '#9CA3AF',
+      },
+    };
+  });
+
   return (
     <View style={styles.chartCard}>
       <View style={styles.chartHeader}>
@@ -12,40 +40,32 @@ const WeeklyChart = ({ weeklyData, activeDay, goalKcal }) => {
       </View>
 
       <View style={styles.chartContainer}>
-        {/* Goal Line */}
-        <View style={[styles.goalLine, { top: (1 - goalKcal / 2500) * 72 }]}>
-          <Text style={styles.goalLabel}>Goal</Text>
-        </View>
-
-        {/* Bars */}
-        <View style={styles.chartBars}>
-          {weeklyData.map(day => {
-            const barHeight = Math.max((day.calories / 2500) * 72, 4);
-            const isActive = activeDay === day.id;
-            const hasData = day.calories > 0;
-
-            return (
-              <View key={day.id} style={styles.chartColumn}>
-                {day.calories > 0 && (
-                  <Text style={styles.barCalories}>{day.calories}</Text>
-                )}
-                <View style={styles.barContainer}>
-                  <View
-                    style={[
-                      styles.bar,
-                      { height: barHeight },
-                      isActive && styles.barActive,
-                      hasData && !isActive && styles.barHasData,
-                    ]}
-                  />
-                </View>
-                <Text style={[styles.barDay, isActive && styles.barDayActive]}>
-                  {day.day}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
+        <BarChart
+          data={barData}
+          barWidth={barWidth}
+          width={chartWidth - 35}
+          barBorderRadius={4}
+          noOfSections={4}
+          maxValue={2500}
+          yAxisThickness={1}
+          yAxisColor="#F3F4F6"
+          xAxisThickness={0}
+          hideRules={false}
+          rulesColor="#F3F4F6"
+          rulesType="solid"
+          hideYAxisText={false}
+          yAxisTextStyle={{
+            fontSize: 9,
+            color: '#9CA3AF',
+            fontWeight: '600',
+          }}
+          yAxisLabelWidth={35}
+          initialSpacing={10}
+          spacing={spacing}
+          height={120}
+          isAnimated
+          animationDuration={300}
+        />
       </View>
     </View>
   );
@@ -82,16 +102,14 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     position: 'relative',
+    width: '100%',
+    paddingTop: 20,
   },
   goalLine: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
+    left: 10,
+    right: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#EF4444',
     zIndex: 1,
   },
   goalLabel: {
@@ -101,48 +119,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingRight: 4,
   },
-  chartBars: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    gap: 8,
-  },
-  chartColumn: {
+  dashedLine: {
     flex: 1,
-    alignItems: 'center',
+    height: 1,
+    borderTopWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#EF4444',
   },
   barCalories: {
     fontSize: 9,
     fontWeight: '700',
     color: '#272727',
-    marginBottom: 4,
   },
-  barContainer: {
-    width: '100%',
-    height: 72,
-    justifyContent: 'flex-end',
+  topLabelContainer: {
+    marginBottom: 6,
     alignItems: 'center',
-  },
-  bar: {
-    width: 8,
-    borderRadius: 4,
-    backgroundColor: '#F3F4F6',
-  },
-  barActive: {
-    width: 10,
-    backgroundColor: '#272727',
-  },
-  barHasData: {
-    backgroundColor: '#E5E7EB',
-  },
-  barDay: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: '#9CA3AF',
-    marginTop: 8,
-  },
-  barDayActive: {
-    color: '#272727',
+    justifyContent: 'center',
   },
 });
 
