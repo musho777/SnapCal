@@ -7,6 +7,7 @@ import {
   Animated,
   StyleSheet,
 } from 'react-native';
+import { DownAndUpIcon } from '../../assets/Icons';
 
 const MealPlanScreen = ({ navigation }) => {
   const [activeDay, setActiveDay] = useState('mon');
@@ -21,27 +22,83 @@ const MealPlanScreen = ({ navigation }) => {
   const [plan, setPlan] = useState({
     mon: {
       breakfast: [
-        { id: 1, emoji: '🥞', name: 'Protein Pancakes', portion: '3 pieces', kcal: 320, protein: 24 },
-        { id: 2, emoji: '🍌', name: 'Banana', portion: '1 medium', kcal: 105, protein: 1 },
+        {
+          id: 1,
+          emoji: '🥞',
+          name: 'Protein Pancakes',
+          portion: '3 pieces',
+          kcal: 320,
+          protein: 24,
+        },
+        {
+          id: 2,
+          emoji: '🍌',
+          name: 'Banana',
+          portion: '1 medium',
+          kcal: 105,
+          protein: 1,
+        },
       ],
       lunch: [
-        { id: 3, emoji: '🥗', name: 'Caesar Salad', portion: '1 bowl', kcal: 380, protein: 32 },
-        { id: 4, emoji: '🍗', name: 'Grilled Chicken', portion: '150g', kcal: 248, protein: 46 },
+        {
+          id: 3,
+          emoji: '🥗',
+          name: 'Caesar Salad',
+          portion: '1 bowl',
+          kcal: 380,
+          protein: 32,
+        },
+        {
+          id: 4,
+          emoji: '🍗',
+          name: 'Grilled Chicken',
+          portion: '150g',
+          kcal: 248,
+          protein: 46,
+        },
       ],
       dinner: [
-        { id: 5, emoji: '🍝', name: 'Pasta Carbonara', portion: '1 plate', kcal: 520, protein: 28 },
+        {
+          id: 5,
+          emoji: '🍝',
+          name: 'Pasta Carbonara',
+          portion: '1 plate',
+          kcal: 520,
+          protein: 28,
+        },
       ],
       snacks: [
-        { id: 6, emoji: '🥜', name: 'Almonds', portion: '30g', kcal: 172, protein: 6 },
+        {
+          id: 6,
+          emoji: '🥜',
+          name: 'Almonds',
+          portion: '30g',
+          kcal: 172,
+          protein: 6,
+        },
       ],
     },
     tue: {
       breakfast: [
-        { id: 7, emoji: '🥚', name: 'Scrambled Eggs', portion: '3 eggs', kcal: 270, protein: 18 },
+        {
+          id: 7,
+          emoji: '🥚',
+          name: 'Scrambled Eggs',
+          portion: '3 eggs',
+          kcal: 270,
+          protein: 18,
+        },
       ],
       lunch: [],
       dinner: [
-        { id: 8, emoji: '🍕', name: 'Margherita Pizza', portion: '2 slices', kcal: 580, protein: 22 },
+        {
+          id: 8,
+          emoji: '🍕',
+          name: 'Margherita Pizza',
+          portion: '2 slices',
+          kcal: 580,
+          protein: 22,
+        },
       ],
       snacks: [],
     },
@@ -64,31 +121,69 @@ const MealPlanScreen = ({ navigation }) => {
   ];
 
   const mealSections = [
-    { id: 'breakfast', label: 'Breakfast', emoji: '🌅', time: '7–10 AM', color: '#FFF8E7', accent: '#F59E0B' },
-    { id: 'lunch', label: 'Lunch', emoji: '🌞', time: '12–2 PM', color: '#F0FFF4', accent: '#22C55E' },
-    { id: 'dinner', label: 'Dinner', emoji: '🌙', time: '6–9 PM', color: '#F0F4FF', accent: '#6366F1' },
-    { id: 'snacks', label: 'Snacks', emoji: '🍿', time: 'Anytime', color: '#FFF0F0', accent: '#EF4444' },
+    {
+      id: 'breakfast',
+      label: 'Breakfast',
+      emoji: '🌅',
+      time: '7–10 AM',
+      color: '#FFF8E7',
+      accent: '#F59E0B',
+    },
+    {
+      id: 'lunch',
+      label: 'Lunch',
+      emoji: '🌞',
+      time: '12–2 PM',
+      color: '#F0FFF4',
+      accent: '#22C55E',
+    },
+    {
+      id: 'dinner',
+      label: 'Dinner',
+      emoji: '🌙',
+      time: '6–9 PM',
+      color: '#F0F4FF',
+      accent: '#6366F1',
+    },
+    {
+      id: 'snacks',
+      label: 'Snacks',
+      emoji: '🍿',
+      time: 'Anytime',
+      color: '#FFF0F0',
+      accent: '#EF4444',
+    },
   ];
 
   // Calculate totals for active day
-  const activeDayPlan = plan[activeDay] || { breakfast: [], lunch: [], dinner: [], snacks: [] };
+  const activeDayPlan = plan[activeDay] || {
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+    snacks: [],
+  };
   const allFoods = Object.values(activeDayPlan).flat();
   const totalKcal = allFoods.reduce((sum, food) => sum + food.kcal, 0);
   const totalProtein = allFoods.reduce((sum, food) => sum + food.protein, 0);
-  const totalCarbs = Math.round(totalKcal * 0.5 / 4); // Estimated from calories
-  const totalFat = Math.round(totalKcal * 0.3 / 9); // Estimated from calories
+  const totalCarbs = Math.round((totalKcal * 0.5) / 4); // Estimated from calories
+  const totalFat = Math.round((totalKcal * 0.3) / 9); // Estimated from calories
 
   const goalKcal = 2000;
-  const percentComplete = Math.min(Math.round((totalKcal / goalKcal) * 100), 100);
+  const percentComplete = Math.min(
+    Math.round((totalKcal / goalKcal) * 100),
+    100,
+  );
   const kcalLeft = Math.max(goalKcal - totalKcal, 0);
 
   // Animated values
   const progressAnim = useRef(new Animated.Value(0)).current;
   const rotationAnims = useRef(
     mealSections.reduce((acc, section) => {
-      acc[section.id] = new Animated.Value(expandedSections[section.id] ? 1 : 0);
+      acc[section.id] = new Animated.Value(
+        expandedSections[section.id] ? 1 : 0,
+      );
       return acc;
-    }, {})
+    }, {}),
   ).current;
 
   useEffect(() => {
@@ -99,7 +194,7 @@ const MealPlanScreen = ({ navigation }) => {
     }).start();
   }, [totalKcal]);
 
-  const toggleSection = (sectionId) => {
+  const toggleSection = sectionId => {
     const newExpanded = !expandedSections[sectionId];
     setExpandedSections({ ...expandedSections, [sectionId]: newExpanded });
 
@@ -115,12 +210,14 @@ const MealPlanScreen = ({ navigation }) => {
       ...plan,
       [activeDay]: {
         ...plan[activeDay],
-        [sectionId]: plan[activeDay][sectionId].filter(food => food.id !== foodId),
+        [sectionId]: plan[activeDay][sectionId].filter(
+          food => food.id !== foodId,
+        ),
       },
     });
   };
 
-  const handleAddFood = (mealType) => {
+  const handleAddFood = mealType => {
     // Navigate to Explore screen with meal type filter
     navigation.navigate('Explore', {
       screen: 'Search',
@@ -150,7 +247,7 @@ const MealPlanScreen = ({ navigation }) => {
       {/* Day Selector */}
       <View style={styles.daySelectorContainer}>
         <View style={styles.daySelector}>
-          {weeklyData.map((day) => {
+          {weeklyData.map(day => {
             const isActive = activeDay === day.id;
             const hasData = day.calories > 0;
             return (
@@ -159,10 +256,14 @@ const MealPlanScreen = ({ navigation }) => {
                 style={[styles.dayButton, isActive && styles.dayButtonActive]}
                 onPress={() => setActiveDay(day.id)}
               >
-                <Text style={[styles.dayLabel, isActive && styles.dayLabelActive]}>
+                <Text
+                  style={[styles.dayLabel, isActive && styles.dayLabelActive]}
+                >
                   {day.day}
                 </Text>
-                <Text style={[styles.dateLabel, isActive && styles.dateLabelActive]}>
+                <Text
+                  style={[styles.dateLabel, isActive && styles.dateLabelActive]}
+                >
                   {day.date}
                 </Text>
                 {hasData && <View style={styles.dateDot} />}
@@ -172,12 +273,25 @@ const MealPlanScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Summary Card */}
         <View style={styles.summaryCard}>
           {/* Decorative circles */}
-          <View style={[styles.decorativeCircle, { width: 120, height: 120, top: -20, right: -20 }]} />
-          <View style={[styles.decorativeCircle, { width: 80, height: 80, bottom: 20, left: -10 }]} />
+          <View
+            style={[
+              styles.decorativeCircle,
+              { width: 120, height: 120, top: -20, right: -20 },
+            ]}
+          />
+          <View
+            style={[
+              styles.decorativeCircle,
+              { width: 80, height: 80, bottom: 20, left: -10 },
+            ]}
+          />
 
           {/* Top Row */}
           <View style={styles.summaryTop}>
@@ -196,10 +310,14 @@ const MealPlanScreen = ({ navigation }) => {
           {/* Progress Bar */}
           <View style={styles.progressContainer}>
             <View style={styles.progressTrack}>
-              <Animated.View style={[styles.progressBar, { width: progressWidth }]} />
+              <Animated.View
+                style={[styles.progressBar, { width: progressWidth }]}
+              />
             </View>
             <View style={styles.progressLabels}>
-              <Text style={styles.progressLabel}>{percentComplete}% of daily goal</Text>
+              <Text style={styles.progressLabel}>
+                {percentComplete}% of daily goal
+              </Text>
               <Text style={styles.progressLabel}>{kcalLeft} Kcal left</Text>
             </View>
           </View>
@@ -210,28 +328,43 @@ const MealPlanScreen = ({ navigation }) => {
               <Text style={styles.macroPillValue}>{totalCarbs}g</Text>
               <Text style={styles.macroPillLabel}>CARBS</Text>
               <View style={styles.macroPillProgress}>
-                <View style={[styles.macroPillProgressBar, { width: '65%', backgroundColor: '#F59E0B' }]} />
+                <View
+                  style={[
+                    styles.macroPillProgressBar,
+                    { width: '65%', backgroundColor: '#F59E0B' },
+                  ]}
+                />
               </View>
             </View>
             <View style={styles.macroPill}>
               <Text style={styles.macroPillValue}>{totalProtein}g</Text>
               <Text style={styles.macroPillLabel}>PROTEIN</Text>
               <View style={styles.macroPillProgress}>
-                <View style={[styles.macroPillProgressBar, { width: '78%', backgroundColor: '#6366F1' }]} />
+                <View
+                  style={[
+                    styles.macroPillProgressBar,
+                    { width: '78%', backgroundColor: '#6366F1' },
+                  ]}
+                />
               </View>
             </View>
             <View style={styles.macroPill}>
               <Text style={styles.macroPillValue}>{totalFat}g</Text>
               <Text style={styles.macroPillLabel}>FAT</Text>
               <View style={styles.macroPillProgress}>
-                <View style={[styles.macroPillProgressBar, { width: '52%', backgroundColor: '#22C55E' }]} />
+                <View
+                  style={[
+                    styles.macroPillProgressBar,
+                    { width: '52%', backgroundColor: '#22C55E' },
+                  ]}
+                />
               </View>
             </View>
           </View>
         </View>
 
         {/* Meal Sections */}
-        {mealSections.map((section) => {
+        {mealSections.map(section => {
           const foods = activeDayPlan[section.id] || [];
           const sectionKcal = foods.reduce((sum, food) => sum + food.kcal, 0);
           const isExpanded = expandedSections[section.id];
@@ -248,7 +381,12 @@ const MealPlanScreen = ({ navigation }) => {
                 onPress={() => toggleSection(section.id)}
                 activeOpacity={0.7}
               >
-                <View style={[styles.sectionIcon, { backgroundColor: section.color }]}>
+                <View
+                  style={[
+                    styles.sectionIcon,
+                    { backgroundColor: section.color },
+                  ]}
+                >
                   <Text style={styles.sectionEmoji}>{section.emoji}</Text>
                 </View>
                 <View style={styles.sectionInfo}>
@@ -259,9 +397,14 @@ const MealPlanScreen = ({ navigation }) => {
                   <Text style={styles.sectionKcal}>{sectionKcal} Kcal</Text>
                   <Text style={styles.sectionCount}>{foods.length} items</Text>
                 </View>
-                <Animated.Text style={[styles.sectionChevron, { transform: [{ rotate: rotation }] }]}>
-                  ▾
-                </Animated.Text>
+                <Animated.View
+                  style={[
+                    styles.sectionChevron,
+                    { transform: [{ rotate: rotation }] },
+                  ]}
+                >
+                  <DownAndUpIcon />
+                </Animated.View>
               </TouchableOpacity>
 
               {/* Food Items */}
@@ -273,7 +416,7 @@ const MealPlanScreen = ({ navigation }) => {
                       <Text style={styles.emptyText}>No meals added yet</Text>
                     </View>
                   ) : (
-                    foods.map((food) => (
+                    foods.map(food => (
                       <View key={food.id} style={styles.foodItem}>
                         <View style={styles.foodThumbnail}>
                           <Text style={styles.foodEmoji}>{food.emoji}</Text>
@@ -281,13 +424,19 @@ const MealPlanScreen = ({ navigation }) => {
                         <View style={styles.foodInfo}>
                           <Text style={styles.foodName}>{food.name}</Text>
                           <View style={styles.foodMeta}>
-                            <Text style={styles.foodPortion}>{food.portion}</Text>
+                            <Text style={styles.foodPortion}>
+                              {food.portion}
+                            </Text>
                             <Text style={styles.foodDot}>•</Text>
-                            <Text style={styles.foodKcal}>{food.kcal} Kcal</Text>
+                            <Text style={styles.foodKcal}>
+                              {food.kcal} Kcal
+                            </Text>
                           </View>
                         </View>
                         <View style={styles.proteinBadge}>
-                          <Text style={styles.proteinBadgeText}>{food.protein}g</Text>
+                          <Text style={styles.proteinBadgeText}>
+                            {food.protein}g
+                          </Text>
                         </View>
                         <TouchableOpacity
                           style={styles.deleteButton}
@@ -301,10 +450,17 @@ const MealPlanScreen = ({ navigation }) => {
 
                   {/* Add Food Button */}
                   <TouchableOpacity
-                    style={[styles.addFoodButton, { borderColor: section.accent }]}
+                    style={[
+                      styles.addFoodButton,
+                      { borderColor: section.accent },
+                    ]}
                     onPress={() => handleAddFood(section.id)}
                   >
-                    <Text style={[styles.addFoodText, { color: section.accent }]}>+ Add Food</Text>
+                    <Text
+                      style={[styles.addFoodText, { color: section.accent }]}
+                    >
+                      + Add Food
+                    </Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -324,17 +480,14 @@ const MealPlanScreen = ({ navigation }) => {
           <View style={styles.chartContainer}>
             {/* Goal Line */}
             <View
-              style={[
-                styles.goalLine,
-                { top: (1 - goalKcal / 2500) * 72 },
-              ]}
+              style={[styles.goalLine, { top: (1 - goalKcal / 2500) * 72 }]}
             >
               <Text style={styles.goalLabel}>Goal</Text>
             </View>
 
             {/* Bars */}
             <View style={styles.chartBars}>
-              {weeklyData.map((day) => {
+              {weeklyData.map(day => {
                 const barHeight = Math.max((day.calories / 2500) * 72, 4);
                 const isActive = activeDay === day.id;
                 const hasData = day.calories > 0;
@@ -354,7 +507,9 @@ const MealPlanScreen = ({ navigation }) => {
                         ]}
                       />
                     </View>
-                    <Text style={[styles.barDay, isActive && styles.barDayActive]}>
+                    <Text
+                      style={[styles.barDay, isActive && styles.barDayActive]}
+                    >
                       {day.day}
                     </Text>
                   </View>
