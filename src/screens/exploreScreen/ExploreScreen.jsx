@@ -264,12 +264,12 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#F7F8FA',
   },
   tabsScrollView: {
-    height: 125,
+    maxHeight: 80,
+    flexGrow: 0,
   },
   tabsContainer: {
     paddingHorizontal: 20,
     gap: 8,
-    paddingBottom: 45,
   },
   listContent: {
     padding: 16,
