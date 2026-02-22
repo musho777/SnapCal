@@ -44,7 +44,7 @@ const MEAL_TABS = [
   { id: 'snack', label: 'Snacks', emoji: '🍎', time: 'Anytime' },
 ];
 
-const ExploreScreen = () => {
+const ExploreScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedItems, setSavedItems] = useState({});
@@ -70,7 +70,7 @@ const ExploreScreen = () => {
         // Handle card press
       }}
       onRecipePress={() => {
-        // Handle recipe button press
+        navigation.navigate('ExploreRecipient', { recipeId: parseInt(item.id) });
       }}
     />
   );
@@ -85,10 +85,8 @@ const ExploreScreen = () => {
     </View>
   );
 
-  return (
-    <View style={localStyles.container}>
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-
+  const renderListHeader = () => (
+    <View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -106,7 +104,12 @@ const ExploreScreen = () => {
           />
         ))}
       </ScrollView>
+    </View>
+  );
 
+  return (
+    <View style={localStyles.container}>
+      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <FlatList
         data={filteredData}
         renderItem={renderFoodCard}
@@ -115,6 +118,7 @@ const ExploreScreen = () => {
         style={{ flex: 1 }}
         columnWrapperStyle={localStyles.columnWrapper}
         contentContainerStyle={localStyles.listContent}
+        ListHeaderComponent={renderListHeader}
         ListEmptyComponent={renderEmptyState}
         showsVerticalScrollIndicator={false}
       />
@@ -132,18 +136,20 @@ const localStyles = StyleSheet.create({
   tabsScrollView: {
     maxHeight: 80,
     flexGrow: 0,
+    marginBottom: 16,
   },
   tabsContainer: {
     paddingHorizontal: 20,
     gap: 8,
   },
   listContent: {
-    padding: 16,
+    paddingTop: 16,
     paddingBottom: 100,
-    gap: 12,
   },
   columnWrapper: {
     gap: 12,
+    marginBottom: 12,
+    paddingHorizontal: 16,
   },
   emptyState: {
     alignItems: 'center',
