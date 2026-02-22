@@ -70,7 +70,9 @@ const ExploreScreen = ({ navigation }) => {
         // Handle card press
       }}
       onRecipePress={() => {
-        navigation.navigate('ExploreRecipient', { recipeId: parseInt(item.id) });
+        navigation.navigate('ExploreRecipient', {
+          recipeId: parseInt(item.id, 10),
+        });
       }}
     />
   );
