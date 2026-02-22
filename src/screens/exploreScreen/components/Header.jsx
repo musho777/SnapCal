@@ -21,12 +21,11 @@ export const Header = ({ searchQuery, onSearchChange }) => {
 const localStyles = StyleSheet.create({
   header: {
     backgroundColor: '#fff',
-    paddingTop: 52,
+    paddingTop: 40,
     paddingHorizontal: 20,
     paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
-    marginBottom: 10,
   },
   headerTop: {
     flexDirection: 'row',

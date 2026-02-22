@@ -1,13 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { UIButton } from '../../common-ui/UIButton';
 
-export const FoodCard = ({
-  item,
-  isSaved = false,
-  onToggleSave,
-  onPress,
-  onRecipePress,
-}) => {
+export const FoodCard = ({ item, isSaved = false, onToggleSave, onPress }) => {
   const getHealthBarColor = score => {
     if (score >= 8) return '#22C55E';
     if (score >= 6) return '#F59E0B';
@@ -15,30 +10,34 @@ export const FoodCard = ({
   };
 
   return (
-    <TouchableOpacity style={localStyled.foodCard} onPress={onPress}>
-      <View style={[localStyled.imageArea, { backgroundColor: item.bgColor }]}>
-        <View style={localStyled.tagBadge}>
-          <Text style={localStyled.tagText}>{item.tag}</Text>
+    <View style={localStyles.foodCard}>
+      <View style={[localStyles.imageArea, { backgroundColor: item.bgColor }]}>
+        <View style={localStyles.tagBadge}>
+          <Text style={localStyles.tagText}>{item.tag}</Text>
         </View>
         <TouchableOpacity
-          style={localStyled.heartButton}
+          style={localStyles.heartButton}
           onPress={() => onToggleSave(item.id)}
         >
-          <Text style={localStyled.heartIcon}>{isSaved ? '❤️' : '🤍'}</Text>
+          <Text style={localStyles.heartIcon}>{isSaved ? '❤️' : '🤍'}</Text>
         </TouchableOpacity>
-        {item.image ? (
-          <Image source={item.image} style={localStyled.foodImage} resizeMode="contain" />
-        ) : (
-          <Text style={localStyled.foodEmoji}>{item.emoji}</Text>
-        )}
+        <Image
+          source={item.image}
+          style={localStyles.foodImage}
+          resizeMode="contain"
+        />
       </View>
-      <View style={localStyled.infoArea}>
-        <Text style={localStyled.foodName}>{item.name}</Text>
-        <Text style={localStyled.calorieText}>🔥 {item.kcal} kcal</Text>
-        <View style={localStyled.healthBarContainer}>
+      <View style={localStyles.infoArea}>
+        <View style={localStyles.foodNameWrapper}>
+          <Text numberOfLines={2} style={localStyles.foodName}>
+            {item.name}
+          </Text>
+        </View>
+        <Text style={localStyles.calorieText}>🔥 {item.kcal} kcal</Text>
+        <View style={localStyles.healthBarContainer}>
           <View
             style={[
-              localStyled.healthBar,
+              localStyles.healthBar,
               {
                 width: `${item.health * 10}%`,
                 backgroundColor: getHealthBarColor(item.health),
@@ -46,18 +45,18 @@ export const FoodCard = ({
             ]}
           />
         </View>
-        <TouchableOpacity
-          style={localStyled.recipeButton}
-          onPress={onRecipePress}
-        >
-          <Text style={localStyled.recipeButtonText}>Tell me Recipe</Text>
-        </TouchableOpacity>
+        <UIButton
+          backgroundColor={'#272727'}
+          color={'white'}
+          onPress={onPress}
+          title={'Tell me Recipe'}
+        />
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
-const localStyled = StyleSheet.create({
+const localStyles = StyleSheet.create({
   foodCard: {
     flex: 1,
     borderRadius: 20,
@@ -103,9 +102,7 @@ const localStyled = StyleSheet.create({
   heartIcon: {
     fontSize: 14,
   },
-  foodEmoji: {
-    fontSize: 52,
-  },
+
   foodImage: {
     width: 90,
     height: 90,
@@ -113,6 +110,9 @@ const localStyled = StyleSheet.create({
   infoArea: {
     padding: 12,
     paddingBottom: 14,
+  },
+  foodNameWrapper: {
+    height: 35,
   },
   foodName: {
     fontSize: 13,
@@ -135,16 +135,5 @@ const localStyled = StyleSheet.create({
   healthBar: {
     height: '100%',
     borderRadius: 2,
-  },
-  recipeButton: {
-    backgroundColor: '#272727',
-    borderRadius: 12,
-    paddingVertical: 9,
-    alignItems: 'center',
-  },
-  recipeButtonText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#fff',
   },
 });

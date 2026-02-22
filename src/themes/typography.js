@@ -76,7 +76,7 @@ const typography = {
     color: colors.textPrimary,
   },
   button: {
-    fontSize: moderateScale(12),
+    fontSize: moderateScale(11),
     fontWeight: '600',
     color: colors.textPrimary,
   },

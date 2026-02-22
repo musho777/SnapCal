@@ -39,7 +39,6 @@ const localStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 80,
-    height: 80,
   },
   tabButtonActive: {
     borderColor: '#272727',

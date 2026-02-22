@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { TabButton, Header } from './components';
 import { FoodCard } from '../../components/cards/FoodCard';
 import recipesData from '../../data/recipes.json';
 import { calculateHealthScore } from '../../utils/healthScore';
 import { getRecipeImage } from '../../utils/imageMapper';
+import { styles } from '../../themes';
+import NoResult from '../../components/noResult';
 
 const getBgColor = mealType => {
   const colorMap = {
@@ -33,7 +35,6 @@ const transformRecipesToFoodData = recipes => {
   });
 };
 
-// Use recipes from JSON file
 const FOOD_DATA = transformRecipesToFoodData(recipesData.recipes);
 
 const MEAL_TABS = [
@@ -66,9 +67,6 @@ const ExploreScreen = ({ navigation }) => {
       item={item}
       isSaved={savedItems[item.id]}
       onToggleSave={toggleSave}
-      onPress={() => {
-        // Handle card press
-      }}
       onRecipePress={() => {
         navigation.navigate('ExploreRecipient', {
           recipeId: parseInt(item.id, 10),
@@ -76,17 +74,6 @@ const ExploreScreen = ({ navigation }) => {
       }}
     />
   );
-
-  const renderEmptyState = () => (
-    <View style={localStyles.emptyState}>
-      <Text style={localStyles.emptyEmoji}>🍽</Text>
-      <Text style={localStyles.emptyTitle}>No results found</Text>
-      <Text style={localStyles.emptyHint}>
-        Try adjusting your search or filters
-      </Text>
-    </View>
-  );
-
   const renderListHeader = () => (
     <View>
       <ScrollView
@@ -117,11 +104,11 @@ const ExploreScreen = ({ navigation }) => {
         renderItem={renderFoodCard}
         keyExtractor={item => item.id}
         numColumns={2}
-        style={{ flex: 1 }}
+        style={styles.flex}
         columnWrapperStyle={localStyles.columnWrapper}
         contentContainerStyle={localStyles.listContent}
         ListHeaderComponent={renderListHeader}
-        ListEmptyComponent={renderEmptyState}
+        ListEmptyComponent={<NoResult />}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -152,24 +139,5 @@ const localStyles = StyleSheet.create({
     gap: 12,
     marginBottom: 12,
     paddingHorizontal: 16,
-  },
-  emptyState: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
-  },
-  emptyEmoji: {
-    fontSize: 40,
-    marginBottom: 12,
-  },
-  emptyTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#272727',
-    marginBottom: 4,
-  },
-  emptyHint: {
-    fontSize: 12,
-    color: '#9CA3AF',
   },
 });
