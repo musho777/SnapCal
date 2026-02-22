@@ -306,3 +306,20 @@ export const ProfileIcon = ({color = '#9CA3AF', size = 24}) => {
     </Svg>
   );
 };
+
+export const AIIcon = ({color = '#fff', size = 20}) => {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M12 2L13.09 7.26L16 4L14.91 9.26L19 8L16.09 11.74L21 12L16.09 12.26L19 16L14.91 14.74L16 20L13.09 16.74L12 22L10.91 16.74L8 20L9.09 14.74L5 16L7.91 12.26L3 12L7.91 11.74L5 8L9.09 9.26L8 4L10.91 7.26L12 2Z"
+        fill={color}
+      />
+    </Svg>
+  );
+};
