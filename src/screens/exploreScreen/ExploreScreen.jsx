@@ -2,180 +2,64 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { TabButton, Header } from './components';
 import { FoodCard } from '../../components/cards/FoodCard';
+import recipesData from '../../data/recipes.json';
+import { calculateHealthScore } from '../../utils/healthScore';
+import { getRecipeImage } from '../../utils/imageMapper';
 
-const FOOD_DATA = [
-  // Breakfast
-  {
-    id: '1',
-    name: 'Avocado Toast',
-    kcal: 320,
-    category: 'breakfast',
-    health: 9,
-    tag: 'Vegan',
-    emoji: '🥑',
-    bgColor: '#D4F1D4',
-  },
-  {
-    id: '2',
-    name: 'Greek Yogurt Bowl',
-    kcal: 250,
-    category: 'breakfast',
-    health: 8,
-    tag: 'Protein',
-    emoji: '🥣',
-    bgColor: '#FFE8D6',
-  },
-  {
-    id: '3',
-    name: 'Banana Pancakes',
-    kcal: 380,
-    category: 'breakfast',
-    health: 6,
-    tag: 'Sweet',
-    emoji: '🥞',
-    bgColor: '#FFF4CC',
-  },
-  {
-    id: '4',
-    name: 'Oatmeal Bowl',
-    kcal: 290,
-    category: 'breakfast',
-    health: 9,
-    tag: 'Fiber',
-    emoji: '🥗',
-    bgColor: '#F5E8D3',
-  },
-  // Lunch
-  {
-    id: '5',
-    name: 'Caesar Salad',
-    kcal: 420,
-    category: 'lunch',
-    health: 7,
-    tag: 'Fresh',
-    emoji: '🥗',
-    bgColor: '#E8F5E9',
-  },
-  {
-    id: '6',
-    name: 'Grilled Chicken',
-    kcal: 480,
-    category: 'lunch',
-    health: 8,
-    tag: 'Protein',
-    emoji: '🍗',
-    bgColor: '#FFF3E0',
-  },
-  {
-    id: '7',
-    name: 'Quinoa Bowl',
-    kcal: 390,
-    category: 'lunch',
-    health: 9,
-    tag: 'Vegan',
-    emoji: '🥙',
-    bgColor: '#E3F2FD',
-  },
-  {
-    id: '8',
-    name: 'Tuna Sandwich',
-    kcal: 450,
-    category: 'lunch',
-    health: 7,
-    tag: 'Quick',
-    emoji: '🥪',
-    bgColor: '#FFF8E1',
-  },
-  // Dinner
-  {
-    id: '9',
-    name: 'Salmon Fillet',
-    kcal: 520,
-    category: 'dinner',
-    health: 9,
-    tag: 'Omega-3',
-    emoji: '🐟',
-    bgColor: '#FFE5E5',
-  },
-  {
-    id: '10',
-    name: 'Beef Steak',
-    kcal: 650,
-    category: 'dinner',
-    health: 6,
-    tag: 'Rich',
-    emoji: '🥩',
-    bgColor: '#FFDCD6',
-  },
-  {
-    id: '11',
-    name: 'Pasta Primavera',
-    kcal: 540,
-    category: 'dinner',
-    health: 7,
-    tag: 'Italian',
-    emoji: '🍝',
-    bgColor: '#FFF4D6',
-  },
-  {
-    id: '12',
-    name: 'Veggie Stir Fry',
-    kcal: 380,
-    category: 'dinner',
-    health: 8,
-    tag: 'Vegan',
-    emoji: '🥘',
-    bgColor: '#E8F5E1',
-  },
-  // Snacks
-  {
-    id: '13',
-    name: 'Mixed Nuts',
-    kcal: 180,
-    category: 'snacks',
-    health: 8,
-    tag: 'Healthy',
-    emoji: '🥜',
-    bgColor: '#F5E8D3',
-  },
-  {
-    id: '14',
-    name: 'Fruit Salad',
-    kcal: 120,
-    category: 'snacks',
-    health: 10,
-    tag: 'Fresh',
-    emoji: '🍓',
-    bgColor: '#FFE8E8',
-  },
-  {
-    id: '15',
-    name: 'Protein Bar',
-    kcal: 220,
-    category: 'snacks',
-    health: 7,
-    tag: 'Energy',
-    emoji: '🍫',
-    bgColor: '#E8D4F1',
-  },
-  {
-    id: '16',
-    name: 'Hummus & Veggies',
-    kcal: 150,
-    category: 'snacks',
-    health: 9,
-    tag: 'Vegan',
-    emoji: '🥕',
-    bgColor: '#FFE8CC',
-  },
-];
+// Helper function to get emoji based on meal type and category
+const getMealEmoji = (mealType, category) => {
+  const emojiMap = {
+    breakfast: '🥞',
+    lunch: '🥗',
+    dinner: '🍽️',
+    snack: '🍎',
+    'main course': '🍖',
+    salad: '🥗',
+  };
+  return emojiMap[mealType] || emojiMap[category] || '🍴';
+};
+
+// Helper function to get background color based on meal type
+const getBgColor = (mealType) => {
+  const colorMap = {
+    breakfast: '#FFF4CC',
+    lunch: '#E8F5E9',
+    dinner: '#FFE8E8',
+    snack: '#F5E8D3',
+  };
+  return colorMap[mealType] || '#F7F8FA';
+};
+
+// Transform recipes data to match FoodCard format
+const transformRecipesToFoodData = (recipes) => {
+  return recipes.map(recipe => {
+    // Calculate health score using the macros data
+    const healthData = calculateHealthScore(recipe.macros);
+
+    return {
+      id: recipe.id.toString(),
+      name: recipe.name,
+      kcal: recipe.totalCalories,
+      category: recipe.mealType,
+      health: healthData.score,
+      tag: recipe.category,
+      emoji: getMealEmoji(recipe.mealType, recipe.category),
+      bgColor: getBgColor(recipe.mealType),
+      image: getRecipeImage(recipe.image),
+      rating: recipe.rating,
+    };
+  });
+};
+
+// Use recipes from JSON file
+const FOOD_DATA = transformRecipesToFoodData(recipesData.recipes);
 
 const MEAL_TABS = [
   { id: 'all', label: 'All', emoji: '✨', time: '' },
   { id: 'breakfast', label: 'Breakfast', emoji: '🌅', time: '7–10 AM' },
   { id: 'lunch', label: 'Lunch', emoji: '☀️', time: '12–2 PM' },
   { id: 'dinner', label: 'Dinner', emoji: '🌙', time: '6–9 PM' },
-  { id: 'snacks', label: 'Snacks', emoji: '🍎', time: 'Anytime' },
+  { id: 'snack', label: 'Snacks', emoji: '🍎', time: 'Anytime' },
 ];
 
 const ExploreScreen = () => {

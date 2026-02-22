@@ -10,6 +10,9 @@ const recipeImages = {
   'carb.png': require('../assets/carb.png'),
   'protein.png': require('../assets/protein.png'),
   'avatar.png': require('../assets/avatar.png'),
+  'grilledSalmon.png': require('../assets/grilledSalmon.png'),
+  'greekYogurt.png': require('../assets/greekYogurt.png'),
+  'pancakes.png': require('../assets/pancakes.png'),
 };
 
 // Helper function to get image by name
