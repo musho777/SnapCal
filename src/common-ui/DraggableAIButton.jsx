@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
 import aiAnimation from '../assets/ai.json';
 
-const BUTTON_SIZE = 52;
+const BUTTON_SIZE = 40;
 const BUTTON_RADIUS = BUTTON_SIZE / 2;
 
 const DraggableAIButton = ({ onPress }) => {
@@ -18,14 +18,36 @@ const DraggableAIButton = ({ onPress }) => {
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
 
-  // Initial position (bottom right with safe area padding)
-  const initialX = screenWidth - BUTTON_SIZE - 20;
-  const initialY = screenHeight - BUTTON_SIZE - insets.bottom - 100;
+  const initialX = screenWidth - BUTTON_SIZE - 15;
+  const initialY = screenHeight - BUTTON_SIZE - insets.bottom - 80;
 
   const pan = useRef(
     new Animated.ValueXY({ x: initialX, y: initialY }),
   ).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
   const [isDragging, setIsDragging] = useState(false);
+
+  const handlePressIn = () => {
+    if (!isDragging) {
+      Animated.spring(scaleAnim, {
+        toValue: 0.92,
+        useNativeDriver: true,
+        speed: 50,
+        bounciness: 4,
+      }).start();
+    }
+  };
+
+  const handlePressOut = () => {
+    if (!isDragging) {
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        speed: 50,
+        bounciness: 4,
+      }).start();
+    }
+  };
 
   const panResponder = useRef(
     PanResponder.create({
@@ -95,9 +117,25 @@ const DraggableAIButton = ({ onPress }) => {
         },
       ]}
     >
-      <TouchableOpacity activeOpacity={isDragging ? 1 : 0.7}>
-        <LottieView source={aiAnimation} autoPlay loop style={styles.lottie} />
-      </TouchableOpacity>
+      <Animated.View
+        style={{
+          transform: [{ scale: scaleAnim }],
+        }}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          style={styles.button}
+        >
+          <LottieView
+            source={aiAnimation}
+            autoPlay
+            loop
+            style={styles.lottie}
+          />
+        </TouchableOpacity>
+      </Animated.View>
     </Animated.View>
   );
 };

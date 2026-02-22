@@ -7,7 +7,6 @@ import { Category } from './components/Category';
 import { RecipeCard } from '../../components/cards/RecipeCard';
 import recipesData from '../../data/recipes.json';
 
-// Image mapping - Metro bundler requires static paths
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
   'snack.png': require('../../assets/snack.png'),
