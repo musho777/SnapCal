@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 export const FoodCard = ({
   item,
@@ -26,7 +26,11 @@ export const FoodCard = ({
         >
           <Text style={localStyled.heartIcon}>{isSaved ? '❤️' : '🤍'}</Text>
         </TouchableOpacity>
-        <Text style={localStyled.foodEmoji}>{item.emoji}</Text>
+        {item.image ? (
+          <Image source={item.image} style={localStyled.foodImage} resizeMode="contain" />
+        ) : (
+          <Text style={localStyled.foodEmoji}>{item.emoji}</Text>
+        )}
       </View>
       <View style={localStyled.infoArea}>
         <Text style={localStyled.foodName}>{item.name}</Text>
@@ -101,6 +105,10 @@ const localStyled = StyleSheet.create({
   },
   foodEmoji: {
     fontSize: 52,
+  },
+  foodImage: {
+    width: 90,
+    height: 90,
   },
   infoArea: {
     padding: 12,
