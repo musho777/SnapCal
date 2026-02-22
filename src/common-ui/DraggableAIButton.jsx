@@ -7,7 +7,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AIIcon } from '../assets/Icons';
+import LottieView from 'lottie-react-native';
+import aiAnimation from '../assets/ai.json';
 
 const BUTTON_SIZE = 52;
 const BUTTON_RADIUS = BUTTON_SIZE / 2;
@@ -62,9 +63,9 @@ const DraggableAIButton = ({ onPress }) => {
         if (Math.abs(gesture.dx) > 5 || Math.abs(gesture.dy) > 5) {
           const centerX = finalX + BUTTON_RADIUS;
           if (centerX < screenWidth / 2) {
-            finalX = minX + 11; // Snap to left with padding
+            finalX = minX + 16; // Snap to left with padding
           } else {
-            finalX = maxX - 11; // Snap to right with padding
+            finalX = maxX - 16; // Snap to right with padding
           }
         }
 
@@ -94,11 +95,8 @@ const DraggableAIButton = ({ onPress }) => {
         },
       ]}
     >
-      <TouchableOpacity
-        activeOpacity={isDragging ? 1 : 0.7}
-        style={styles.button}
-      >
-        {/* <AIIcon color="#fff" size={24} /> */}
+      <TouchableOpacity activeOpacity={isDragging ? 1 : 0.7}>
+        <LottieView source={aiAnimation} autoPlay loop style={styles.lottie} />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -126,6 +124,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  lottie: {
+    width: 82,
+    height: 82,
   },
 });
 

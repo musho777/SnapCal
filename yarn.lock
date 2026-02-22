@@ -4770,6 +4770,11 @@ loose-envify@^1.0.0, loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
+lottie-react-native@^7.3.6:
+  version "7.3.6"
+  resolved "https://registry.npmjs.org/lottie-react-native/-/lottie-react-native-7.3.6.tgz"
+  integrity sha512-TevFHRvFURh6GlaqLKrSNXuKAxvBvFCiXfS7FXQI1K/ikOStgAwWLFPGjW0i1qB2/VzPACKmRs+535VjHUZZZQ==
+
 lru-cache@^5.1.1:
   version "5.1.1"
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-5.1.1.tgz"
@@ -5606,7 +5611,7 @@ react-native-screens@^4.23.0, "react-native-screens@>= 4.0.0":
     css-tree "^1.1.3"
     warn-once "0.1.1"
 
-react-native@*, react-native@0.84.0:
+react-native@*, react-native@>=0.46, react-native@0.84.0:
   version "0.84.0"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.84.0.tgz"
   integrity sha512-CcBfucLDHz8MAjQx9kFXasYtpcn8zP1YapUgGtAy0psRZTLShwF9yeh5+ErSgEK2gXV1CCSz7hqCZqx1eMyBLA==
