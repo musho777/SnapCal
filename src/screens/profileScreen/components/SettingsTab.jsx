@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import EditProfileCard from './EditProfileCard';
-import { UIOptionRow } from '../../../components/UIOptionRow';
+import { UIOptionRow } from '../../../common-ui/UIOptionRow';
 
 const SettingsTab = ({
   userName,
