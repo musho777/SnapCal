@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { MainNavigation } from './src/navigation/mainNavigation';
-import DraggableAIButton from './src/common-ui/DraggableAIButton';
+import { DraggableAIButton } from './src/common-ui/uIButton';
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';

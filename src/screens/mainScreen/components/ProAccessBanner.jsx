@@ -1,6 +1,6 @@
 import { Image, StyleSheet, View, Text } from 'react-native';
 import { styles } from '../../../themes';
-import { UIButton } from '../../../common-ui/UIButton';
+import { UIButton } from '../../../common-ui/uIButton';
 
 export const ProAccessBanner = () => {
   return (
