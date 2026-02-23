@@ -63,9 +63,9 @@ export const Step2Nutrition = ({ data, setData }) => {
       <View style={localStyles.card}>
         <Text style={localStyles.label}>Macronutrients</Text>
         <View style={localStyles.macroCardsRow}>
-          {macroConfig.map((_, index) => {
+          {macroConfig.map((macro, index) => {
             const macroData = data.macros[index];
-            return <CaloriesCard themes="dark" data={macroData} />;
+            return <CaloriesCard key={macro.type} themes="dark" data={macroData} />;
           })}
         </View>
 

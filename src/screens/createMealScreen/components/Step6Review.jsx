@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
+import { CaloriesCard } from '../../../components/cards/CaloriesCard';
 
 const categoryEmojis = {
   salad: '🥗',
@@ -49,7 +50,9 @@ export const Step6Review = ({ data, onEdit }) => {
 
       <View style={localStyles.card}>
         <View style={localStyles.headerRow}>
-          <Text style={localStyles.mealName}>{data.name || 'Untitled Meal'}</Text>
+          <Text style={localStyles.mealName}>
+            {data.name || 'Untitled Meal'}
+          </Text>
           <View style={localStyles.newBadge}>
             <Text style={localStyles.newBadgeText}>New</Text>
           </View>
@@ -66,24 +69,7 @@ export const Step6Review = ({ data, onEdit }) => {
           {macroConfig.map((macro, index) => {
             const macroData = data.macros[index];
             return (
-              <View key={macro.type} style={localStyles.macroCard}>
-                <View
-                  style={[
-                    localStyles.macroIconCircle,
-                    {
-                      backgroundColor: `${macro.color}22`,
-                      borderColor: macro.color,
-                    },
-                  ]}
-                >
-                  <Text style={localStyles.macroIcon}>{macro.icon}</Text>
-                </View>
-                <Text style={localStyles.macroWeight}>
-                  {macroData.weight}
-                  <Text style={localStyles.macroWeightUnit}>g</Text>
-                </Text>
-                <Text style={localStyles.macroType}>{macro.type}</Text>
-              </View>
+              <CaloriesCard key={macro.type} themes="dark" data={macroData} />
             );
           })}
         </View>
