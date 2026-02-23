@@ -1,12 +1,12 @@
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FloatingCenterButton } from './FloatingCenterButton';
 import {
   HomeIcon,
   ExploreIcon,
   MealPlanIcon,
   ProfileIcon,
 } from '../../assets/Icons';
+import { FloatingCenterButton } from '../../common-ui/uIButton';
 
 const ACTIVE_COLOR = '#272727';
 const INACTIVE_COLOR = '#9CA3AF';
@@ -69,7 +69,7 @@ const TabButton = ({ route, isFocused, onPress, onLongPress }) => {
   );
 };
 
-export const CustomTabBar = ({ state, descriptors, navigation }) => {
+const CustomTabBar = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
 
   const handleCenterButtonPress = () => {
@@ -199,3 +199,4 @@ const localStyles = StyleSheet.create({
     flex: 1,
   },
 });
+export default CustomTabBar;

@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TrackScreen from '../screens/trackScreen';
 import MealPlanScreen from '../screens/mealPlanScreen';
 import ProfileScreen from '../screens/profileScreen';
-import { CustomTabBar } from './components/CustomTabBar';
+import CustomTabBar from '../components/customTabBar';
 import HomeStack from './homeStack';
 import ExploreStack from './exploreStack';
 
