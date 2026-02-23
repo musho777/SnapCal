@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { UIToggleSwitch } from '../../../common-ui/UIToggleSwitch';
+import { UIToggleSwitch } from '../common-ui/UIToggleSwitch';
 
-const SettingsRow = ({
+export const UIOptionRow = ({
   icon,
   label,
   type = 'arrow',
@@ -161,5 +161,3 @@ const localStyles = StyleSheet.create({
     color: '#EF4444',
   },
 });
-
-export default SettingsRow;

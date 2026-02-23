@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import EditProfileCard from './EditProfileCard';
-import SettingsRow from './SettingsRow';
+import { UIOptionRow } from '../../../components/UIOptionRow';
 
 const SettingsTab = ({
   userName,
@@ -49,7 +49,7 @@ const SettingsTab = ({
       <View style={localStyles.section}>
         <Text style={localStyles.sectionLabel}>SECURITY</Text>
         <View style={localStyles.card}>
-          <SettingsRow
+          <UIOptionRow
             icon="🔒"
             label="Change Password"
             type="arrow"
@@ -62,21 +62,21 @@ const SettingsTab = ({
       <View style={localStyles.section}>
         <Text style={localStyles.sectionLabel}>NOTIFICATIONS</Text>
         <View style={localStyles.card}>
-          <SettingsRow
+          <UIOptionRow
             icon="🍽️"
             label="Meal Reminders"
             type="toggle"
             value={notifMeals}
             onValueChange={setNotifMeals}
           />
-          <SettingsRow
+          <UIOptionRow
             icon="💧"
             label="Water Reminders"
             type="toggle"
             value={notifWater}
             onValueChange={setNotifWater}
           />
-          <SettingsRow
+          <UIOptionRow
             icon="💡"
             label="Nutrition Tips"
             type="toggle"
@@ -90,7 +90,7 @@ const SettingsTab = ({
       <View style={localStyles.section}>
         <Text style={localStyles.sectionLabel}>UNITS</Text>
         <View style={localStyles.card}>
-          <SettingsRow
+          <UIOptionRow
             icon="⚖️"
             label="Weight"
             type="select"
@@ -98,7 +98,7 @@ const SettingsTab = ({
             onValueChange={setWeightUnit}
             options={['kg', 'lbs']}
           />
-          <SettingsRow
+          <UIOptionRow
             icon="📏"
             label="Height"
             type="select"
@@ -113,14 +113,14 @@ const SettingsTab = ({
       <View style={localStyles.section}>
         <Text style={localStyles.sectionLabel}>APPEARANCE</Text>
         <View style={localStyles.card}>
-          <SettingsRow
+          <UIOptionRow
             icon="🌙"
             label="Dark Mode"
             type="toggle"
             value={darkMode}
             onValueChange={setDarkMode}
           />
-          <SettingsRow
+          <UIOptionRow
             icon="🌐"
             label="Language"
             type="select"
@@ -134,7 +134,7 @@ const SettingsTab = ({
       {/* Log Out */}
       <View style={localStyles.section}>
         <View style={localStyles.card}>
-          <SettingsRow
+          <UIOptionRow
             icon="🚪"
             label="Log Out"
             type="danger"
