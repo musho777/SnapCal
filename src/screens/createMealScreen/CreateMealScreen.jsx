@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { WizardHeader } from './components/WizardHeader';
 import { SuccessScreen } from './components/SuccessScreen';
 import { Step1BasicInfo } from './components/Step1BasicInfo';
@@ -8,7 +8,6 @@ import { Step3RecipeInfo } from './components/Step3RecipeInfo';
 import { Step4Ingredients } from './components/Step4Ingredients';
 import { Step5CookingSteps } from './components/Step5CookingSteps';
 import { Step6Review } from './components/Step6Review';
-import { saveRecipe } from '../../utils/recipeStorage';
 import { UIButton } from '../../common-ui/uIButton';
 
 const CreateMealScreen = ({ navigation }) => {
@@ -72,15 +71,7 @@ const CreateMealScreen = ({ navigation }) => {
     }
   };
 
-  const handleCreateMeal = async () => {
-    try {
-      const newRecipe = await saveRecipe(data);
-      setCreatedRecipe(newRecipe);
-      setSubmitted(true);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to create meal. Please try again.');
-    }
-  };
+  const handleCreateMeal = async () => {};
 
   const handleCreateAnother = () => {
     setSubmitted(false);
