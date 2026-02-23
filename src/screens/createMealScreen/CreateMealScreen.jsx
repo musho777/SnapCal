@@ -172,15 +172,9 @@ const CreateMealScreen = ({ navigation }) => {
           backgroundColor="#272727"
           color="white"
           style={localStyles.buttonStyles}
-          title={currentStep < 6 ? 'Continue →' : '🎉 Create Meal'}
+          title={currentStep < 6 ? 'Continue' : '🎉 Create Meal'}
         />
       </View>
-
-      {/* <WizardFooter
-        currentStep={currentStep}
-        onContinue={handleContinue}
-        isValid={canProceed}
-      /> */}
     </View>
   );
 };

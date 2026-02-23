@@ -1,5 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from 'react-native';
 
 const stepInfo = [
   { icon: '📝', label: 'Basic Info' },
