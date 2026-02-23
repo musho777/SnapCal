@@ -38,7 +38,6 @@ const SettingsTab = ({
       contentContainerStyle={localStyles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Edit Profile Card */}
       <EditProfileCard
         userName={userName}
         userEmail={userEmail}
