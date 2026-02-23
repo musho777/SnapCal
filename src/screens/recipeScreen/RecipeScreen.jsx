@@ -1,4 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { styles } from '../../themes';
 import { Header } from './components/Header';
 import { FireIcon } from '../../assets/Icons';
@@ -8,6 +10,7 @@ import { RecipeInfo } from './components/RecipeInfo';
 import { Ingredients } from './components/Ingredients';
 import { CookingSteps } from './components/CookingSteps';
 import { calculateHealthScore } from '../../utils/healthScore';
+import { getAllRecipes } from '../../utils/recipeStorage';
 import recipesData from '../../data/recipes.json';
 
 const imageMap = {
@@ -24,14 +27,34 @@ const imageMap = {
 };
 
 const getImageSource = imagePath => {
+  if (typeof imagePath === 'string' && imagePath.startsWith('file://')) {
+    return { uri: imagePath };
+  }
   const filename = imagePath.split('/').pop();
   return imageMap[filename] || imageMap['snack.png'];
 };
 
 const RecipeScreen = ({ route }) => {
   const recipeId = route?.params?.recipeId || 1;
-  const recipe =
-    recipesData.recipes.find(r => r.id === recipeId) || recipesData.recipes[0];
+  const [recipe, setRecipe] = useState(recipesData.recipes[0]);
+
+  const loadRecipe = async () => {
+    const allRecipes = await getAllRecipes();
+    const foundRecipe = allRecipes.find(r => r.id === recipeId);
+    if (foundRecipe) {
+      setRecipe(foundRecipe);
+    }
+  };
+
+  useEffect(() => {
+    loadRecipe();
+  }, [recipeId]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadRecipe();
+    }, [recipeId])
+  );
 
   const data = recipe.macros;
   const recipeInfo = recipe.recipeInfo;

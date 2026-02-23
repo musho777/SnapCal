@@ -1359,6 +1359,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@react-native-async-storage/async-storage@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-3.0.1.tgz"
+  integrity sha512-VHwHb19sMg4Xh3W5M6YmJ/HSm1uh8RYFa6Dozm9o/jVYTYUgz2BmDXqXF7sum3glQaR34/hlwVc94px1sSdC2A==
+  dependencies:
+    idb "8.0.3"
+
 "@react-native-community/cli-clean@20.1.0":
   version "20.1.0"
   resolved "https://registry.npmjs.org/@react-native-community/cli-clean/-/cli-clean-20.1.0.tgz"
@@ -1510,6 +1517,11 @@
     picocolors "^1.1.1"
     prompts "^2.4.2"
     semver "^7.5.2"
+
+"@react-native-community/slider@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.npmjs.org/@react-native-community/slider/-/slider-5.1.2.tgz"
+  integrity sha512-UV/MjCyCtSjS5BQDrrGIMmCXm309xEG6XbR0Dj65kzTraJSVDxSjQS2uBUXgX+5SZUOCzCxzv3OufOZBdtQY4w==
 
 "@react-native/assets-registry@0.84.0":
   version "0.84.0"
@@ -3826,6 +3838,11 @@ iconv-lite@~0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
+idb@8.0.3:
+  version "8.0.3"
+  resolved "https://registry.npmjs.org/idb/-/idb-8.0.3.tgz"
+  integrity sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==
+
 ieee754@^1.1.13:
   version "1.2.1"
   resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
@@ -5600,6 +5617,11 @@ react-native-gifted-charts@^1.4.74:
   integrity sha512-HaTH/sIj7NBR/yOyQkzLjuikwQQW9srUXHpmJ4FARWOp+qUGX5KYyyc1cnxQQyLio+P8Sw8e6ME/LJsvVqmFQA==
   dependencies:
     gifted-charts-core "0.1.78"
+
+react-native-image-picker@^8.2.1:
+  version "8.2.1"
+  resolved "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-8.2.1.tgz"
+  integrity sha512-FBeGYJGFDjMdGCcyubDJgBAPCQ4L1D3hwLXyUU91jY9ahOZMTbluceVvRmrEKqnDPFJ0gF1NVhJ0nr1nROFLdg==
 
 react-native-linear-gradient@*, react-native-linear-gradient@^2.8.3:
   version "2.8.3"
