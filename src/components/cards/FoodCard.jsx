@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { UIButton } from '../../common-ui/UIButton';
+import { UIButton } from '../../common-ui/uIButton';
 
 export const FoodCard = ({
   item,
