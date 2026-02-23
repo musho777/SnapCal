@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import TabBar from './TabBar';
+import { UITabBar } from '../../../common-ui/UITabBar';
 
 const Header = ({
   userName,
@@ -63,7 +63,11 @@ const Header = ({
       </View>
 
       {/* Tab Bar */}
-      <TabBar activeTab={activeTab} onTabChange={onTabChange} />
+      <UITabBar
+        tabs={['Saved', 'My Recipes', 'Settings']}
+        activeTab={activeTab}
+        onTabChange={onTabChange}
+      />
     </View>
   );
 };

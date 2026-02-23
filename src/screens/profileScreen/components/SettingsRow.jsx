@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import ToggleSwitch from './ToggleSwitch';
+import { UIToggleSwitch } from '../../../common-ui/UIToggleSwitch';
 
 const SettingsRow = ({
   icon,
@@ -15,7 +15,7 @@ const SettingsRow = ({
   const renderRightContent = () => {
     switch (type) {
       case 'toggle':
-        return <ToggleSwitch value={value} onToggle={onValueChange} />;
+        return <UIToggleSwitch value={value} onToggle={onValueChange} />;
 
       case 'select':
         return (

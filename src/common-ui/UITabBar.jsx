@@ -1,18 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const TabBar = ({ activeTab, onTabChange }) => {
-  const tabs = ['Saved', 'My Recipes', 'Settings'];
-
+export const UITabBar = ({ tabs, activeTab, onTabChange }) => {
   return (
     <View style={localStyles.container}>
-      {tabs.map((tab) => (
+      {tabs.map(tab => (
         <TouchableOpacity
           key={tab}
-          style={[
-            localStyles.tab,
-            activeTab === tab && localStyles.tabActive,
-          ]}
+          style={[localStyles.tab, activeTab === tab && localStyles.tabActive]}
           onPress={() => onTabChange(tab)}
         >
           <Text
@@ -53,5 +48,3 @@ const localStyles = StyleSheet.create({
     color: '#272727',
   },
 });
-
-export default TabBar;
