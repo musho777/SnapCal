@@ -6,10 +6,11 @@ export const UIButton = ({
   color = 'black',
   backgroundColor = 'white',
   onPress,
+  style,
 }) => {
   return (
     <TouchableOpacity
-      style={[localStyles.button, { backgroundColor: backgroundColor }]}
+      style={[localStyles.button, { backgroundColor: backgroundColor }, style]}
       onPress={onPress}
     >
       <Text style={[styles.button, { color: color }]}>{title}</Text>

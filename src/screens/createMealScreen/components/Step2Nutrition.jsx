@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
+import { CaloriesCard } from '../../../components/cards/CaloriesCard';
 
 const macroConfig = [
   { type: 'Carbs', color: '#4CAF50', icon: '🌾' },
@@ -62,28 +63,9 @@ export const Step2Nutrition = ({ data, setData }) => {
       <View style={localStyles.card}>
         <Text style={localStyles.label}>Macronutrients</Text>
         <View style={localStyles.macroCardsRow}>
-          {macroConfig.map((macro, index) => {
+          {macroConfig.map((_, index) => {
             const macroData = data.macros[index];
-            return (
-              <View key={macro.type} style={localStyles.macroCard}>
-                <View
-                  style={[
-                    localStyles.macroIconCircle,
-                    {
-                      backgroundColor: `${macro.color}22`,
-                      borderColor: macro.color,
-                    },
-                  ]}
-                >
-                  <Text style={localStyles.macroIcon}>{macro.icon}</Text>
-                </View>
-                <Text style={localStyles.macroWeight}>
-                  {macroData.weight}
-                  <Text style={localStyles.macroWeightUnit}>g</Text>
-                </Text>
-                <Text style={localStyles.macroType}>{macro.type}</Text>
-              </View>
-            );
+            return <CaloriesCard themes="dark" data={macroData} />;
           })}
         </View>
 

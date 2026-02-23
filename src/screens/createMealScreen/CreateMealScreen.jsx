@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { View, ScrollView, StyleSheet, Alert } from 'react-native';
 import { WizardHeader } from './components/WizardHeader';
-import { WizardFooter } from './components/WizardFooter';
 import { SuccessScreen } from './components/SuccessScreen';
 import { Step1BasicInfo } from './components/Step1BasicInfo';
 import { Step2Nutrition } from './components/Step2Nutrition';
@@ -10,6 +9,7 @@ import { Step4Ingredients } from './components/Step4Ingredients';
 import { Step5CookingSteps } from './components/Step5CookingSteps';
 import { Step6Review } from './components/Step6Review';
 import { saveRecipe } from '../../utils/recipeStorage';
+import { UIButton } from '../../common-ui/uIButton';
 
 const CreateMealScreen = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -166,11 +166,21 @@ const CreateMealScreen = ({ navigation }) => {
         {renderStep()}
       </ScrollView>
 
-      <WizardFooter
+      <View style={localStyles.gradient}>
+        <UIButton
+          onPress={handleContinue}
+          backgroundColor="#272727"
+          color="white"
+          style={localStyles.buttonStyles}
+          title={currentStep < 6 ? 'Continue →' : '🎉 Create Meal'}
+        />
+      </View>
+
+      {/* <WizardFooter
         currentStep={currentStep}
         onContinue={handleContinue}
         isValid={canProceed}
-      />
+      /> */}
     </View>
   );
 };
@@ -178,14 +188,25 @@ const CreateMealScreen = ({ navigation }) => {
 const localStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F9FAFB',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
+    padding: 10,
     paddingBottom: 120,
+  },
+  gradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 16,
+    paddingBottom: 32,
+  },
+  buttonStyles: {
+    paddingVertical: 20,
   },
 });
 

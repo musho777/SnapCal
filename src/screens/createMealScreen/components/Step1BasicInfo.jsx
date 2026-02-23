@@ -89,10 +89,7 @@ export const Step1BasicInfo = ({ data, setData }) => {
       <View style={localStyles.card}>
         <Text style={localStyles.label}>Meal Name</Text>
         <TextInput
-          style={[
-            localStyles.input,
-            nameFocused && localStyles.inputFocused,
-          ]}
+          style={[localStyles.input, nameFocused && localStyles.inputFocused]}
           placeholder="e.g. Chicken Salad"
           placeholderTextColor="#999"
           value={data.name}
@@ -212,10 +209,10 @@ const localStyles = StyleSheet.create({
     borderRadius: 20,
     padding: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.01,
+    shadowRadius: 2,
+    elevation: 1,
   },
   label: {
     fontSize: 12,
