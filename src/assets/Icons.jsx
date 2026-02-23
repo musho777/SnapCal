@@ -194,7 +194,7 @@ export const SearchIcon = () => {
 };
 
 // Bottom Tab Navigator Icons
-export const HomeIcon = ({color = '#9CA3AF', size = 24}) => {
+export const HomeIcon = ({ color = '#9CA3AF', size = 24 }) => {
   return (
     <Svg
       width={size}
@@ -214,7 +214,7 @@ export const HomeIcon = ({color = '#9CA3AF', size = 24}) => {
   );
 };
 
-export const ExploreIcon = ({color = '#9CA3AF', size = 24}) => {
+export const ExploreIcon = ({ color = '#9CA3AF', size = 24 }) => {
   return (
     <Svg
       width={size}
@@ -223,13 +223,7 @@ export const ExploreIcon = ({color = '#9CA3AF', size = 24}) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <Circle
-        cx="12"
-        cy="12"
-        r="9"
-        stroke={color}
-        strokeWidth="2"
-      />
+      <Circle cx="12" cy="12" r="9" stroke={color} strokeWidth="2" />
       <Path
         d="M14.5 9.5L9.5 14.5M14.5 9.5L11.5 14M14.5 9.5L9.99995 10M9.5 14.5L14 12.5M9.5 14.5L12.5 9.99995"
         stroke={color}
@@ -241,7 +235,7 @@ export const ExploreIcon = ({color = '#9CA3AF', size = 24}) => {
   );
 };
 
-export const PlusIcon = ({color = '#fff', size = 24}) => {
+export const PlusIcon = ({ color = '#fff', size = 24 }) => {
   return (
     <Svg
       width={size}
@@ -261,7 +255,7 @@ export const PlusIcon = ({color = '#fff', size = 24}) => {
   );
 };
 
-export const MealPlanIcon = ({color = '#9CA3AF', size = 24}) => {
+export const MealPlanIcon = ({ color = '#9CA3AF', size = 24 }) => {
   return (
     <Svg
       width={size}
@@ -281,7 +275,7 @@ export const MealPlanIcon = ({color = '#9CA3AF', size = 24}) => {
   );
 };
 
-export const ProfileIcon = ({color = '#9CA3AF', size = 24}) => {
+export const ProfileIcon = ({ color = '#9CA3AF', size = 24 }) => {
   return (
     <Svg
       width={size}
@@ -290,13 +284,7 @@ export const ProfileIcon = ({color = '#9CA3AF', size = 24}) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <Circle
-        cx="12"
-        cy="8"
-        r="4"
-        stroke={color}
-        strokeWidth="2"
-      />
+      <Circle cx="12" cy="8" r="4" stroke={color} strokeWidth="2" />
       <Path
         d="M5 20C5 17.5 8 15 12 15C16 15 19 17.5 19 20"
         stroke={color}
@@ -307,7 +295,7 @@ export const ProfileIcon = ({color = '#9CA3AF', size = 24}) => {
   );
 };
 
-export const AIIcon = ({color = '#fff', size = 20}) => {
+export const AIIcon = ({ color = '#fff', size = 20 }) => {
   return (
     <Svg
       width={size}
@@ -319,6 +307,25 @@ export const AIIcon = ({color = '#fff', size = 20}) => {
       <Path
         d="M12 2L13.09 7.26L16 4L14.91 9.26L19 8L16.09 11.74L21 12L16.09 12.26L19 16L14.91 14.74L16 20L13.09 16.74L12 22L10.91 16.74L8 20L9.09 14.74L5 16L7.91 12.26L3 12L7.91 11.74L5 8L9.09 9.26L8 4L10.91 7.26L12 2Z"
         fill={color}
+      />
+    </Svg>
+  );
+};
+
+export const DownAndUpIcon = () => {
+  return (
+    <Svg
+      width="20px"
+      height="20px"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4.293 8.293a1 1 0 011.414 0L12 14.586l6.293-6.293a1 1 0 111.414 1.414l-7 7a1 1 0 01-1.414 0l-7-7a1 1 0 010-1.414z"
+        fill="#000"
       />
     </Svg>
   );

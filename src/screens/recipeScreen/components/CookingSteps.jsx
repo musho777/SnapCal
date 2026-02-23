@@ -64,7 +64,7 @@ const localStyles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#6B39F4',
+    backgroundColor: '#272727',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 2,

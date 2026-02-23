@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { styles } from '../themes';
+import { styles } from '../../themes';
 
 export const UIButton = ({
   title,

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
-import aiAnimation from '../assets/ai.json';
+import aiAnimation from '../../assets/ai.json';
 
 const BUTTON_SIZE = 40;
 const BUTTON_RADIUS = BUTTON_SIZE / 2;
