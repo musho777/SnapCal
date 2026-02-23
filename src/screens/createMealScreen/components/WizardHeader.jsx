@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Animated,
 } from 'react-native';
+import { GoBackIcon } from '../../../assets/Icons';
 
 const stepInfo = [
   { icon: '📝', label: 'Basic Info' },
@@ -43,21 +44,9 @@ export const WizardHeader = ({ currentStep, onBack, totalSteps = 6 }) => {
   return (
     <View style={localStyles.container}>
       <View style={localStyles.headerRow}>
-        <TouchableOpacity
-          style={[
-            localStyles.backButton,
-            currentStep === 1 && localStyles.backButtonDisabled,
-          ]}
-          onPress={onBack}
-          disabled={currentStep === 1}
-        >
-          <Text
-            style={[
-              localStyles.backText,
-              currentStep === 1 && localStyles.backTextDisabled,
-            ]}
-          >
-            ‹
+        <TouchableOpacity style={localStyles.backButton} onPress={onBack}>
+          <Text style={localStyles.backText}>
+            <GoBackIcon />
           </Text>
         </TouchableOpacity>
 
