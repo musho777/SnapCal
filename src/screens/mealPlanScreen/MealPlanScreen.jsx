@@ -17,7 +17,6 @@ const MealPlanScreen = ({ navigation }) => {
     snacks: false,
   });
 
-  // Sample meal plan data
   const [plan, setPlan] = useState({
     mon: {
       breakfast: [
@@ -108,7 +107,6 @@ const MealPlanScreen = ({ navigation }) => {
     sun: { breakfast: [], lunch: [], dinner: [], snacks: [] },
   });
 
-  // Weekly data for chart
   const weeklyData = [
     { day: 'Mon', date: 17, calories: 1745, id: 'mon' },
     { day: 'Tue', date: 18, calories: 850, id: 'tue' },
@@ -154,7 +152,6 @@ const MealPlanScreen = ({ navigation }) => {
     },
   ];
 
-  // Calculate totals for active day
   const activeDayPlan = plan[activeDay] || {
     breakfast: [],
     lunch: [],
@@ -164,8 +161,8 @@ const MealPlanScreen = ({ navigation }) => {
   const allFoods = Object.values(activeDayPlan).flat();
   const totalKcal = allFoods.reduce((sum, food) => sum + food.kcal, 0);
   const totalProtein = allFoods.reduce((sum, food) => sum + food.protein, 0);
-  const totalCarbs = Math.round((totalKcal * 0.5) / 4); // Estimated from calories
-  const totalFat = Math.round((totalKcal * 0.3) / 9); // Estimated from calories
+  const totalCarbs = Math.round((totalKcal * 0.5) / 4);
+  const totalFat = Math.round((totalKcal * 0.3) / 9);
 
   const goalKcal = 2000;
 
@@ -187,7 +184,6 @@ const MealPlanScreen = ({ navigation }) => {
   };
 
   const handleAddFood = mealType => {
-    // Navigate to Explore screen with meal type filter
     navigation.navigate('Explore', {
       screen: 'Search',
       params: { mealType },
@@ -196,10 +192,8 @@ const MealPlanScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <Header />
 
-      {/* Day Selector */}
       <DaySelector
         weeklyData={weeklyData}
         activeDay={activeDay}
@@ -210,7 +204,6 @@ const MealPlanScreen = ({ navigation }) => {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Summary Card */}
         <SummaryCard
           totalKcal={totalKcal}
           goalKcal={goalKcal}
@@ -219,7 +212,6 @@ const MealPlanScreen = ({ navigation }) => {
           totalFat={totalFat}
         />
 
-        {/* Meal Sections */}
         {mealSections.map(section => {
           const foods = activeDayPlan[section.id] || [];
           const isExpanded = expandedSections[section.id];
@@ -237,7 +229,6 @@ const MealPlanScreen = ({ navigation }) => {
           );
         })}
 
-        {/* Weekly Bar Chart */}
         <WeeklyChart
           weeklyData={weeklyData}
           activeDay={activeDay}
