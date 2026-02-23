@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { TabButton, Header } from './components';
 import { FoodCard } from '../../components/cards/FoodCard';
-import { getAllRecipes } from '../../utils/recipeStorage';
+import recipesData from '../../data/recipes.json';
 import { calculateHealthScore } from '../../utils/healthScore';
 import { getRecipeImage } from '../../utils/imageMapper';
 import { styles } from '../../themes';
@@ -27,6 +26,8 @@ const transformRecipesToFoodData = recipes => {
   });
 };
 
+const FOOD_DATA = transformRecipesToFoodData(recipesData.recipes);
+
 const MEAL_TABS = [
   { id: 'all', label: 'All', emoji: '✨', time: '' },
   { id: 'breakfast', label: 'Breakfast', emoji: '🌅', time: '7–10 AM' },
@@ -39,30 +40,12 @@ const ExploreScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedItems, setSavedItems] = useState({});
-  const [recipes, setRecipes] = useState([]);
-  const [foodData, setFoodData] = useState([]);
-
-  const loadRecipes = async () => {
-    const allRecipes = await getAllRecipes();
-    setRecipes(allRecipes);
-    setFoodData(transformRecipesToFoodData(allRecipes));
-  };
-
-  useEffect(() => {
-    loadRecipes();
-  }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      loadRecipes();
-    }, [])
-  );
 
   const toggleSave = id => {
     setSavedItems(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const filteredData = foodData.filter(food => {
+  const filteredData = FOOD_DATA.filter(food => {
     const matchesTab = activeTab === 'all' || food.category === activeTab;
     const matchesSearch = food.name
       .toLowerCase()
