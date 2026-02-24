@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Animated as RNAnimated,
+  Easing,
+  TouchableOpacity,
+} from 'react-native';
 import {
   useSharedValue,
   withTiming,
@@ -23,6 +29,8 @@ import {
   calculateTDEE,
   adjustCaloriesForGoal,
 } from './constants';
+import { UIButton } from '../../common-ui/uIButton';
+import { GoBackIcon } from '../../assets/Icons';
 
 const OnboardingFlow = ({ onComplete }) => {
   const [screen, setScreen] = useState('splash');
@@ -145,7 +153,9 @@ const OnboardingFlow = ({ onComplete }) => {
 
   return (
     <RNAnimated.View style={[styles.container, { backgroundColor }]}>
-      <BackButton onPress={goBack} />
+      <View style={{ zIndex: 999 }}>
+        <BackButton onPress={goBack} />
+      </View>
 
       <IllustrationHeader
         meta={currentMeta}
@@ -162,7 +172,6 @@ const OnboardingFlow = ({ onComplete }) => {
           direction={direction}
         />
       </StepContainer>
-
       <BottomCTA
         onPress={goNext}
         disabled={!canProceed()}
@@ -255,6 +264,14 @@ const styles = StyleSheet.create({
   },
   stepContent: {
     flex: 1,
+  },
+  button: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
   },
 });
 
