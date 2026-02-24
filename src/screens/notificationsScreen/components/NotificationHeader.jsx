@@ -10,7 +10,6 @@ const NotificationHeader = ({
   return (
     <View style={localStyles.header}>
       <View style={localStyles.topRow}>
-        {/* Left side - Title and subtitle */}
         <View style={localStyles.leftSide}>
           <View style={localStyles.titleRow}>
             <Text style={localStyles.title}>Notifications</Text>
@@ -48,8 +47,6 @@ const NotificationHeader = ({
             )}
           </View>
         </View>
-
-        {/* Right side - Action buttons */}
       </View>
     </View>
   );

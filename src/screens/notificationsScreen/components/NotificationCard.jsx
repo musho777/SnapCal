@@ -5,6 +5,12 @@ import { Swipeable } from 'react-native-gesture-handler';
 const NotificationCard = ({ notification, onPress, onDelete }) => {
   const swipeableRef = useRef(null);
 
+  const dynamicIconStyles = {
+    backgroundColor: notification.iconBg,
+    borderColor: `${notification.iconColor}22`,
+    borderWidth: 1,
+  };
+
   const renderRightActions = () => (
     <TouchableOpacity
       style={styles.deleteButton}
@@ -33,18 +39,10 @@ const NotificationCard = ({ notification, onPress, onDelete }) => {
         onPress={onPress}
         activeOpacity={0.7}
       >
-        {/* Icon */}
-        <View
-          style={[
-            styles.iconContainer,
-            { backgroundColor: notification.iconBg },
-            { borderColor: `${notification.iconColor}22`, borderWidth: 1 },
-          ]}
-        >
+        <View style={[styles.iconContainer, dynamicIconStyles]}>
           <Text style={styles.iconEmoji}>{notification.icon}</Text>
         </View>
 
-        {/* Content */}
         <View style={styles.content}>
           <View style={styles.topRow}>
             <Text
