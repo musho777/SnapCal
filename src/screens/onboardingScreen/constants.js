@@ -20,8 +20,8 @@ export const STEPS_META = [
     illustrationBg: ['#D6EAFF', '#B3D4FF'],
     shapes: ['#B3D4FF', '#8FBFFF', '#D6EAFF'],
     illustration: '📏',
-    title: 'Tell us about\nyourself',
-    subtitle: 'Your stats help us calculate\nthe perfect calorie target',
+    title: 'Tell us about yourself',
+    subtitle: 'Your stats help us calculate the perfect calorie target',
   },
   {
     id: 'diet',

@@ -3,12 +3,12 @@ import {
   View,
   TouchableOpacity,
   Text,
-  TextInput,
   StyleSheet,
   ScrollView,
 } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { calculateBMI, getBMICategory } from '../constants';
+import UIInput from '../../../common-ui/uIInput/UIInput';
 
 const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
   const [focusedInput, setFocusedInput] = useState(null);
@@ -71,20 +71,20 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(100)} style={styles.section}>
-          <Text style={styles.label}>Age</Text>
           <View style={styles.inputWrapper}>
-            <TextInput
-              style={[
-                styles.input,
+            <UIInput
+              label="Age"
+              variant="meal"
+              placeholder="Enter your age"
+              value={data.age}
+              onChangeText={text => onUpdateData({ age: text })}
+              keyboardType="numeric"
+              containerStyle={[
+                styles.inputContainer,
                 focusedInput === 'age' && {
                   borderColor: accentColor,
                 },
               ]}
-              placeholder="Enter your age"
-              placeholderTextColor="#C0C0C0"
-              value={data.age}
-              onChangeText={text => onUpdateData({ age: text })}
-              keyboardType="numeric"
               onFocus={() => setFocusedInput('age')}
               onBlur={() => setFocusedInput(null)}
             />
@@ -93,20 +93,20 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(200)} style={styles.section}>
-          <Text style={styles.label}>Weight</Text>
           <View style={styles.inputWrapper}>
-            <TextInput
-              style={[
-                styles.input,
+            <UIInput
+              label="Weight"
+              variant="meal"
+              placeholder="Enter your weight"
+              value={data.weight}
+              onChangeText={text => onUpdateData({ weight: text })}
+              keyboardType="decimal-pad"
+              containerStyle={[
+                styles.inputContainer,
                 focusedInput === 'weight' && {
                   borderColor: accentColor,
                 },
               ]}
-              placeholder="Enter your weight"
-              placeholderTextColor="#C0C0C0"
-              value={data.weight}
-              onChangeText={text => onUpdateData({ weight: text })}
-              keyboardType="decimal-pad"
               onFocus={() => setFocusedInput('weight')}
               onBlur={() => setFocusedInput(null)}
             />
@@ -115,20 +115,20 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
-          <Text style={styles.label}>Height</Text>
           <View style={styles.inputWrapper}>
-            <TextInput
-              style={[
-                styles.input,
+            <UIInput
+              label="Height"
+              variant="meal"
+              placeholder="Enter your height"
+              value={data.height}
+              onChangeText={text => onUpdateData({ height: text })}
+              keyboardType="numeric"
+              containerStyle={[
+                styles.inputContainer,
                 focusedInput === 'height' && {
                   borderColor: accentColor,
                 },
               ]}
-              placeholder="Enter your height"
-              placeholderTextColor="#C0C0C0"
-              value={data.height}
-              onChangeText={text => onUpdateData({ height: text })}
-              keyboardType="numeric"
               onFocus={() => setFocusedInput('height')}
               onBlur={() => setFocusedInput(null)}
             />
@@ -202,21 +202,17 @@ const styles = StyleSheet.create({
   inputWrapper: {
     position: 'relative',
   },
-  input: {
+  inputContainer: {
     backgroundColor: '#FAFAFA',
     borderRadius: 16,
-    padding: 14,
     paddingRight: 60,
     borderWidth: 2,
     borderColor: '#F0F0F0',
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#1A1A1A',
   },
   unit: {
     position: 'absolute',
-    right: 12,
-    top: 16,
+    right: 20,
+    top: 38,
     color: '#9CA3AF',
     fontSize: 13,
     fontWeight: '600',

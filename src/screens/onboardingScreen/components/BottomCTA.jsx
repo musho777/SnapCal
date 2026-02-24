@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Platform } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
@@ -30,7 +36,7 @@ const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
                 { color: disabled ? '#9CA3AF' : '#fff' },
               ]}
             >
-              {isLastStep ? 'Finish Setup 🎉' : 'Continue →'}
+              {isLastStep ? 'Finish Setup 🎉' : 'Continue'}
             </Text>
           </TouchableOpacity>
         </Animated.View>
