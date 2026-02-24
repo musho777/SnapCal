@@ -1,21 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 const StepContainer = ({ title, subtitle, children }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Animated.Text
-          entering={FadeInUp.delay(0)}
-          style={styles.title}
-        >
+        <Animated.Text entering={FadeInUp.delay(0)} style={styles.title}>
           {title}
         </Animated.Text>
-        <Animated.Text
-          entering={FadeInUp.delay(100)}
-          style={styles.subtitle}
-        >
+        <Animated.Text entering={FadeInUp.delay(100)} style={styles.subtitle}>
           {subtitle}
         </Animated.Text>
       </View>
@@ -64,7 +58,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingBottom: 120, // Space for bottom CTA button
+    paddingBottom: 120,
   },
 });
 
