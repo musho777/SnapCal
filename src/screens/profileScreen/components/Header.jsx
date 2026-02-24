@@ -62,7 +62,6 @@ const Header = ({
         </TouchableOpacity>
       </View>
 
-      {/* Tab Bar */}
       <UITabBar
         tabs={['Saved', 'My Recipes', 'Settings']}
         activeTab={activeTab}
