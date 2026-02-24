@@ -26,7 +26,6 @@ onboardingScreen/
 ├── index.js                     # Export file
 ├── components/                  # Shared UI components
 │   ├── BackButton.jsx          # Glass-morphism back button
-│   ├── BottomCTA.jsx           # Fixed bottom CTA button with gradient
 │   ├── IllustrationHeader.jsx  # Animated header with emoji illustration
 │   ├── ProgressDots.jsx        # Animated progress indicators
 │   └── StepContainer.jsx       # White rounded card container
@@ -58,12 +57,12 @@ The onboarding flow is already integrated into the navigation system. It will au
 import OnboardingFlow from './screens/onboardingScreen';
 
 <OnboardingFlow
-  onComplete={(userData) => {
+  onComplete={userData => {
     // Handle completion
     console.log('User data:', userData);
     // Save to AsyncStorage, navigate to main app, etc.
   }}
-/>
+/>;
 ```
 
 ### Data Structure
@@ -94,12 +93,12 @@ To add or modify steps, update `constants.js`:
 export const STEPS_META = [
   {
     id: 'your-step',
-    bg: '#F0F0F0',           // Background color
-    accent: '#6B39F4',        // Accent color
-    accentLight: '#E5DEFF',   // Light accent for highlights
-    illustrationBg: ['#E5DEFF', '#D5CEFF'],  // Gradient colors
+    bg: '#F0F0F0', // Background color
+    accent: '#6B39F4', // Accent color
+    accentLight: '#E5DEFF', // Light accent for highlights
+    illustrationBg: ['#E5DEFF', '#D5CEFF'], // Gradient colors
     shapes: ['#D5CEFF', '#C5BEFF', '#E5DEFF'], // Decorative blob colors
-    illustration: '🎯',       // Emoji for illustration
+    illustration: '🎯', // Emoji for illustration
     title: 'Step Title',
     subtitle: 'Step description',
   },
@@ -121,6 +120,7 @@ All styling follows React Native best practices with StyleSheet.create(). Key de
 ## Dependencies
 
 Required packages (already installed):
+
 - `react-native-reanimated` - For smooth animations
 - `react-native-linear-gradient` - For gradient backgrounds
 - `@react-native-community/blur` - For glass-morphism effects (iOS)
@@ -146,7 +146,7 @@ Update `mainNavigation.js` to check this on mount:
 const [onboardingCompleted, setOnboardingCompleted] = useState(null);
 
 useEffect(() => {
-  AsyncStorage.getItem('onboarding_completed').then((value) => {
+  AsyncStorage.getItem('onboarding_completed').then(value => {
     setOnboardingCompleted(value === 'true');
   });
 }, []);
@@ -165,6 +165,7 @@ BMI = weight (kg) / height (m)²
 ```
 
 Categories:
+
 - Underweight: BMI < 18.5
 - Normal: 18.5 ≤ BMI < 25
 - Overweight: 25 ≤ BMI < 30
@@ -175,11 +176,13 @@ Categories:
 Using the Mifflin-St Jeor Equation:
 
 **Male:**
+
 ```
 BMR = 10 × weight(kg) + 6.25 × height(cm) - 5 × age(years) + 5
 ```
 
 **Female:**
+
 ```
 BMR = 10 × weight(kg) + 6.25 × height(cm) - 5 × age(years) - 161
 ```
@@ -191,6 +194,7 @@ TDEE = BMR × Activity Multiplier
 ```
 
 Activity multipliers:
+
 - Sedentary: 1.2
 - Lightly Active: 1.375
 - Moderately Active: 1.55
@@ -223,6 +227,7 @@ To test the onboarding flow:
 3. **Animations**: All animations use `react-native-reanimated` for 60fps performance.
 
 4. **Accessibility**: Add accessibility labels and hints for screen readers:
+
    ```jsx
    <TouchableOpacity
      accessible={true}
@@ -243,10 +248,12 @@ To test the onboarding flow:
 ## Platform-Specific Notes
 
 ### iOS
+
 - Blur effects work natively with `@react-native-community/blur`
 - Shadows use `shadowColor`, `shadowOpacity`, `shadowRadius`, `shadowOffset`
 
 ### Android
+
 - Blur effects fallback to semi-transparent background
 - Shadows use `elevation` property
 - Test performance on lower-end devices
@@ -265,6 +272,7 @@ To test the onboarding flow:
 ## Support
 
 For issues or questions:
+
 1. Check this README
 2. Review the code comments
 3. Test on both iOS and Android

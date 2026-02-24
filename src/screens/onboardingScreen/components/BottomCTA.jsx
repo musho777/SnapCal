@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
   const buttonStyle = disabled
@@ -23,10 +22,7 @@ const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['transparent', '#ffffff']}
-        style={styles.gradient}
-      >
+      <View colors={['transparent', '#ffffff']} style={styles.gradient}>
         <TouchableOpacity
           onPress={onPress}
           disabled={disabled}
@@ -34,10 +30,10 @@ const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
           style={[buttonStyle, buttonColorStyle]}
         >
           <Text style={textStyle}>
-            {isLastStep ? 'Finish Setup 🎉' : 'Continue'}
+            {isLastStep ? 'Finish Setup 🎉' : 'Contieeen2ue'}
           </Text>
         </TouchableOpacity>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -65,7 +61,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.45,
       },
       android: {
-        elevation: 8,
+        elevation: 2,
       },
     }),
   },
