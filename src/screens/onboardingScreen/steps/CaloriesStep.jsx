@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -29,7 +29,7 @@ const CaloriesStep = ({
 
   const inputHeight = useSharedValue(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     inputHeight.value = withTiming(showCustomInput ? 70 : 0, {
       duration: 300,
     });

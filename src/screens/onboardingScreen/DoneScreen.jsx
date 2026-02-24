@@ -35,71 +35,74 @@ const DoneScreen = ({ data, onFinish }) => {
   const activityOption = ACTIVITY_OPTIONS.find(opt => opt.id === data.activity);
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.scrollContent}
-    >
-      <View style={styles.container}>
-        <LinearGradient colors={['#1A1A1A', '#333']} style={styles.hero}>
-          <Animated.Text style={[styles.confetti, confettiStyle]}>
-            🎉
-          </Animated.Text>
-          <Text style={styles.heroTitle}>You're All Set!</Text>
-          <Text style={styles.heroSubtitle}>
-            Your personalized nutrition plan{'\n'}is ready to go
-          </Text>
-
-          <View style={styles.calorieBadge}>
-            <Text style={styles.calorieValue}>{data.calorieGoal}</Text>
-            <Text style={styles.calorieLabel}>cal/day</Text>
-          </View>
-        </LinearGradient>
-
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryTitle}>Your Profile Summary</Text>
-
-          <SummaryRow
-            icon="🎯"
-            label="Goal"
-            value={goalOption?.title || data.goal}
-            delay={0}
-          />
-          <SummaryRow
-            icon="📏"
-            label="Stats"
-            value={`${data.age} years, ${data.weight}kg, ${data.height}cm`}
-            delay={80}
-          />
-          <SummaryRow
-            icon="🥗"
-            label="Diet"
-            value={dietOption?.title || data.diet}
-            delay={160}
-          />
-          <SummaryRow
-            icon="🏃"
-            label="Activity"
-            value={activityOption?.title || data.activity}
-            delay={240}
-          />
-          <View style={styles.infoBox}>
-            <Text style={styles.infoIcon}>💡</Text>
-            <Text style={styles.infoText}>
-              You can always update these preferences in your profile settings.
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.container}>
+          <View colors={['#1A1A1A']} style={styles.hero}>
+            <Animated.Text style={[styles.confetti, confettiStyle]}>
+              🎉
+            </Animated.Text>
+            <Text style={styles.heroTitle}>You're All Set!</Text>
+            <Text style={styles.heroSubtitle}>
+              Your personalized nutrition plan{'\n'}is ready to go
             </Text>
+
+            <View style={styles.calorieBadge}>
+              <Text style={styles.calorieValue}>{data.calorieGoal}</Text>
+              <Text style={styles.calorieLabel}>cal/day</Text>
+            </View>
           </View>
-          <View style={styles.ctaContainer}>
-            <TouchableOpacity
-              onPress={onFinish}
-              style={styles.button}
-              activeOpacity={0.9}
-            >
-              <Text style={styles.buttonText}>Start Tracking →</Text>
-            </TouchableOpacity>
+
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryTitle}>Your Profile Summary</Text>
+
+            <SummaryRow
+              icon="🎯"
+              label="Goal"
+              value={goalOption?.title || data.goal}
+              delay={0}
+            />
+            <SummaryRow
+              icon="📏"
+              label="Stats"
+              value={`${data.age} years, ${data.weight}kg, ${data.height}cm`}
+              delay={80}
+            />
+            <SummaryRow
+              icon="🥗"
+              label="Diet"
+              value={dietOption?.title || data.diet}
+              delay={160}
+            />
+            <SummaryRow
+              icon="🏃"
+              label="Activity"
+              value={activityOption?.title || data.activity}
+              delay={240}
+            />
+            <View style={styles.infoBox}>
+              <Text style={styles.infoIcon}>💡</Text>
+              <Text style={styles.infoText}>
+                You can always update these preferences in your profile
+                settings.
+              </Text>
+            </View>
           </View>
         </View>
+      </ScrollView>
+      <View style={styles.ctaContainer}>
+        <TouchableOpacity
+          onPress={onFinish}
+          style={styles.button}
+          activeOpacity={0.9}
+        >
+          <Text style={styles.buttonText}>Start Tracking →</Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -125,6 +128,7 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingBottom: 50,
     alignItems: 'center',
+    backgroundColor: '#1A1A1A',
   },
   confetti: {
     fontSize: 60,
@@ -164,11 +168,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'rgba(255,255,255,0.6)',
   },
-  scrollContent: {},
+  scrollContent: {
+    flexGrow: 1,
+  },
   summaryCard: {
     backgroundColor: '#fff',
-    overflow: 'hidden',
-    flex: 1,
   },
   summaryTitle: {
     fontSize: 18,
@@ -232,7 +236,6 @@ const styles = StyleSheet.create({
   ctaContainer: {
     padding: 24,
     paddingBottom: 40,
-    backgroundColor: 'transparent',
   },
   button: {
     backgroundColor: '#1A1A1A',
