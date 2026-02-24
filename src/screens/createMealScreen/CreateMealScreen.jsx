@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { WizardHeader } from './components/WizardHeader';
 import { SuccessScreen } from './components/SuccessScreen';
@@ -36,24 +36,24 @@ const CreateMealScreen = ({ navigation }) => {
     cookingSteps: [''],
   });
 
-  const canProceed = useMemo(() => {
-    if (currentStep === 1) {
-      return data.name.trim() && data.mealType && data.category;
-    }
-    if (currentStep === 2) {
-      return data.totalCalories > 0;
-    }
-    if (currentStep === 3) {
-      return data.recipeInfo.description.trim();
-    }
-    if (currentStep === 4) {
-      return data.ingredients.some(i => i.name.trim());
-    }
-    if (currentStep === 5) {
-      return data.cookingSteps.some(s => s.trim());
-    }
-    return true;
-  }, [currentStep, data]);
+  // const canProceed = useMemo(() => {
+  //   if (currentStep === 1) {
+  //     return data.name.trim() && data.mealType && data.category;
+  //   }
+  //   if (currentStep === 2) {
+  //     return data.totalCalories > 0;
+  //   }
+  //   if (currentStep === 3) {
+  //     return data.recipeInfo.description.trim();
+  //   }
+  //   if (currentStep === 4) {
+  //     return data.ingredients.some(i => i.name.trim());
+  //   }
+  //   if (currentStep === 5) {
+  //     return data.cookingSteps.some(s => s.trim());
+  //   }
+  //   return true;
+  // }, [currentStep, data]);
 
   const handleBack = () => {
     if (currentStep > 1) {
