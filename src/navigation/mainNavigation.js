@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -9,6 +9,7 @@ import CustomTabBar from '../components/customTabBar';
 import HomeStack from './homeStack';
 import ExploreStack from './exploreStack';
 import CreateMealScreen from '../screens/createMealScreen';
+import OnboardingFlow from '../screens/onboardingScreen';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -34,17 +35,38 @@ const TabNavigator = () => {
 };
 
 export const MainNavigation = () => {
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+
+  const handleOnboardingComplete = (userData) => {
+    // TODO: Save user data to AsyncStorage or your preferred storage
+    console.log('Onboarding completed with data:', userData);
+    setOnboardingCompleted(true);
+  };
+
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      <RootStack.Screen name="MainApp" component={TabNavigator} />
-      <RootStack.Screen
-        name="CreateMeal"
-        component={CreateMealScreen}
-        options={{
-          presentation: 'modal',
-          animation: 'slide_from_bottom',
-        }}
-      />
+      {!onboardingCompleted ? (
+        <RootStack.Screen name="Onboarding">
+          {(props) => (
+            <OnboardingFlow
+              {...props}
+              onComplete={handleOnboardingComplete}
+            />
+          )}
+        </RootStack.Screen>
+      ) : (
+        <>
+          <RootStack.Screen name="MainApp" component={TabNavigator} />
+          <RootStack.Screen
+            name="CreateMeal"
+            component={CreateMealScreen}
+            options={{
+              presentation: 'modal',
+              animation: 'slide_from_bottom',
+            }}
+          />
+        </>
+      )}
     </RootStack.Navigator>
   );
 };
