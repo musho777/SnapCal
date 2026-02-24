@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
 import { CaloriesCard } from '../../../components/cards/CaloriesCard';
+import UIInput from '../../../common-ui/uIInput';
 
 const macroConfig = [
   { type: 'Carbs', color: '#4CAF50', icon: '🌾' },
@@ -12,8 +13,6 @@ const macroConfig = [
 ];
 
 export const Step2Nutrition = ({ data, setData }) => {
-  const [caloriesFocused, setCaloriesFocused] = useState(false);
-
   const updateCalories = calories => {
     setData(prev => ({ ...prev, totalCalories: calories }));
   };
@@ -41,19 +40,16 @@ export const Step2Nutrition = ({ data, setData }) => {
           <View style={localStyles.caloriesLabelContainer}>
             <Text style={localStyles.caloriesLabel}>Total</Text>
           </View>
-          <TextInput
-            style={[
-              localStyles.caloriesInput,
-              caloriesFocused && localStyles.caloriesInputFocused,
-            ]}
-            placeholder="0"
-            placeholderTextColor="#999"
-            keyboardType="numeric"
-            value={data.totalCalories.toString()}
-            onChangeText={updateCalories}
-            onFocus={() => setCaloriesFocused(true)}
-            onBlur={() => setCaloriesFocused(false)}
-          />
+          <View style={localStyles.caloriesInputWrapper}>
+            <UIInput
+              variant="meal"
+              placeholder="0"
+              keyboardType="numeric"
+              value={data.totalCalories.toString()}
+              onChangeText={updateCalories}
+              containerStyle={localStyles.caloriesInputStyle}
+            />
+          </View>
           <View style={localStyles.caloriesUnitContainer}>
             <Text style={localStyles.caloriesUnit}>Kcal 🔥</Text>
           </View>
@@ -65,7 +61,9 @@ export const Step2Nutrition = ({ data, setData }) => {
         <View style={localStyles.macroCardsRow}>
           {macroConfig.map((macro, index) => {
             const macroData = data.macros[index];
-            return <CaloriesCard key={macro.type} themes="dark" data={macroData} />;
+            return (
+              <CaloriesCard key={macro.type} themes="dark" data={macroData} />
+            );
           })}
         </View>
 
@@ -130,8 +128,9 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#F5F5F5',
     borderRadius: 14,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: '#E8E8E8',
+    alignItems: 'center',
     overflow: 'hidden',
   },
   caloriesLabelContainer: {
@@ -144,15 +143,13 @@ const localStyles = StyleSheet.create({
     fontWeight: '600',
     color: '#666',
   },
-  caloriesInput: {
+  caloriesInputWrapper: {
     flex: 1,
-    padding: 13,
-    fontSize: 14,
-    color: '#272727',
-    fontWeight: '700',
   },
-  caloriesInputFocused: {
-    backgroundColor: '#fff',
+  caloriesInputStyle: {
+    fontWeight: '700',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   caloriesUnitContainer: {
     padding: 13,

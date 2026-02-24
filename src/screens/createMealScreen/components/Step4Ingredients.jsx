@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import UIInput from '../../../common-ui/uIInput';
 
 export const Step4Ingredients = ({ data, setData }) => {
   const addIngredient = () => {
@@ -42,19 +43,19 @@ export const Step4Ingredients = ({ data, setData }) => {
             <View style={localStyles.numberCircle}>
               <Text style={localStyles.numberText}>{index + 1}</Text>
             </View>
-            <TextInput
-              style={[localStyles.input, localStyles.nameInput]}
+            <UIInput
+              variant="meal"
               placeholder="Ingredient name"
-              placeholderTextColor="#999"
               value={ingredient.name}
               onChangeText={value => updateIngredient(index, 'name', value)}
+              style={localStyles.nameInput}
             />
-            <TextInput
-              style={[localStyles.input, localStyles.amountInput]}
+            <UIInput
+              variant="meal"
               placeholder="Amount"
-              placeholderTextColor="#999"
               value={ingredient.amount}
               onChangeText={value => updateIngredient(index, 'amount', value)}
+              style={localStyles.amountInput}
             />
             {data.ingredients.length > 1 && (
               <TouchableOpacity
@@ -124,15 +125,6 @@ const localStyles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     color: '#fff',
-  },
-  input: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 14,
-    padding: 10,
-    fontSize: 13,
-    color: '#272727',
-    borderWidth: 1.5,
-    borderColor: '#E8E8E8',
   },
   nameInput: {
     flex: 2,

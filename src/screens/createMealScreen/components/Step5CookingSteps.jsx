@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import UIInput from '../../../common-ui/uIInput';
 
 export const Step5CookingSteps = ({ data, setData }) => {
   const addStep = () => {
@@ -39,15 +40,14 @@ export const Step5CookingSteps = ({ data, setData }) => {
             <View style={localStyles.numberCircle}>
               <Text style={localStyles.numberText}>{index + 1}</Text>
             </View>
-            <TextInput
-              style={localStyles.textarea}
+            <UIInput
+              variant="meal"
               placeholder="Describe this step..."
-              placeholderTextColor="#999"
               multiline={true}
               numberOfLines={3}
-              textAlignVertical="top"
               value={step}
               onChangeText={value => updateStep(index, value)}
+              style={localStyles.stepInput}
             />
             {data.cookingSteps.length > 1 && (
               <TouchableOpacity
@@ -119,16 +119,8 @@ const localStyles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
   },
-  textarea: {
+  stepInput: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 14,
-    padding: 10,
-    fontSize: 13,
-    color: '#272727',
-    borderWidth: 1.5,
-    borderColor: '#E8E8E8',
-    minHeight: 72,
   },
   deleteButton: {
     width: 30,

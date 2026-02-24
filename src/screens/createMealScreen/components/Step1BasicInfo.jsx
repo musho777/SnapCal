@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   StyleSheet,
   Alert,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import UIInput from '../../../common-ui/uIInput';
 
 const mealTypes = [
   { id: 'breakfast', label: 'Breakfast', emoji: '🌅' },
@@ -31,7 +31,6 @@ const categories = [
 ];
 
 export const Step1BasicInfo = ({ data, setData }) => {
-  const [nameFocused, setNameFocused] = useState(false);
 
   const handleSelectPhoto = async () => {
     const result = await launchImageLibrary({
@@ -88,14 +87,11 @@ export const Step1BasicInfo = ({ data, setData }) => {
 
       <View style={localStyles.card}>
         <Text style={localStyles.label}>Meal Name</Text>
-        <TextInput
-          style={[localStyles.input, nameFocused && localStyles.inputFocused]}
+        <UIInput
+          variant="meal"
           placeholder="e.g. Chicken Salad"
-          placeholderTextColor="#999"
           value={data.name}
           onChangeText={updateName}
-          onFocus={() => setNameFocused(true)}
-          onBlur={() => setNameFocused(false)}
         />
       </View>
 
@@ -221,18 +217,6 @@ const localStyles = StyleSheet.create({
     marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-  },
-  input: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 14,
-    padding: 13,
-    fontSize: 14,
-    color: '#272727',
-    borderWidth: 1.5,
-    borderColor: '#E8E8E8',
-  },
-  inputFocused: {
-    borderColor: '#272727',
   },
   buttonsRow: {
     flexDirection: 'row',

@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import UIInput from '../../../common-ui/uIInput';
 
 const servingsOptions = ['1', '2', '3', '4', '6', '8'];
 
 export const Step3RecipeInfo = ({ data, setData }) => {
-  const [descriptionFocused, setDescriptionFocused] = useState(false);
-  const [prepTimeFocused, setPrepTimeFocused] = useState(false);
-  const [cookTimeFocused, setCookTimeFocused] = useState(false);
 
   const updateRecipeInfo = (field, value) => {
     setData(prev => ({
@@ -22,63 +20,38 @@ export const Step3RecipeInfo = ({ data, setData }) => {
     <View style={localStyles.container}>
       <View style={localStyles.card}>
         <Text style={localStyles.label}>Description</Text>
-        <TextInput
-          style={[
-            localStyles.textarea,
-            descriptionFocused && localStyles.textareaFocused,
-          ]}
+        <UIInput
+          variant="meal"
           placeholder="Describe your meal..."
-          placeholderTextColor="#999"
           multiline={true}
           numberOfLines={4}
-          textAlignVertical="top"
           value={data.recipeInfo.description}
           onChangeText={value => updateRecipeInfo('description', value)}
-          onFocus={() => setDescriptionFocused(true)}
-          onBlur={() => setDescriptionFocused(false)}
         />
       </View>
 
       <View style={localStyles.card}>
         <Text style={localStyles.label}>Time</Text>
         <View style={localStyles.timeRow}>
-          <View style={localStyles.timeInput}>
-            <Text style={localStyles.timeLabel}>PREP TIME</Text>
-            <View style={localStyles.inputWithIcon}>
-              <Text style={localStyles.inputIcon}>⏱</Text>
-              <TextInput
-                style={[
-                  localStyles.input,
-                  prepTimeFocused && localStyles.inputFocused,
-                ]}
-                placeholder="15 min"
-                placeholderTextColor="#999"
-                value={data.recipeInfo.prepTime}
-                onChangeText={value => updateRecipeInfo('prepTime', value)}
-                onFocus={() => setPrepTimeFocused(true)}
-                onBlur={() => setPrepTimeFocused(false)}
-              />
-            </View>
-          </View>
+          <UIInput
+            variant="meal"
+            label="PREP TIME"
+            icon="⏱"
+            placeholder="15 min"
+            value={data.recipeInfo.prepTime}
+            onChangeText={value => updateRecipeInfo('prepTime', value)}
+            style={localStyles.timeInput}
+          />
 
-          <View style={localStyles.timeInput}>
-            <Text style={localStyles.timeLabel}>COOK TIME</Text>
-            <View style={localStyles.inputWithIcon}>
-              <Text style={localStyles.inputIcon}>🍳</Text>
-              <TextInput
-                style={[
-                  localStyles.input,
-                  cookTimeFocused && localStyles.inputFocused,
-                ]}
-                placeholder="20 min"
-                placeholderTextColor="#999"
-                value={data.recipeInfo.cookTime}
-                onChangeText={value => updateRecipeInfo('cookTime', value)}
-                onFocus={() => setCookTimeFocused(true)}
-                onBlur={() => setCookTimeFocused(false)}
-              />
-            </View>
-          </View>
+          <UIInput
+            variant="meal"
+            label="COOK TIME"
+            icon="🍳"
+            placeholder="20 min"
+            value={data.recipeInfo.cookTime}
+            onChangeText={value => updateRecipeInfo('cookTime', value)}
+            style={localStyles.timeInput}
+          />
         </View>
       </View>
 
@@ -135,54 +108,12 @@ const localStyles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-  textarea: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 14,
-    padding: 13,
-    fontSize: 14,
-    color: '#272727',
-    borderWidth: 1.5,
-    borderColor: '#E8E8E8',
-    minHeight: 110,
-  },
-  textareaFocused: {
-    borderColor: '#272727',
-  },
   timeRow: {
     flexDirection: 'row',
     gap: 12,
   },
   timeInput: {
     flex: 1,
-  },
-  timeLabel: {
-    fontSize: 11,
-    color: '#999',
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  inputWithIcon: {
-    position: 'relative',
-  },
-  inputIcon: {
-    position: 'absolute',
-    left: 12,
-    top: 13,
-    fontSize: 16,
-    zIndex: 1,
-  },
-  input: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 14,
-    padding: 13,
-    paddingLeft: 40,
-    fontSize: 14,
-    color: '#272727',
-    borderWidth: 1.5,
-    borderColor: '#E8E8E8',
-  },
-  inputFocused: {
-    borderColor: '#272727',
   },
   servingsRow: {
     flexDirection: 'row',

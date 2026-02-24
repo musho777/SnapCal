@@ -12,7 +12,7 @@ export const Header = ({ searchQuery, onSearchChange }) => {
         </View>
       </View>
       <View style={localStyles.searchContainer}>
-        <UIInput showSearchIcon />
+        <UIInput style={localStyles.input} showSearchIcon />
       </View>
     </View>
   );
@@ -63,5 +63,8 @@ const localStyles = StyleSheet.create({
     fontSize: 16,
     color: '#9CA3AF',
     marginLeft: 8,
+  },
+  input: {
+    width: '100%',
   },
 });
