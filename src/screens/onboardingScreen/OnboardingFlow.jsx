@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  Animated as RNAnimated,
-  Easing,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
 import {
   useSharedValue,
   withTiming,
@@ -29,8 +23,7 @@ import {
   calculateTDEE,
   adjustCaloriesForGoal,
 } from './constants';
-import { UIButton } from '../../common-ui/uIButton';
-import { GoBackIcon } from '../../assets/Icons';
+import { styles } from '../../themes';
 
 const OnboardingFlow = ({ onComplete }) => {
   const [screen, setScreen] = useState('splash');
@@ -152,8 +145,8 @@ const OnboardingFlow = ({ onComplete }) => {
   const currentMeta = STEPS_META[step];
 
   return (
-    <RNAnimated.View style={[styles.container, { backgroundColor }]}>
-      <View style={{ zIndex: 999 }}>
+    <RNAnimated.View style={[styles.flex, { backgroundColor }]}>
+      <View style={localStyles.zIndex}>
         <BackButton onPress={goBack} />
       </View>
 
@@ -255,23 +248,12 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
     }
   };
 
-  return <View style={[styles.stepContent]}>{renderStep()}</View>;
+  return <View style={[styles.flex]}>{renderStep()}</View>;
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  stepContent: {
-    flex: 1,
-  },
-  button: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 24,
-    paddingBottom: 40,
+const localStyles = StyleSheet.create({
+  zIndex: {
+    zIndex: 999,
   },
 });
 

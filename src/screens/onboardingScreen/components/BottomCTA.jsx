@@ -9,6 +9,18 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 
 const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
+  const buttonStyle = disabled
+    ? [styles.button, styles.buttonDisabled]
+    : styles.button;
+
+  const buttonColorStyle = !disabled
+    ? { backgroundColor: accentColor, shadowColor: accentColor }
+    : null;
+
+  const textStyle = disabled
+    ? [styles.buttonText, styles.buttonTextDisabled]
+    : [styles.buttonText, styles.buttonTextActive];
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -19,21 +31,9 @@ const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
           onPress={onPress}
           disabled={disabled}
           activeOpacity={0.9}
-          style={[
-            styles.button,
-            {
-              backgroundColor: disabled ? '#E0E0E0' : accentColor,
-              shadowColor: accentColor,
-              shadowOpacity: disabled ? 0 : 0.45,
-            },
-          ]}
+          style={[buttonStyle, buttonColorStyle]}
         >
-          <Text
-            style={[
-              styles.buttonText,
-              { color: disabled ? '#9CA3AF' : '#fff' },
-            ]}
-          >
+          <Text style={textStyle}>
             {isLastStep ? 'Finish Setup 🎉' : 'Continue'}
           </Text>
         </TouchableOpacity>
@@ -62,9 +62,21 @@ const styles = StyleSheet.create({
       ios: {
         shadowRadius: 28,
         shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.45,
       },
       android: {
         elevation: 8,
+      },
+    }),
+  },
+  buttonDisabled: {
+    backgroundColor: '#E0E0E0',
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 0,
+      },
+      android: {
+        elevation: 0,
       },
     }),
   },
@@ -72,6 +84,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '900',
     letterSpacing: -0.3,
+  },
+  buttonTextActive: {
+    color: '#fff',
+  },
+  buttonTextDisabled: {
+    color: '#9CA3AF',
   },
 });
 

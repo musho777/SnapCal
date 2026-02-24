@@ -6,7 +6,6 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
-  Platform,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -58,7 +57,6 @@ const CaloriesStep = ({
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.container}>
-        {/* Calorie Card */}
         <Animated.View
           entering={FadeInUp.delay(0)}
           style={[
@@ -66,17 +64,6 @@ const CaloriesStep = ({
             {
               backgroundColor: accentLight,
               borderColor: accentColor + '33',
-              ...Platform.select({
-                ios: {
-                  shadowColor: accentColor,
-                  shadowOpacity: 0.2,
-                  shadowRadius: 32,
-                  shadowOffset: { width: 0, height: 8 },
-                },
-                android: {
-                  elevation: 8,
-                },
-              }),
             },
           ]}
         >

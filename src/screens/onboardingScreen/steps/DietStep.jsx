@@ -88,7 +88,6 @@ const DietOption = ({
       <Text style={styles.icon}>{option.icon}</Text>
       <Text style={styles.title}>{option.title}</Text>
 
-      {/* Checkmark Badge */}
       {isSelected && (
         <Animated.View
           style={[
