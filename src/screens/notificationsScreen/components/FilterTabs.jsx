@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { Tab } from '../../../components/ui';
+import UITab from '../../../common-ui/uITab';
 
 const FILTERS = ['All', 'Unread', 'Meals', 'Tips', 'Goals'];
 
@@ -17,7 +17,7 @@ const FilterTabs = ({ activeFilter, onFilterChange, unreadCount }) => {
           const badge = filter === 'Unread' ? unreadCount : undefined;
 
           return (
-            <Tab
+            <UITab
               key={filter}
               label={filter}
               isActive={isActive}

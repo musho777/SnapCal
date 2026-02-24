@@ -1,7 +1,6 @@
-import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Tab = ({
+const UITab = ({
   label,
   isActive = false,
   badge,
@@ -26,7 +25,9 @@ const Tab = ({
       style={[
         styles.pill,
         style,
-        isActive ? [styles.pillActive, activeStyle] : [styles.pillInactive, inactiveStyle],
+        isActive
+          ? [styles.pillActive, activeStyle]
+          : [styles.pillInactive, inactiveStyle],
       ]}
       onPress={onPress}
       activeOpacity={0.7}
@@ -128,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Tab;
+export default UITab;
