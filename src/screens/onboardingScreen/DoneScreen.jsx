@@ -35,7 +35,7 @@ const DoneScreen = ({ data, onFinish }) => {
   const activityOption = ACTIVITY_OPTIONS.find(opt => opt.id === data.activity);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={styles.wrapper}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -119,6 +119,10 @@ const SummaryRow = ({ icon, label, value, delay }) => (
 );
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
