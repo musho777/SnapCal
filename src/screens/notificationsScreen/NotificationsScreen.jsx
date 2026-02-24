@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import { NotificationHeader, FilterTabs, NotificationCard } from './components';
+import NoResult from '../../components/noResult';
 
-// Mock notification data
 const INITIAL_NOTIFICATIONS = [
   {
     id: 1,
@@ -114,10 +114,8 @@ const NotificationsScreen = ({ navigation }) => {
   const [items, setItems] = useState(INITIAL_NOTIFICATIONS);
   const [activeFilter, setActiveFilter] = useState('All');
 
-  // Calculate unread count
   const unreadCount = items.filter(n => !n.read).length;
 
-  // State handlers
   const markRead = id => {
     setItems(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
   };
@@ -134,7 +132,6 @@ const NotificationsScreen = ({ navigation }) => {
     setItems([]);
   };
 
-  // Filter logic
   const filterFn = {
     All: null,
     Unread: n => !n.read,
@@ -145,14 +142,12 @@ const NotificationsScreen = ({ navigation }) => {
 
   const filtered = filterFn ? items.filter(filterFn) : items;
 
-  // Group by date
   const grouped = filtered.reduce((acc, n) => {
     if (!acc[n.date]) acc[n.date] = [];
     acc[n.date].push(n);
     return acc;
   }, {});
 
-  // Empty state when all cleared
   if (items.length === 0) {
     return (
       <View style={localStyles.page}>
@@ -162,22 +157,11 @@ const NotificationsScreen = ({ navigation }) => {
           onClearAll={clearAll}
           showActions={items.length > 0}
         />
-        <ScrollView
-          contentContainerStyle={localStyles.emptyContainer}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text style={localStyles.emptyEmoji}>🔔</Text>
-          <Text style={localStyles.emptyTitle}>All clear!</Text>
-          <Text style={localStyles.emptyMessage}>
-            No notifications yet. We'll let you know when something important
-            comes up.
-          </Text>
-        </ScrollView>
+        <NoResult text="No notifications yet. " />
       </View>
     );
   }
 
-  // Empty state when filter has no results
   if (filtered.length === 0) {
     return (
       <View style={localStyles.page}>
@@ -192,15 +176,7 @@ const NotificationsScreen = ({ navigation }) => {
           onFilterChange={setActiveFilter}
           unreadCount={unreadCount}
         />
-        <ScrollView
-          contentContainerStyle={localStyles.emptyFilterContainer}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text style={localStyles.emptyFilterEmoji}>🔍</Text>
-          <Text style={localStyles.emptyFilterTitle}>
-            No {activeFilter} notifications
-          </Text>
-        </ScrollView>
+        <NoResult />
       </View>
     );
   }
@@ -270,40 +246,6 @@ const localStyles = StyleSheet.create({
     letterSpacing: 0.8,
     marginBottom: 10,
     paddingLeft: 4,
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    paddingTop: 80,
-    paddingHorizontal: 20,
-  },
-  emptyEmoji: {
-    fontSize: 56,
-    marginBottom: 16,
-  },
-  emptyTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1A1A1A',
-    marginBottom: 6,
-  },
-  emptyMessage: {
-    fontSize: 13,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  emptyFilterContainer: {
-    alignItems: 'center',
-    paddingTop: 60,
-  },
-  emptyFilterEmoji: {
-    fontSize: 40,
-    marginBottom: 12,
-  },
-  emptyFilterTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1A1A1A',
   },
 });
 
