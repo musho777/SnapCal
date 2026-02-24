@@ -12,6 +12,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
+  FadeInUp,
 } from 'react-native-reanimated';
 import { calculateMacros } from '../constants';
 
@@ -58,7 +59,8 @@ const CaloriesStep = ({
     >
       <View style={styles.container}>
         {/* Calorie Card */}
-        <View
+        <Animated.View
+          entering={FadeInUp.delay(0)}
           style={[
             styles.calorieCard,
             {
@@ -100,28 +102,33 @@ const CaloriesStep = ({
               color="#FF8C42"
             />
           </View>
-        </View>
+        </Animated.View>
 
         {/* Info Text */}
-        <View style={styles.infoBox}>
+        <Animated.View
+          entering={FadeInUp.delay(100)}
+          style={styles.infoBox}
+        >
           <Text style={styles.infoIcon}>💡</Text>
           <Text style={styles.infoText}>
             {customCalories
               ? 'Your custom goal is all set! You can always adjust this later in settings.'
               : 'This goal is calculated based on your profile and activity level to help you reach your target.'}
           </Text>
-        </View>
+        </Animated.View>
 
         {/* Custom Goal Toggle */}
-        <TouchableOpacity
-          onPress={() => setShowCustomInput(!showCustomInput)}
-          style={styles.customButton}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.customButtonText, { color: accentColor }]}>
-            {showCustomInput ? 'Use suggested goal' : 'Set custom goal'}
-          </Text>
-        </TouchableOpacity>
+        <Animated.View entering={FadeInUp.delay(200)}>
+          <TouchableOpacity
+            onPress={() => setShowCustomInput(!showCustomInput)}
+            style={styles.customButton}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.customButtonText, { color: accentColor }]}>
+              {showCustomInput ? 'Use suggested goal' : 'Set custom goal'}
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
 
         {/* Custom Input */}
         <Animated.View style={[styles.customInputWrapper, inputAnimatedStyle]}>

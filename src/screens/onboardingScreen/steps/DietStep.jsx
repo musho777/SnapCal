@@ -11,6 +11,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  FadeInLeft,
 } from 'react-native-reanimated';
 import { DIET_OPTIONS } from '../constants';
 
@@ -21,15 +22,20 @@ const DietStep = ({ selectedDiet, onSelectDiet, accentColor, accentLight }) => {
       contentContainerStyle={styles.scrollContent}
     >
       <View style={styles.container}>
-        {DIET_OPTIONS.map((option) => (
-          <DietOption
+        {DIET_OPTIONS.map((option, index) => (
+          <Animated.View
             key={option.id}
-            option={option}
-            isSelected={selectedDiet === option.id}
-            onPress={() => onSelectDiet(option.id)}
-            accentColor={accentColor}
-            accentLight={accentLight}
-          />
+            entering={FadeInLeft.delay(index * 100)}
+            style={{ width: '48%' }}
+          >
+            <DietOption
+              option={option}
+              isSelected={selectedDiet === option.id}
+              onPress={() => onSelectDiet(option.id)}
+              accentColor={accentColor}
+              accentLight={accentLight}
+            />
+          </Animated.View>
         ))}
       </View>
     </ScrollView>
@@ -108,7 +114,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   option: {
-    width: '48%',
     padding: 18,
     paddingVertical: 24,
     borderRadius: 20,

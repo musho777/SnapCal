@@ -57,21 +57,21 @@ const OnboardingFlow = ({ onComplete }) => {
 
   const backgroundColor = bgColor.interpolate({
     inputRange: [0, 1, 2, 3, 4],
-    outputRange: STEPS_META.map((meta) => meta.bg),
+    outputRange: STEPS_META.map(meta => meta.bg),
   });
 
   // Calculate suggested calories when reaching step 4 (calories step)
   useEffect(() => {
     if (screen === 'steps' && step === 4 && !data.calorieGoal) {
       const activityOption = ACTIVITY_OPTIONS.find(
-        (opt) => opt.id === data.activity
+        opt => opt.id === data.activity,
       );
       if (activityOption) {
         const bmr = calculateBMR(
           data.weight,
           data.height,
           data.age,
-          data.gender
+          data.gender,
         );
         const tdee = calculateTDEE(bmr, activityOption.multiplier);
         const suggested = adjustCaloriesForGoal(tdee, data.goal);
@@ -83,8 +83,8 @@ const OnboardingFlow = ({ onComplete }) => {
     }
   }, [screen, step, data.activity]);
 
-  const updateData = (newData) => {
-    setData((prev) => ({ ...prev, ...newData }));
+  const updateData = newData => {
+    setData(prev => ({ ...prev, ...newData }));
   };
 
   const canProceed = () => {
@@ -103,7 +103,7 @@ const OnboardingFlow = ({ onComplete }) => {
       return;
     }
     setDirection('forward');
-    setStep((s) => s + 1);
+    setStep(s => s + 1);
   };
 
   const goBack = () => {
@@ -112,7 +112,7 @@ const OnboardingFlow = ({ onComplete }) => {
       return;
     }
     setDirection('back');
-    setStep((s) => s - 1);
+    setStep(s => s - 1);
   };
 
   const handleGetStarted = () => {
@@ -199,7 +199,7 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
         return (
           <GoalStep
             selectedGoal={data.goal}
-            onSelectGoal={(goal) => updateData({ goal })}
+            onSelectGoal={goal => updateData({ goal })}
             accentColor={currentMeta.accent}
             accentLight={currentMeta.accentLight}
           />
@@ -217,7 +217,7 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
         return (
           <DietStep
             selectedDiet={data.diet}
-            onSelectDiet={(diet) => updateData({ diet })}
+            onSelectDiet={diet => updateData({ diet })}
             accentColor={currentMeta.accent}
             accentLight={currentMeta.accentLight}
           />
@@ -226,7 +226,7 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
         return (
           <ActivityStep
             selectedActivity={data.activity}
-            onSelectActivity={(activity) => updateData({ activity })}
+            onSelectActivity={activity => updateData({ activity })}
             accentColor={currentMeta.accent}
             accentLight={currentMeta.accentLight}
           />
@@ -236,7 +236,7 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
           <CaloriesStep
             suggestedCalories={parseInt(data.calorieGoal, 10) || 2000}
             customCalories={data.customCalories}
-            onSetCustomCalories={(calories) =>
+            onSetCustomCalories={calories =>
               updateData({
                 customCalories: calories,
                 calorieGoal: calories.toString(),
@@ -251,11 +251,7 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
     }
   };
 
-  return (
-    <Animated.View style={[styles.stepContent, animatedStyle]}>
-      {renderStep()}
-    </Animated.View>
-  );
+  return <View style={[styles.stepContent]}>{renderStep()}</View>;
 };
 
 const styles = StyleSheet.create({

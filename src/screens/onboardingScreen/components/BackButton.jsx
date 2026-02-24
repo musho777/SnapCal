@@ -1,27 +1,30 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, Platform, View } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 const BackButton = ({ onPress }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={styles.container}
-      activeOpacity={0.8}
-    >
-      {Platform.OS === 'ios' ? (
-        <BlurView
-          style={styles.blurView}
-          blurType="light"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="rgba(255,255,255,0.8)"
-        >
-          <Text style={styles.icon}>‹</Text>
-        </BlurView>
-      ) : (
-        <AndroidBackButton />
-      )}
-    </TouchableOpacity>
+    <Animated.View entering={FadeIn.delay(100)}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.container}
+        activeOpacity={0.8}
+      >
+        {Platform.OS === 'ios' ? (
+          <BlurView
+            style={styles.blurView}
+            blurType="light"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="rgba(255,255,255,0.8)"
+          >
+            <Text style={styles.icon}>‹</Text>
+          </BlurView>
+        ) : (
+          <AndroidBackButton />
+        )}
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 

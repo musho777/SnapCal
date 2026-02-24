@@ -24,7 +24,10 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
     >
       <View style={styles.container}>
         {/* Gender Selection */}
-        <View style={styles.section}>
+        <Animated.View
+          entering={FadeInUp.delay(0)}
+          style={styles.section}
+        >
           <Text style={styles.label}>Gender</Text>
           <View style={styles.genderRow}>
             <TouchableOpacity
@@ -69,10 +72,13 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Age Input */}
-        <View style={styles.section}>
+        <Animated.View
+          entering={FadeInUp.delay(100)}
+          style={styles.section}
+        >
           <Text style={styles.label}>Age</Text>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -92,10 +98,13 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
             />
             <Text style={styles.unit}>years</Text>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Weight Input */}
-        <View style={styles.section}>
+        <Animated.View
+          entering={FadeInUp.delay(200)}
+          style={styles.section}
+        >
           <Text style={styles.label}>Weight</Text>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -115,10 +124,13 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
             />
             <Text style={styles.unit}>kg</Text>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Height Input */}
-        <View style={styles.section}>
+        <Animated.View
+          entering={FadeInUp.delay(300)}
+          style={styles.section}
+        >
           <Text style={styles.label}>Height</Text>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -138,12 +150,12 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
             />
             <Text style={styles.unit}>cm</Text>
           </View>
-        </View>
+        </Animated.View>
 
         {/* BMI Card */}
         {bmi && bmiCategory && (
           <Animated.View
-            entering={FadeInUp.duration(400)}
+            entering={FadeInUp.delay(400).duration(400)}
             style={[
               styles.bmiCard,
               {

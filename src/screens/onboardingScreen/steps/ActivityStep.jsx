@@ -11,6 +11,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  FadeInLeft,
 } from 'react-native-reanimated';
 import { ACTIVITY_OPTIONS } from '../constants';
 
@@ -27,14 +28,16 @@ const ActivityStep = ({
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.listContent}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      renderItem={({ item }) => (
-        <ActivityOption
-          option={item}
-          isSelected={selectedActivity === item.id}
-          onPress={() => onSelectActivity(item.id)}
-          accentColor={accentColor}
-          accentLight={accentLight}
-        />
+      renderItem={({ item, index }) => (
+        <Animated.View entering={FadeInLeft.delay(index * 100)}>
+          <ActivityOption
+            option={item}
+            isSelected={selectedActivity === item.id}
+            onPress={() => onSelectActivity(item.id)}
+            accentColor={accentColor}
+            accentLight={accentLight}
+          />
+        </Animated.View>
       )}
     />
   );

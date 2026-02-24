@@ -11,6 +11,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  FadeInLeft,
 } from 'react-native-reanimated';
 import { GOAL_OPTIONS } from '../constants';
 
@@ -21,15 +22,19 @@ const GoalStep = ({ selectedGoal, onSelectGoal, accentColor, accentLight }) => {
       contentContainerStyle={styles.scrollContent}
     >
       <View style={styles.container}>
-        {GOAL_OPTIONS.map((option) => (
-          <GoalOption
+        {GOAL_OPTIONS.map((option, index) => (
+          <Animated.View
             key={option.id}
-            option={option}
-            isSelected={selectedGoal === option.id}
-            onPress={() => onSelectGoal(option.id)}
-            accentColor={accentColor}
-            accentLight={accentLight}
-          />
+            entering={FadeInLeft.delay(index * 100)}
+          >
+            <GoalOption
+              option={option}
+              isSelected={selectedGoal === option.id}
+              onPress={() => onSelectGoal(option.id)}
+              accentColor={accentColor}
+              accentLight={accentLight}
+            />
+          </Animated.View>
         ))}
       </View>
     </ScrollView>

@@ -1,12 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 
 const StepContainer = ({ title, subtitle, children }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <Animated.Text
+          entering={FadeInUp.delay(0)}
+          style={styles.title}
+        >
+          {title}
+        </Animated.Text>
+        <Animated.Text
+          entering={FadeInUp.delay(100)}
+          style={styles.subtitle}
+        >
+          {subtitle}
+        </Animated.Text>
       </View>
       <View style={styles.content}>{children}</View>
     </View>
