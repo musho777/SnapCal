@@ -1,54 +1,61 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const NotificationHeader = ({ unreadCount, onMarkAllRead, onClearAll, showActions }) => {
+const NotificationHeader = ({
+  unreadCount,
+  onMarkAllRead,
+  onClearAll,
+  showActions,
+}) => {
   return (
-    <View style={styles.header}>
-      <View style={styles.topRow}>
+    <View style={localStyles.header}>
+      <View style={localStyles.topRow}>
         {/* Left side - Title and subtitle */}
-        <View style={styles.leftSide}>
-          <View style={styles.titleRow}>
-            <Text style={styles.title}>Notifications</Text>
+        <View style={localStyles.leftSide}>
+          <View style={localStyles.titleRow}>
+            <Text style={localStyles.title}>Notifications</Text>
             {unreadCount > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{unreadCount}</Text>
+              <View style={localStyles.badge}>
+                <Text style={localStyles.badgeText}>{unreadCount}</Text>
               </View>
             )}
           </View>
-          <Text style={styles.subtitle}>
-            {unreadCount > 0
-              ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`
-              : 'All caught up!'}
-          </Text>
+          <View style={localStyles.row}>
+            <Text style={localStyles.subtitle}>
+              {unreadCount > 0
+                ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`
+                : 'All caught up!'}
+            </Text>
+            {showActions && (
+              <View style={localStyles.rightSide}>
+                {unreadCount > 0 && (
+                  <TouchableOpacity
+                    style={localStyles.markAllButton}
+                    onPress={onMarkAllRead}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={localStyles.markAllText}>Mark all read</Text>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  style={localStyles.clearAllButton}
+                  onPress={onClearAll}
+                  activeOpacity={0.7}
+                >
+                  <Text style={localStyles.clearAllText}>Clear all</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
         </View>
 
         {/* Right side - Action buttons */}
-        {showActions && (
-          <View style={styles.rightSide}>
-            {unreadCount > 0 && (
-              <TouchableOpacity
-                style={styles.markAllButton}
-                onPress={onMarkAllRead}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.markAllText}>Mark all read</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={styles.clearAllButton}
-              onPress={onClearAll}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.clearAllText}>Clear all</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   header: {
     backgroundColor: '#fff',
     paddingTop: 52,
@@ -120,6 +127,11 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     color: '#EF4444',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

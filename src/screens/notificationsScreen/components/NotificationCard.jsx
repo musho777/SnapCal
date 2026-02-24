@@ -68,9 +68,6 @@ const NotificationCard = ({ notification, onPress, onDelete }) => {
             {notification.message}
           </Text>
         </View>
-
-        {/* Unread dot */}
-        {!notification.read && <View style={styles.unreadDot} />}
       </TouchableOpacity>
     </Swipeable>
   );
@@ -84,27 +81,19 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     gap: 12,
     marginBottom: 10,
+    marginHorizontal: 2,
     position: 'relative',
+    backgroundColor: '#fff',
   },
   cardRead: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#F3F4F6',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 2,
-    elevation: 1,
   },
   cardUnread: {
     backgroundColor: '#FAFAFA',
-    borderWidth: 1.5,
-    borderColor: '#E8E8E8',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#2979FF',
   },
   iconContainer: {
     width: 44,

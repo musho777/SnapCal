@@ -12,7 +12,7 @@ const FilterTabs = ({ activeFilter, onFilterChange, unreadCount }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {FILTERS.map((filter) => {
+        {FILTERS.map(filter => {
           const isActive = activeFilter === filter;
           const badge = filter === 'Unread' ? unreadCount : undefined;
 
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 16,
+    paddingVertical: 16,
     gap: 8,
   },
 });

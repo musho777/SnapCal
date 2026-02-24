@@ -8,7 +8,7 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 1,
     type: 'meal_reminder',
-    title: 'Time for Breakfast! 🌅',
+    title: 'Time for Breakfast!',
     message:
       "Don't skip your morning meal. Start your day with a nutritious breakfast to fuel your body and mind.",
     time: '8:00 AM',
@@ -21,7 +21,7 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 2,
     type: 'water',
-    title: 'Stay Hydrated 💧',
+    title: 'Stay Hydrated',
     message:
       "Time to drink some water! You've been active for a while. Keep yourself hydrated.",
     time: '7:30 AM',
@@ -34,7 +34,7 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 3,
     type: 'goal',
-    title: 'Daily Goal Achieved! 🎯',
+    title: 'Daily Goal Achieved!',
     message:
       "Congratulations! You've reached your calorie goal for today. Keep up the great work!",
     time: '6:45 PM',
@@ -47,7 +47,7 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 4,
     type: 'tip',
-    title: 'Nutrition Tip 💡',
+    title: 'Nutrition Tip',
     message:
       'Did you know? Eating protein-rich foods can help you feel fuller longer and maintain muscle mass.',
     time: '3:00 PM',
@@ -73,7 +73,7 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 6,
     type: 'water',
-    title: 'Hydration Reminder 💧',
+    title: 'Hydration Reminder',
     message: "You're doing great! Remember to drink water throughout the day.",
     time: '10:00 AM',
     date: 'Yesterday',
@@ -85,7 +85,7 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 7,
     type: 'ai',
-    title: 'AI Insight 🤖',
+    title: 'AI Insight',
     message:
       'Based on your eating patterns, you might want to increase your vegetable intake for better nutrition balance.',
     time: '9:15 AM',
@@ -98,7 +98,7 @@ const INITIAL_NOTIFICATIONS = [
   {
     id: 8,
     type: 'goal',
-    title: 'Streak Alert! 🔥',
+    title: 'Streak Alert!',
     message:
       "Amazing! You've logged your meals for 7 days straight. Keep the momentum going!",
     time: '8:00 PM',
