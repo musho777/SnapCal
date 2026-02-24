@@ -120,7 +120,7 @@ const NotificationsScreen = ({ navigation }) => {
     setItems(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
   };
 
-  const deleteNotif = id => {
+  const deleteNotification = id => {
     setItems(prev => prev.filter(n => n.id !== id));
   };
 
@@ -202,16 +202,16 @@ const NotificationsScreen = ({ navigation }) => {
         {Object.entries(grouped).map(([date, notifications]) => (
           <View key={date} style={localStyles.dateGroup}>
             <Text style={localStyles.dateHeader}>{date}</Text>
-            {notifications.map((notif, index) => (
+            {notifications.map((notification, index) => (
               <Animated.View
-                key={notif.id}
+                key={notification.id}
                 entering={FadeInDown.delay(index * 40).springify()}
                 layout={Layout.springify()}
               >
                 <NotificationCard
-                  notification={notif}
-                  onPress={() => markRead(notif.id)}
-                  onDelete={() => deleteNotif(notif.id)}
+                  notification={notification}
+                  onPress={() => markRead(notification.id)}
+                  onDelete={() => deleteNotification(notification.id)}
                 />
               </Animated.View>
             ))}
@@ -233,7 +233,7 @@ const localStyles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 10,
     paddingTop: 12,
-    paddingBottom: 100,
+    paddingBottom: 80,
   },
   dateGroup: {
     marginBottom: 20,
