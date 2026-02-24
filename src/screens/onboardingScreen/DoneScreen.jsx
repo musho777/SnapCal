@@ -30,39 +30,32 @@ const DoneScreen = ({ data, onFinish }) => {
     transform: [{ scale: confettiScale.value }],
   }));
 
-  const goalOption = GOAL_OPTIONS.find((opt) => opt.id === data.goal);
-  const dietOption = DIET_OPTIONS.find((opt) => opt.id === data.diet);
-  const activityOption = ACTIVITY_OPTIONS.find(
-    (opt) => opt.id === data.activity
-  );
+  const goalOption = GOAL_OPTIONS.find(opt => opt.id === data.goal);
+  const dietOption = DIET_OPTIONS.find(opt => opt.id === data.diet);
+  const activityOption = ACTIVITY_OPTIONS.find(opt => opt.id === data.activity);
 
   return (
-    <View style={styles.container}>
-      {/* Hero Section */}
-      <LinearGradient
-        colors={['#1A1A1A', '#333']}
-        style={styles.hero}
-      >
-        <Animated.Text style={[styles.confetti, confettiStyle]}>
-          🎉
-        </Animated.Text>
-        <Text style={styles.heroTitle}>You're All Set!</Text>
-        <Text style={styles.heroSubtitle}>
-          Your personalized nutrition plan{'\n'}is ready to go
-        </Text>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.scrollContent}
+    >
+      <View style={styles.container}>
+        {/* Hero Section */}
+        <LinearGradient colors={['#1A1A1A', '#333']} style={styles.hero}>
+          <Animated.Text style={[styles.confetti, confettiStyle]}>
+            🎉
+          </Animated.Text>
+          <Text style={styles.heroTitle}>You're All Set!</Text>
+          <Text style={styles.heroSubtitle}>
+            Your personalized nutrition plan{'\n'}is ready to go
+          </Text>
 
-        {/* Calorie Badge */}
-        <View style={styles.calorieBadge}>
-          <Text style={styles.calorieValue}>{data.calorieGoal}</Text>
-          <Text style={styles.calorieLabel}>cal/day</Text>
-        </View>
-      </LinearGradient>
+          <View style={styles.calorieBadge}>
+            <Text style={styles.calorieValue}>{data.calorieGoal}</Text>
+            <Text style={styles.calorieLabel}>cal/day</Text>
+          </View>
+        </LinearGradient>
 
-      {/* Summary Section */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
         <View style={styles.summaryCard}>
           <Text style={styles.summaryTitle}>Your Profile Summary</Text>
 
@@ -90,36 +83,29 @@ const DoneScreen = ({ data, onFinish }) => {
             value={activityOption?.title || data.activity}
             delay={240}
           />
+          <View style={styles.infoBox}>
+            <Text style={styles.infoIcon}>💡</Text>
+            <Text style={styles.infoText}>
+              You can always update these preferences in your profile settings.
+            </Text>
+          </View>
+          <View style={styles.ctaContainer}>
+            <TouchableOpacity
+              onPress={onFinish}
+              style={styles.button}
+              activeOpacity={0.9}
+            >
+              <Text style={styles.buttonText}>Start Tracking →</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        {/* Info Box */}
-        <View style={styles.infoBox}>
-          <Text style={styles.infoIcon}>💡</Text>
-          <Text style={styles.infoText}>
-            You can always update these preferences in your profile settings.
-          </Text>
-        </View>
-      </ScrollView>
-
-      {/* CTA Button */}
-      <View style={styles.ctaContainer}>
-        <TouchableOpacity
-          onPress={onFinish}
-          style={styles.button}
-          activeOpacity={0.9}
-        >
-          <Text style={styles.buttonText}>Start Tracking →</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const SummaryRow = ({ icon, label, value, delay }) => (
-  <Animated.View
-    entering={FadeInLeft.delay(delay)}
-    style={styles.summaryRow}
-  >
+  <Animated.View entering={FadeInLeft.delay(delay)} style={styles.summaryRow}>
     <View style={styles.summaryIconBox}>
       <Text style={styles.summaryIcon}>{icon}</Text>
     </View>
@@ -133,7 +119,7 @@ const SummaryRow = ({ icon, label, value, delay }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#fff',
   },
   hero: {
     padding: 60,
@@ -179,25 +165,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'rgba(255,255,255,0.6)',
   },
-  scrollContent: {
-    padding: 24,
-    paddingBottom: 120,
-  },
+  scrollContent: {},
   summaryCard: {
     backgroundColor: '#fff',
-    borderRadius: 24,
     overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.06,
-        shadowRadius: 20,
-        shadowOffset: { width: 0, height: 4 },
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
+    flex: 1,
   },
   summaryTitle: {
     fontSize: 18,
@@ -259,10 +231,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   ctaContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     padding: 24,
     paddingBottom: 40,
     backgroundColor: 'transparent',

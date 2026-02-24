@@ -6,13 +6,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
-import ProgressDots from './ProgressDots';
+import ProgressDots from '../../../components/ProgressDots';
 
-const IllustrationHeader = ({
-  meta,
-  currentStep,
-  totalSteps,
-}) => {
+const IllustrationHeader = ({ meta, currentStep, totalSteps }) => {
   const blob1Scale = useSharedValue(1);
   const blob2Scale = useSharedValue(1);
   const blob3Scale = useSharedValue(1);
@@ -86,7 +82,6 @@ const IllustrationHeader = ({
         ]}
       />
 
-      {/* Center Illustration Circle */}
       <LinearGradient
         colors={meta.illustrationBg}
         style={[
@@ -109,7 +104,6 @@ const IllustrationHeader = ({
         <Text style={styles.emoji}>{meta.illustration}</Text>
       </LinearGradient>
 
-      {/* Progress Dots */}
       <ProgressDots
         currentStep={currentStep}
         totalSteps={totalSteps}

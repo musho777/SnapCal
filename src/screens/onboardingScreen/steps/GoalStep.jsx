@@ -84,7 +84,6 @@ const GoalOption = ({
         },
       ]}
     >
-      {/* Icon Box */}
       <View
         style={[
           styles.iconBox,
@@ -96,13 +95,11 @@ const GoalOption = ({
         <Text style={styles.icon}>{option.icon}</Text>
       </View>
 
-      {/* Text */}
       <View style={styles.textContainer}>
         <Text style={styles.title}>{option.title}</Text>
         <Text style={styles.subtitle}>{option.subtitle}</Text>
       </View>
 
-      {/* Radio Circle */}
       <View
         style={[
           styles.radioOuter,
@@ -112,9 +109,7 @@ const GoalOption = ({
           },
         ]}
       >
-        <Animated.View
-          style={[styles.radioDot, radioAnimatedStyle]}
-        />
+        <Animated.View style={[styles.radioDot, radioAnimatedStyle]} />
       </View>
     </TouchableOpacity>
   );

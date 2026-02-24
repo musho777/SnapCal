@@ -9,8 +9,8 @@ export const STEPS_META = [
     illustrationBg: ['#FFE8D6', '#FFD4B3'],
     shapes: ['#FFD4B3', '#FFBF8A', '#FFE8D6'],
     illustration: '🎯',
-    title: "What's your\nmain goal?",
-    subtitle: "We'll build your perfect\nnutrition plan around it",
+    title: "What's your main goal?",
+    subtitle: "We'll build your perfect nutrition plan around it",
   },
   {
     id: 'stats',
@@ -31,8 +31,8 @@ export const STEPS_META = [
     illustrationBg: ['#C8F0DA', '#A0E0BC'],
     shapes: ['#A0E0BC', '#78D09E', '#C8F0DA'],
     illustration: '🥗',
-    title: 'Any dietary\npreferences?',
-    subtitle: "We'll suggest meals that fit\nyour lifestyle perfectly",
+    title: 'Any dietary preferences?',
+    subtitle: "We'll suggest meals that fit your lifestyle perfectly",
   },
   {
     id: 'activity',
@@ -42,8 +42,8 @@ export const STEPS_META = [
     illustrationBg: ['#E4D9FF', '#C9B8FF'],
     shapes: ['#C9B8FF', '#AE97FF', '#E4D9FF'],
     illustration: '🏃',
-    title: 'How active\nare you?',
-    subtitle: 'Activity level impacts how\nmany calories you need',
+    title: 'How active are you?',
+    subtitle: 'Activity level impacts how many calories you need',
   },
   {
     id: 'calories',
@@ -53,16 +53,36 @@ export const STEPS_META = [
     illustrationBg: ['#FFD6EB', '#FFB3D4'],
     shapes: ['#FFB3D4', '#FF8FC0', '#FFD6EB'],
     illustration: '🔥',
-    title: 'Your daily\ncalorie goal',
-    subtitle: 'Calculated just for you\nbased on your profile',
+    title: 'Your daily calorie goal',
+    subtitle: 'Calculated just for you based on your profile',
   },
 ];
 
 export const GOAL_OPTIONS = [
-  { id: 'lose', icon: '📉', title: 'Lose Weight', subtitle: 'Get lean and fit' },
-  { id: 'maintain', icon: '⚖️', title: 'Maintain Weight', subtitle: 'Stay where you are' },
-  { id: 'gain', icon: '📈', title: 'Gain Weight', subtitle: 'Build muscle mass' },
-  { id: 'healthy', icon: '🌱', title: 'Eat Healthy', subtitle: 'Improve nutrition' },
+  {
+    id: 'lose',
+    icon: '📉',
+    title: 'Lose Weight',
+    subtitle: 'Get lean and fit',
+  },
+  {
+    id: 'maintain',
+    icon: '⚖️',
+    title: 'Maintain Weight',
+    subtitle: 'Stay where you are',
+  },
+  {
+    id: 'gain',
+    icon: '📈',
+    title: 'Gain Weight',
+    subtitle: 'Build muscle mass',
+  },
+  {
+    id: 'healthy',
+    icon: '🌱',
+    title: 'Eat Healthy',
+    subtitle: 'Improve nutrition',
+  },
 ];
 
 export const DIET_OPTIONS = [
@@ -174,7 +194,7 @@ export const calculateBMI = (weight, height) => {
 };
 
 // Helper function to get BMI category
-export const getBMICategory = (bmi) => {
+export const getBMICategory = bmi => {
   if (!bmi) return null;
 
   const bmiValue = parseFloat(bmi);
@@ -195,17 +215,17 @@ export const calculateMacros = (calories, goal) => {
     case 'lose':
       proteinPercent = 0.35;
       carbsPercent = 0.35;
-      fatPercent = 0.30;
+      fatPercent = 0.3;
       break;
     case 'gain':
-      proteinPercent = 0.30;
+      proteinPercent = 0.3;
       carbsPercent = 0.45;
       fatPercent = 0.25;
       break;
     default:
-      proteinPercent = 0.30;
-      carbsPercent = 0.40;
-      fatPercent = 0.30;
+      proteinPercent = 0.3;
+      carbsPercent = 0.4;
+      fatPercent = 0.3;
   }
 
   return {

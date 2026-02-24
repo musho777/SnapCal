@@ -6,7 +6,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-const ProgressDots = ({ currentStep, totalSteps, accentColor, accentLight }) => {
+const ProgressDots = ({
+  currentStep,
+  totalSteps,
+  accentColor,
+  accentLight,
+}) => {
   return (
     <View style={styles.container}>
       {Array.from({ length: totalSteps }).map((_, index) => (
@@ -36,20 +41,14 @@ const Dot = ({ isActive, isPast, accentColor, accentLight }) => {
   const backgroundColor = isPast || isActive ? accentColor : accentLight;
 
   return (
-    <Animated.View
-      style={[
-        styles.dot,
-        animatedStyle,
-        { backgroundColor },
-      ]}
-    />
+    <Animated.View style={[styles.dot, animatedStyle, { backgroundColor }]} />
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 40,
     left: 0,
     right: 0,
     flexDirection: 'row',

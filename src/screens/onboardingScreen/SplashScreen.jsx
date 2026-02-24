@@ -32,16 +32,19 @@ const SplashScreen = ({ onGetStarted }) => {
 
         {/* Features */}
         <View style={styles.features}>
-          {SPLASH_FEATURES.map((feature, index) => (
-            <Animated.View
-              key={index}
-              entering={FadeInLeft.delay(200 + index * 100)}
-              style={styles.featureRow}
-            >
-              <Text style={styles.featureIcon}>{feature.icon}</Text>
-              <Text style={styles.featureText}>{feature.text}</Text>
-            </Animated.View>
-          ))}
+          {SPLASH_FEATURES.map((feature, index) => {
+            console.log(feature);
+            return (
+              <Animated.View
+                key={index}
+                entering={FadeInLeft.delay(200 + index * 100)}
+                style={styles.featureRow}
+              >
+                <Text style={styles.featureIcon}>{feature.icon}</Text>
+                <Text style={styles.featureText}>{feature.text}</Text>
+              </Animated.View>
+            );
+          })}
         </View>
       </View>
 
@@ -156,6 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 18,
+    width: '100%',
     gap: 14,
   },
   featureIcon: {
