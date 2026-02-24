@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
-import { NotificationHeader, FilterTabs, NotificationCard } from './components';
+import { NotificationHeader, NotificationCard } from './components';
+import { Tabs } from '../../components/tabs';
+
+// Filter tabs configuration
+const FILTER_TABS = [
+  { value: 'All', label: 'All' },
+  { value: 'Unread', label: 'Unread' },
+  { value: 'Meals', label: 'Meals' },
+  { value: 'Tips', label: 'Tips' },
+  { value: 'Goals', label: 'Goals' },
+];
 
 // Mock notification data
 const INITIAL_NOTIFICATIONS = [
@@ -117,6 +127,11 @@ const NotificationsScreen = ({ navigation }) => {
   // Calculate unread count
   const unreadCount = items.filter(n => !n.read).length;
 
+  // Add badge to Unread tab
+  const tabs = FILTER_TABS.map(tab =>
+    tab.value === 'Unread' ? { ...tab, badge: unreadCount } : tab,
+  );
+
   // State handlers
   const markRead = id => {
     setItems(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
@@ -187,10 +202,10 @@ const NotificationsScreen = ({ navigation }) => {
           onClearAll={clearAll}
           showActions={items.length > 0}
         />
-        <FilterTabs
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-          unreadCount={unreadCount}
+        <Tabs
+          tabs={tabs}
+          activeTab={activeFilter}
+          onTabChange={setActiveFilter}
         />
         <ScrollView
           contentContainerStyle={localStyles.emptyFilterContainer}
@@ -213,10 +228,10 @@ const NotificationsScreen = ({ navigation }) => {
         onClearAll={clearAll}
         showActions={items.length > 0}
       />
-      <FilterTabs
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-        unreadCount={unreadCount}
+      <Tabs
+        tabs={tabs}
+        activeTab={activeFilter}
+        onTabChange={setActiveFilter}
       />
       <ScrollView
         style={localStyles.scrollView}
