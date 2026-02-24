@@ -23,11 +23,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.container}>
-        {/* Gender Selection */}
-        <Animated.View
-          entering={FadeInUp.delay(0)}
-          style={styles.section}
-        >
+        <Animated.View entering={FadeInUp.delay(0)} style={styles.section}>
           <Text style={styles.label}>Gender</Text>
           <View style={styles.genderRow}>
             <TouchableOpacity
@@ -74,11 +70,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
           </View>
         </Animated.View>
 
-        {/* Age Input */}
-        <Animated.View
-          entering={FadeInUp.delay(100)}
-          style={styles.section}
-        >
+        <Animated.View entering={FadeInUp.delay(100)} style={styles.section}>
           <Text style={styles.label}>Age</Text>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -91,7 +83,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
               placeholder="Enter your age"
               placeholderTextColor="#C0C0C0"
               value={data.age}
-              onChangeText={(text) => onUpdateData({ age: text })}
+              onChangeText={text => onUpdateData({ age: text })}
               keyboardType="numeric"
               onFocus={() => setFocusedInput('age')}
               onBlur={() => setFocusedInput(null)}
@@ -100,11 +92,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
           </View>
         </Animated.View>
 
-        {/* Weight Input */}
-        <Animated.View
-          entering={FadeInUp.delay(200)}
-          style={styles.section}
-        >
+        <Animated.View entering={FadeInUp.delay(200)} style={styles.section}>
           <Text style={styles.label}>Weight</Text>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -117,7 +105,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
               placeholder="Enter your weight"
               placeholderTextColor="#C0C0C0"
               value={data.weight}
-              onChangeText={(text) => onUpdateData({ weight: text })}
+              onChangeText={text => onUpdateData({ weight: text })}
               keyboardType="decimal-pad"
               onFocus={() => setFocusedInput('weight')}
               onBlur={() => setFocusedInput(null)}
@@ -126,11 +114,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
           </View>
         </Animated.View>
 
-        {/* Height Input */}
-        <Animated.View
-          entering={FadeInUp.delay(300)}
-          style={styles.section}
-        >
+        <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
           <Text style={styles.label}>Height</Text>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -143,7 +127,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
               placeholder="Enter your height"
               placeholderTextColor="#C0C0C0"
               value={data.height}
-              onChangeText={(text) => onUpdateData({ height: text })}
+              onChangeText={text => onUpdateData({ height: text })}
               keyboardType="numeric"
               onFocus={() => setFocusedInput('height')}
               onBlur={() => setFocusedInput(null)}
@@ -152,7 +136,6 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
           </View>
         </Animated.View>
 
-        {/* BMI Card */}
         {bmi && bmiCategory && (
           <Animated.View
             entering={FadeInUp.delay(400).duration(400)}

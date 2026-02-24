@@ -55,7 +55,7 @@ const GoalOption = ({
       damping: 12,
       stiffness: 200,
     });
-  }, [isSelected]);
+  }, [isSelected, radioScale]);
 
   const radioAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: radioScale.value }],

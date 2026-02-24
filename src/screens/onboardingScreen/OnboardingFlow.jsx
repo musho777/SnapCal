@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
-import Animated, {
+import {
   useSharedValue,
-  useAnimatedStyle,
   withTiming,
   Easing as REasing,
 } from 'react-native-reanimated';
@@ -26,7 +25,7 @@ import {
 } from './constants';
 
 const OnboardingFlow = ({ onComplete }) => {
-  const [screen, setScreen] = useState('splash'); // splash | steps | done
+  const [screen, setScreen] = useState('splash');
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState('forward');
   const [data, setData] = useState({
@@ -41,7 +40,7 @@ const OnboardingFlow = ({ onComplete }) => {
     customCalories: null,
   });
 
-  // Background color animation
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const bgColor = new RNAnimated.Value(0);
 
   useEffect(() => {
@@ -53,14 +52,13 @@ const OnboardingFlow = ({ onComplete }) => {
         useNativeDriver: false,
       }).start();
     }
-  }, [step, screen]);
+  }, [step, screen, bgColor]);
 
   const backgroundColor = bgColor.interpolate({
     inputRange: [0, 1, 2, 3, 4],
     outputRange: STEPS_META.map(meta => meta.bg),
   });
 
-  // Calculate suggested calories when reaching step 4 (calories step)
   useEffect(() => {
     if (screen === 'steps' && step === 4 && !data.calorieGoal) {
       const activityOption = ACTIVITY_OPTIONS.find(
@@ -81,7 +79,17 @@ const OnboardingFlow = ({ onComplete }) => {
         }
       }
     }
-  }, [screen, step, data.activity]);
+  }, [
+    screen,
+    step,
+    data.activity,
+    data.calorieGoal,
+    data.weight,
+    data.height,
+    data.age,
+    data.gender,
+    data.goal,
+  ]);
 
   const updateData = newData => {
     setData(prev => ({ ...prev, ...newData }));
@@ -125,32 +133,26 @@ const OnboardingFlow = ({ onComplete }) => {
     }
   };
 
-  // Render Splash Screen
   if (screen === 'splash') {
     return <SplashScreen onGetStarted={handleGetStarted} />;
   }
 
-  // Render Done Screen
   if (screen === 'done') {
     return <DoneScreen data={data} onFinish={handleFinish} />;
   }
 
-  // Render Steps
   const currentMeta = STEPS_META[step];
 
   return (
     <RNAnimated.View style={[styles.container, { backgroundColor }]}>
-      {/* Back Button */}
       <BackButton onPress={goBack} />
 
-      {/* Illustration Header */}
       <IllustrationHeader
         meta={currentMeta}
         currentStep={step}
         totalSteps={STEPS_META.length}
       />
 
-      {/* Step Content with Slide Animation */}
       <StepContainer title={currentMeta.title} subtitle={currentMeta.subtitle}>
         <StepContent
           step={step}
@@ -161,7 +163,6 @@ const OnboardingFlow = ({ onComplete }) => {
         />
       </StepContainer>
 
-      {/* Bottom CTA */}
       <BottomCTA
         onPress={goNext}
         disabled={!canProceed()}
@@ -172,7 +173,6 @@ const OnboardingFlow = ({ onComplete }) => {
   );
 };
 
-// Step Content Component with Slide Animation
 const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
   const translateX = useSharedValue(direction === 'back' ? -300 : 300);
   const opacity = useSharedValue(0);
@@ -186,12 +186,7 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
       easing: REasing.out(REasing.cubic),
     });
     opacity.value = withTiming(1, { duration: 300 });
-  }, [step]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
-    opacity: opacity.value,
-  }));
+  }, [opacity, step, translateX]);
 
   const renderStep = () => {
     switch (step) {

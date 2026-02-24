@@ -24,7 +24,7 @@ const ActivityStep = ({
   return (
     <FlatList
       data={ACTIVITY_OPTIONS}
-      keyExtractor={(item) => item.id}
+      keyExtractor={item => item.id}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.listContent}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -57,7 +57,7 @@ const ActivityOption = ({
       damping: 12,
       stiffness: 200,
     });
-  }, [isSelected]);
+  }, [isSelected, radioScale]);
 
   const radioAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: radioScale.value }],
@@ -114,9 +114,7 @@ const ActivityOption = ({
           },
         ]}
       >
-        <Animated.View
-          style={[styles.radioDot, radioAnimatedStyle]}
-        />
+        <Animated.View style={[styles.radioDot, radioAnimatedStyle]} />
       </View>
     </TouchableOpacity>
   );

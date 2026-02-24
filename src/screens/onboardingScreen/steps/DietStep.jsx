@@ -26,7 +26,7 @@ const DietStep = ({ selectedDiet, onSelectDiet, accentColor, accentLight }) => {
           <Animated.View
             key={option.id}
             entering={FadeInLeft.delay(index * 100)}
-            style={{ width: '48%' }}
+            style={styles.width}
           >
             <DietOption
               option={option}
@@ -56,7 +56,7 @@ const DietOption = ({
       damping: 10,
       stiffness: 150,
     });
-  }, [isSelected]);
+  }, [checkScale, isSelected]);
 
   const checkAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: checkScale.value }],
@@ -112,6 +112,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+  },
+  width: {
+    width: '48%',
   },
   option: {
     padding: 18,

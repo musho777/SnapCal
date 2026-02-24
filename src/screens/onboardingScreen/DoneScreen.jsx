@@ -24,7 +24,7 @@ const DoneScreen = ({ data, onFinish }) => {
       damping: 8,
       stiffness: 100,
     });
-  }, []);
+  }, [confettiScale]);
 
   const confettiStyle = useAnimatedStyle(() => ({
     transform: [{ scale: confettiScale.value }],
@@ -40,7 +40,6 @@ const DoneScreen = ({ data, onFinish }) => {
       contentContainerStyle={styles.scrollContent}
     >
       <View style={styles.container}>
-        {/* Hero Section */}
         <LinearGradient colors={['#1A1A1A', '#333']} style={styles.hero}>
           <Animated.Text style={[styles.confetti, confettiStyle]}>
             🎉

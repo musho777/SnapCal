@@ -12,14 +12,11 @@ import { SPLASH_FEATURES } from './constants';
 const SplashScreen = ({ onGetStarted }) => {
   return (
     <View style={styles.container}>
-      {/* Decorative Blobs */}
       <View style={[styles.blob, styles.blob1]} />
       <View style={[styles.blob, styles.blob2]} />
       <View style={[styles.blob, styles.blob3]} />
 
-      {/* Content */}
       <View style={styles.content}>
-        {/* Logo */}
         <View style={styles.logoContainer}>
           <View style={styles.logo}>
             <Text style={styles.logoEmoji}>🥗</Text>
@@ -30,7 +27,6 @@ const SplashScreen = ({ onGetStarted }) => {
           </Text>
         </View>
 
-        {/* Features */}
         <View style={styles.features}>
           {SPLASH_FEATURES.map((feature, index) => {
             console.log(feature);
@@ -48,7 +44,6 @@ const SplashScreen = ({ onGetStarted }) => {
         </View>
       </View>
 
-      {/* CTA */}
       <View style={styles.ctaContainer}>
         <TouchableOpacity
           onPress={onGetStarted}

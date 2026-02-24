@@ -25,7 +25,7 @@ const CaloriesStep = ({
 }) => {
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customValue, setCustomValue] = useState(
-    customCalories ? customCalories.toString() : ''
+    customCalories ? customCalories.toString() : '',
   );
 
   const inputHeight = useSharedValue(0);
@@ -34,7 +34,7 @@ const CaloriesStep = ({
     inputHeight.value = withTiming(showCustomInput ? 70 : 0, {
       duration: 300,
     });
-  }, [showCustomInput]);
+  }, [inputHeight, showCustomInput]);
 
   const inputAnimatedStyle = useAnimatedStyle(() => ({
     height: inputHeight.value,
@@ -96,19 +96,12 @@ const CaloriesStep = ({
               value={`${macros.carbs}g`}
               color="#3DBE7A"
             />
-            <MacroPill
-              label="Fat"
-              value={`${macros.fat}g`}
-              color="#FF8C42"
-            />
+            <MacroPill label="Fat" value={`${macros.fat}g`} color="#FF8C42" />
           </View>
         </Animated.View>
 
         {/* Info Text */}
-        <Animated.View
-          entering={FadeInUp.delay(100)}
-          style={styles.infoBox}
-        >
+        <Animated.View entering={FadeInUp.delay(100)} style={styles.infoBox}>
           <Text style={styles.infoIcon}>💡</Text>
           <Text style={styles.infoText}>
             {customCalories
@@ -149,10 +142,7 @@ const CaloriesStep = ({
             />
             <TouchableOpacity
               onPress={handleSetCustom}
-              style={[
-                styles.setButton,
-                { backgroundColor: accentColor },
-              ]}
+              style={[styles.setButton, { backgroundColor: accentColor }]}
               activeOpacity={0.8}
             >
               <Text style={styles.setButtonText}>Set</Text>
