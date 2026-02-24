@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -14,14 +14,15 @@ import Animated, {
   FadeInLeft,
 } from 'react-native-reanimated';
 import { GOAL_OPTIONS } from '../constants';
+import { styles } from '../../../themes';
 
 const GoalStep = ({ selectedGoal, onSelectGoal, accentColor, accentLight }) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.scrollContent}
+      contentContainerStyle={localStyles.scrollContent}
     >
-      <View style={styles.container}>
+      <View style={localStyles.container}>
         {GOAL_OPTIONS.map((option, index) => (
           <Animated.View
             key={option.id}
@@ -50,7 +51,7 @@ const GoalOption = ({
 }) => {
   const radioScale = useSharedValue(isSelected ? 1 : 0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     radioScale.value = withSpring(isSelected ? 1 : 0, {
       damping: 12,
       stiffness: 200,
@@ -61,61 +62,52 @@ const GoalOption = ({
     transform: [{ scale: radioScale.value }],
   }));
 
+  const optionColorStyle = isSelected
+    ? { borderColor: accentColor, backgroundColor: accentLight }
+    : null;
+
+  const optionShadowColorStyle =
+    isSelected && Platform.OS === 'ios' ? { shadowColor: accentColor } : null;
+
+  const iconBoxStyle = isSelected
+    ? [localStyles.iconBox]
+    : [localStyles.iconBox, localStyles.iconBoxUnselected];
+
+  const iconBoxColorStyle = isSelected
+    ? { backgroundColor: accentColor }
+    : null;
+
+  const radioOuterStyle = isSelected
+    ? [localStyles.radioOuter]
+    : [localStyles.radioOuter, localStyles.radioOuterUnselected];
+
+  const radioOuterColorStyle = isSelected
+    ? { borderColor: accentColor, backgroundColor: accentColor }
+    : null;
+
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      style={[
-        styles.option,
-        isSelected && {
-          borderColor: accentColor,
-          backgroundColor: accentLight,
-          ...Platform.select({
-            ios: {
-              shadowColor: accentColor,
-              shadowOpacity: 0.25,
-              shadowRadius: 20,
-              shadowOffset: { width: 0, height: 4 },
-            },
-            android: {
-              elevation: 4,
-            },
-          }),
-        },
-      ]}
+      style={[localStyles.option, optionColorStyle, optionShadowColorStyle]}
     >
-      <View
-        style={[
-          styles.iconBox,
-          {
-            backgroundColor: isSelected ? accentColor : '#F0F0F0',
-          },
-        ]}
-      >
-        <Text style={styles.icon}>{option.icon}</Text>
+      <View style={[iconBoxStyle, iconBoxColorStyle]}>
+        <Text style={localStyles.icon}>{option.icon}</Text>
       </View>
 
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{option.title}</Text>
-        <Text style={styles.subtitle}>{option.subtitle}</Text>
+      <View style={styles.flex}>
+        <Text style={localStyles.title}>{option.title}</Text>
+        <Text style={localStyles.subtitle}>{option.subtitle}</Text>
       </View>
 
-      <View
-        style={[
-          styles.radioOuter,
-          {
-            borderColor: isSelected ? accentColor : '#E0E0E0',
-            backgroundColor: isSelected ? accentColor : 'transparent',
-          },
-        ]}
-      >
-        <Animated.View style={[styles.radioDot, radioAnimatedStyle]} />
+      <View style={[radioOuterStyle, radioOuterColorStyle]}>
+        <Animated.View style={[localStyles.radioDot, radioAnimatedStyle]} />
       </View>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   scrollContent: {
     paddingTop: 8,
   },
@@ -133,6 +125,7 @@ const styles = StyleSheet.create({
     borderColor: '#F0F0F0',
     backgroundColor: '#fff',
   },
+
   iconBox: {
     width: 52,
     height: 52,
@@ -140,11 +133,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  iconBoxUnselected: {
+    backgroundColor: '#F0F0F0',
+  },
   icon: {
     fontSize: 28,
-  },
-  textContainer: {
-    flex: 1,
   },
   title: {
     fontSize: 16,
@@ -163,6 +156,10 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  radioOuterUnselected: {
+    borderColor: '#E0E0E0',
+    backgroundColor: 'transparent',
   },
   radioDot: {
     width: 8,

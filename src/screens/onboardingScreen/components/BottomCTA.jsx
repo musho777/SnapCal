@@ -7,7 +7,6 @@ import {
   Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Animated, { FadeInUp } from 'react-native-reanimated';
 
 const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
   return (
@@ -16,30 +15,28 @@ const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
         colors={['transparent', '#ffffff']}
         style={styles.gradient}
       >
-        <Animated.View entering={FadeInUp.delay(200)}>
-          <TouchableOpacity
-            onPress={onPress}
-            disabled={disabled}
-            activeOpacity={0.9}
+        <TouchableOpacity
+          onPress={onPress}
+          disabled={disabled}
+          activeOpacity={0.9}
+          style={[
+            styles.button,
+            {
+              backgroundColor: disabled ? '#E0E0E0' : accentColor,
+              shadowColor: accentColor,
+              shadowOpacity: disabled ? 0 : 0.45,
+            },
+          ]}
+        >
+          <Text
             style={[
-              styles.button,
-              {
-                backgroundColor: disabled ? '#E0E0E0' : accentColor,
-                shadowColor: accentColor,
-                shadowOpacity: disabled ? 0 : 0.45,
-              },
+              styles.buttonText,
+              { color: disabled ? '#9CA3AF' : '#fff' },
             ]}
           >
-            <Text
-              style={[
-                styles.buttonText,
-                { color: disabled ? '#9CA3AF' : '#fff' },
-              ]}
-            >
-              {isLastStep ? 'Finish Setup 🎉' : 'Continue'}
-            </Text>
-          </TouchableOpacity>
-        </Animated.View>
+            {isLastStep ? 'Finish Setup 🎉' : 'Continue'}
+          </Text>
+        </TouchableOpacity>
       </LinearGradient>
     </View>
   );
