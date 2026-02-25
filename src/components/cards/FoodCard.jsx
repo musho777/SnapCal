@@ -51,6 +51,7 @@ export const FoodCard = ({
           />
         </View>
         <UIButton
+          variant="card"
           backgroundColor={'#272727'}
           color={'white'}
           onPress={onRecipePress}

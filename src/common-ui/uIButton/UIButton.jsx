@@ -56,20 +56,33 @@ const getVariantStyles = variant => {
         },
       };
 
-    case 'primary':
-    default:
+    case 'dark':
       return {
         container: {
-          backgroundColor: '#007AFF',
+          backgroundColor: '#272727',
         },
         text: {
           color: '#fff',
         },
       };
-    case 'dark': // 👈 NEW VARIANT
+
+    case 'card':
       return {
         container: {
           backgroundColor: '#272727',
+          paddingVertical: 10,
+        },
+        text: {
+          color: '#fff',
+          fontSize: 11,
+        },
+      };
+
+    case 'primary':
+    default:
+      return {
+        container: {
+          backgroundColor: '#007AFF',
         },
         text: {
           color: '#fff',
