@@ -10,6 +10,7 @@ import HomeStack from './homeStack';
 import ExploreStack from './exploreStack';
 import CreateMealScreen from '../screens/createMealScreen';
 import OnboardingFlow from '../screens/onboardingScreen';
+import LoginScreen from '../screens/authScreens/login/LoginScreen.jsx';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -35,10 +36,9 @@ const TabNavigator = () => {
 };
 
 export const MainNavigation = () => {
-  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(true);
 
-  const handleOnboardingComplete = (userData) => {
-    // TODO: Save user data to AsyncStorage or your preferred storage
+  const handleOnboardingComplete = userData => {
     console.log('Onboarding completed with data:', userData);
     setOnboardingCompleted(true);
   };
@@ -47,11 +47,8 @@ export const MainNavigation = () => {
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       {!onboardingCompleted ? (
         <RootStack.Screen name="Onboarding">
-          {(props) => (
-            <OnboardingFlow
-              {...props}
-              onComplete={handleOnboardingComplete}
-            />
+          {props => (
+            <OnboardingFlow {...props} onComplete={handleOnboardingComplete} />
           )}
         </RootStack.Screen>
       ) : (
@@ -63,6 +60,13 @@ export const MainNavigation = () => {
             options={{
               presentation: 'modal',
               animation: 'slide_from_bottom',
+            }}
+          />
+          <RootStack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{
+              presentation: 'modal',
             }}
           />
         </>

@@ -19,15 +19,18 @@ const UIInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
-  const variantStyles = variant === 'meal' ? {
-    container: localStyles.mealContainer,
-    containerFocused: localStyles.mealContainerFocused,
-    input: localStyles.mealInput,
-  } : {
-    container: localStyles.container,
-    containerFocused: localStyles.containerFocused,
-    input: localStyles.input,
-  };
+  const variantStyles =
+    variant === 'meal'
+      ? {
+          container: localStyles.mealContainer,
+          containerFocused: localStyles.mealContainerFocused,
+          input: localStyles.mealInput,
+        }
+      : {
+          container: localStyles.container,
+          containerFocused: localStyles.containerFocused,
+          input: localStyles.input,
+        };
 
   return (
     <View style={style}>
@@ -83,7 +86,7 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
+    borderRadius: 15,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
@@ -106,8 +109,8 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F5F5F5',
-    borderRadius: 14,
-    padding: 13,
+    borderRadius: 16,
+    padding: 15,
     borderWidth: 1.5,
     borderColor: '#E8E8E8',
   },

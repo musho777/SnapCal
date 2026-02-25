@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import EditProfileCard from './EditProfileCard';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
+import { useNavigation } from '@react-navigation/native';
 
 const SettingsTab = ({
   userName,
@@ -22,8 +23,11 @@ const SettingsTab = ({
   language,
   setLanguage,
 }) => {
+  const navigation = useNavigation();
   const handleLogout = () => {
+    navigation.navigate('LoginScreen');
     console.log('Logout pressed');
+
     // Implement logout logic
   };
 

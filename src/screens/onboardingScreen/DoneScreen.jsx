@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,13 +13,13 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import LinearGradient from 'react-native-linear-gradient';
 import { GOAL_OPTIONS, DIET_OPTIONS, ACTIVITY_OPTIONS } from './constants';
 
 const DoneScreen = ({ data, onFinish }) => {
   const confettiScale = useSharedValue(0.5);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log('confettiScale');
     confettiScale.value = withSpring(1, {
       damping: 8,
       stiffness: 100,
