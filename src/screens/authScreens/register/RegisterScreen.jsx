@@ -5,37 +5,43 @@ import { Apple, Facebook, Chrome } from 'lucide-react-native';
 import UIInput from '../../../common-ui/uIInput/UIInput';
 import AuthOutlet from '../AuthOutlet';
 import { UIButton } from '../../../common-ui/uIButton';
-import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const [focusedInput, setFocusedInput] = useState(null);
-
-  const navigation = useNavigation();
-
-  const navigationToRegister = () => {
-    navigation.navigate('RegisterScreen');
-  };
-
   return (
     <AuthOutlet
       type={{
         id: 'goal',
-        bg: '#FFF8F0',
-        accent: '#FF8C42',
-        accentLight: '#FFE8D6',
-        illustrationBg: ['#FFE8D6', '#FFD4B3'],
-        shapes: ['#FFD4B3', '#FFBF8A', '#FFE8D6'],
-        illustration: '🎯',
-        title: "What's your main goal?",
-        subtitle: "We'll build your perfect nutrition plan around it",
+        bg: '#F0FFF6',
+        accent: '#3DBE7A',
+        accentLight: '#C8F0DA',
+        illustrationBg: ['#C8F0DA', '#A0E0BC'],
+        shapes: ['#A0E0BC', '#78D09E', '#C8F0DA'],
+        illustration: '🌱',
+        title: 'Create your account',
+        subtitle: "Start your nutrition journey today — it's free!",
       }}
     >
       <View style={styles.container}>
         <Animated.View entering={FadeInUp.delay(100)} style={styles.section}>
           <UIInput
+            label="Full Name"
+            variant="meal"
+            placeholder="Your Full name"
+            keyboardType="numeric"
+            containerStyle={[
+              styles.inputContainer,
+              focusedInput === 'email' && styles.inputWrapperActiveColor,
+            ]}
+            onFocus={() => setFocusedInput('email')}
+            onBlur={() => setFocusedInput(null)}
+          />
+        </Animated.View>
+        <Animated.View entering={FadeInUp.delay(200)} style={styles.section}>
+          <UIInput
             label="Email"
             variant="meal"
-            placeholder="you@example.com"
+            placeholder="Your Email"
             keyboardType="numeric"
             containerStyle={[
               styles.inputContainer,
@@ -46,11 +52,25 @@ const LoginScreen = () => {
           />
         </Animated.View>
 
-        <Animated.View entering={FadeInUp.delay(200)} style={styles.section}>
+        <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
           <UIInput
             label="Password"
             variant="meal"
             placeholder="Your Password"
+            keyboardType="decimal-pad"
+            containerStyle={[
+              styles.inputContainer,
+              focusedInput === 'password' && styles.inputWrapperActiveColor,
+            ]}
+            onFocus={() => setFocusedInput('password')}
+            onBlur={() => setFocusedInput(null)}
+          />
+        </Animated.View>
+        <Animated.View entering={FadeInUp.delay(400)} style={styles.section}>
+          <UIInput
+            label="Confirm Password"
+            variant="meal"
+            placeholder="Confirm Password"
             keyboardType="decimal-pad"
             containerStyle={[
               styles.inputContainer,
@@ -75,9 +95,7 @@ const LoginScreen = () => {
         >
           <Text style={styles.signupText}>
             Don't have an account?{' '}
-            <Text onPress={navigationToRegister} style={styles.signupLink}>
-              Sign Up
-            </Text>
+            <Text style={styles.signupLink}>Sign Up</Text>
           </Text>
         </Animated.View>
       </View>
@@ -125,4 +143,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 const StepContainer = ({ title, subtitle, children }) => {
   return (
-    <View style={styles.container}>
+    <View>
       <View style={styles.header}>
         <Animated.Text entering={FadeInUp.delay(0)} style={styles.title}>
           {title}
@@ -19,24 +19,6 @@ const StepContainer = ({ title, subtitle, children }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    marginTop: -24,
-    flex: 1,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.06,
-        shadowRadius: 30,
-        shadowOffset: { width: 0, height: -4 },
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-  },
   header: {
     paddingHorizontal: 24,
     paddingTop: 28,

@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withSpring,
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -14,28 +13,6 @@ const IllustrationHeader = ({ meta }) => {
   const blob1Opacity = useSharedValue(1);
   const blob2Opacity = useSharedValue(1);
   const blob3Opacity = useSharedValue(1);
-
-  // useEffect(() => {
-  //   blob1Scale.value = withSpring(0.9, {}, () => {
-  //     blob1Scale.value = withSpring(1);
-  //   });
-  //   blob2Scale.value = withSpring(0.8, {}, () => {
-  //     blob2Scale.value = withSpring(1);
-  //   });
-  //   blob3Scale.value = withSpring(0.85, {}, () => {
-  //     blob3Scale.value = withSpring(1);
-  //   });
-
-  //   blob1Opacity.value = withSpring(0.7, {}, () => {
-  //     blob1Opacity.value = withSpring(1);
-  //   });
-  //   blob2Opacity.value = withSpring(0.6, {}, () => {
-  //     blob2Opacity.value = withSpring(1);
-  //   });
-  //   blob3Opacity.value = withSpring(0.65, {}, () => {
-  //     blob3Opacity.value = withSpring(1);
-  //   });
-  // }, [currentStep]);
 
   const blob1Style = useAnimatedStyle(() => ({
     transform: [{ scale: blob1Scale.value }],
@@ -54,7 +31,6 @@ const IllustrationHeader = ({ meta }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: meta.bg }]}>
-      {/* Decorative Blobs */}
       <Animated.View
         style={[
           styles.blob,
@@ -108,6 +84,7 @@ const IllustrationHeader = ({ meta }) => {
 const styles = StyleSheet.create({
   container: {
     height: 280,
+    width: '100%',
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
@@ -118,33 +95,33 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   blob1: {
-    width: 320,
-    height: 320,
+    width: 280,
+    height: 280,
     top: -100,
     right: -80,
   },
   blob2: {
-    width: 200,
-    height: 200,
+    width: 180,
+    height: 180,
     top: -60,
-    right: 40,
+    leftr: 40,
   },
   blob3: {
     width: 180,
     height: 180,
     top: 120,
-    right: -40,
+    left: -40,
   },
   illustrationCircle: {
-    width: 140,
-    height: 140,
+    width: 120,
+    height: 120,
     borderRadius: 70,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
   },
   emoji: {
-    fontSize: 64,
+    fontSize: 44,
   },
 });
 

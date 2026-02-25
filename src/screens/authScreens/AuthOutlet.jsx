@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
-import { View, Animated as RNAnimated, Easing } from 'react-native';
+import { useEffect } from 'react';
+import {
+  View,
+  Animated as RNAnimated,
+  Easing,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import {
   useSharedValue,
   withTiming,
@@ -9,54 +15,47 @@ import IllustrationHeader from './components/IllustrationHeader';
 import StepContainer from './components/StepContainer';
 
 import { styles } from '../../themes';
-import { STEPS_META } from '../onboardingScreen/constants';
 
-const AuthOutlet = ({ children }) => {
-  const [screen, setScreen] = useState('splash');
-  const [step, setStep] = useState(0);
-  const [direction, setDirection] = useState('forward');
-  const [data, setData] = useState({
-    goal: '',
-    gender: '',
-    age: '',
-    weight: '',
-    height: '',
-    diet: '',
-    activity: '',
-    calorieGoal: '',
-    customCalories: null,
-  });
-
+const AuthOutlet = ({ children, type }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const bgColor = new RNAnimated.Value(0);
 
   useEffect(() => {
-    if (screen === 'steps') {
-      RNAnimated.timing(bgColor, {
-        toValue: step,
-        duration: 400,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: false,
-      }).start();
-    }
-  }, [step, screen, bgColor]);
+    RNAnimated.timing(bgColor, {
+      toValue: 0,
+      duration: 400,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    }).start();
+  }, [bgColor]);
 
   const backgroundColor = bgColor.interpolate({
     inputRange: [0, 1, 2, 3, 4],
-
-    outputRange: STEPS_META.map(meta => meta.bg),
+    outputRange: ['#F0F0F0', '#F0F7FF', '#F0FFF6', '#F5F0FF', '#FFF0F5'],
   });
-  const currentMeta = STEPS_META[0];
 
   return (
     <RNAnimated.View style={[styles.flex, { backgroundColor }]}>
-      <IllustrationHeader meta={currentMeta} currentStep={step} />
-      <StepContainer
-        title={'Welcome Back '}
-        subtitle={'Sign in to continue your nutrition journey'}
+      <View style={localStyles.imageContainer}>
+        <IllustrationHeader meta={type} />
+      </View>
+      <ScrollView
+        style={localStyles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.flexGrow1}
+        bounces={false}
       >
-        <StepContent children={children} />
-      </StepContainer>
+        <View style={localStyles.spacer} />
+
+        <View style={localStyles.details}>
+          <StepContainer
+            title={'Welcome Back '}
+            subtitle={'Sign in to continue your nutrition journey'}
+          >
+            <StepContent children={children} />
+          </StepContainer>
+        </View>
+      </ScrollView>
     </RNAnimated.View>
   );
 };
@@ -78,5 +77,49 @@ const StepContent = ({ step, direction, children }) => {
 
   return <View style={[styles.flex]}>{children}</View>;
 };
+
+const localStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  imageContainer: {
+    position: 'absolute',
+    width: '100%',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 400,
+    zIndex: 0,
+  },
+
+  scrollView: {
+    flex: 1,
+    zIndex: 1,
+    flexGrow: 1,
+    position: 'relative',
+  },
+  spacer: {
+    height: 250,
+  },
+  details: {
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    minHeight: 300,
+    borderWidth: 4,
+    borderColor: 'white',
+    backgroundColor: '#F9FAFB',
+    shadowColor: '#1f1f1f',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.17,
+    shadowRadius: 3.05,
+    elevation: 5,
+    gap: 10,
+    paddingBottom: 20,
+    flex: 1,
+  },
+});
 
 export default AuthOutlet;

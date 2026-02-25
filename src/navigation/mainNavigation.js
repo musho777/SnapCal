@@ -11,6 +11,7 @@ import ExploreStack from './exploreStack';
 import CreateMealScreen from '../screens/createMealScreen';
 import OnboardingFlow from '../screens/onboardingScreen';
 import LoginScreen from '../screens/authScreens/login/LoginScreen.jsx';
+import RegisterScreen from '../screens/authScreens/register/RegisterScreen.jsx';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -53,13 +54,8 @@ export const MainNavigation = () => {
         </RootStack.Screen>
       ) : (
         <>
-          <RootStack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{
-              presentation: 'modal',
-            }}
-          />
+          <RootStack.Screen name="LoginScreen" component={LoginScreen} />
+          <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
           <RootStack.Screen name="MainApp" component={TabNavigator} />
           <RootStack.Screen
             name="CreateMeal"
