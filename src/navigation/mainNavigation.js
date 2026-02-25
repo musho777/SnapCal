@@ -37,7 +37,7 @@ const TabNavigator = () => {
 };
 
 export const MainNavigation = () => {
-  const [onboardingCompleted, setOnboardingCompleted] = useState(true);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
 
   const handleOnboardingComplete = userData => {
     console.log('Onboarding completed with data:', userData);
