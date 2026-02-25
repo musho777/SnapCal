@@ -4,8 +4,10 @@ import { styles } from '../../themes';
 import { Header } from './components/Header';
 import { ProAccessBanner } from './components/ProAccessBanner';
 import { Category } from './components/Category';
-import { RecipeCard } from '../../components/cards/RecipeCard';
 import recipesData from '../../data/recipes.json';
+import { FoodCard } from '../../components/cards/FoodCard';
+import { getBgColor } from '../../utils/themesUtils';
+import { getRecipeImage } from '../../utils/imageMapper';
 
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
@@ -27,10 +29,15 @@ const getImageSource = imagePath => {
 
 const MainScreen = ({ navigation }) => {
   const data = recipesData.recipes.map(recipe => ({
-    id: recipe.id,
-    title: recipe.name,
-    kcal: recipe.totalCalories.toString(),
-    image: getImageSource(recipe.image),
+    id: recipe.id.toString(),
+    name: recipe.name,
+    kcal: recipe.totalCalories,
+    category: recipe.mealType,
+    health: 100,
+    tag: recipe.category,
+    bgColor: getBgColor(recipe.mealType),
+    image: getRecipeImage(recipe.image),
+    rating: recipe.rating,
   }));
   const handleShowRecipients = recipeId => {
     navigation.navigate('Recipient', { recipeId });
@@ -48,7 +55,6 @@ const MainScreen = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
       >
         {data.map((elm, i) => {
-          console.log(i === data.length - 1);
           return (
             <View
               style={[
@@ -57,11 +63,18 @@ const MainScreen = ({ navigation }) => {
               ]}
               key={i}
             >
-              <RecipeCard
+              <FoodCard
+                item={elm}
+                flex={false}
+                isSaved={false}
+                onToggleSave={() => {}}
+                onRecipePress={() => handleShowRecipients(elm.id)}
+              />
+              {/* <RecipeCard
                 onPress={() => handleShowRecipients(elm.id)}
                 data={elm}
                 key={i}
-              />
+              /> */}
             </View>
           );
         })}
@@ -78,6 +91,7 @@ const localStyled = StyleSheet.create({
   recipeCardWrapper: {
     marginRight: 15,
     paddingBottom: 10,
+    width: 175,
   },
   paddingLeft: {
     paddingLeft: 5,

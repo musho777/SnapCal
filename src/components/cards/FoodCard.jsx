@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { UIButton } from '../../common-ui/uIButton';
+import { styles } from '../../themes';
 
 export const FoodCard = ({
   item,
   isSaved = false,
   onToggleSave,
   onRecipePress,
+  flex = true,
 }) => {
   const getHealthBarColor = score => {
     if (score >= 8) return '#22C55E';
@@ -15,7 +17,7 @@ export const FoodCard = ({
   };
 
   return (
-    <View style={localStyles.foodCard}>
+    <View style={[localStyles.foodCard, flex && styles.flex]}>
       <View style={[localStyles.imageArea, { backgroundColor: item.bgColor }]}>
         <View style={localStyles.tagBadge}>
           <Text style={localStyles.tagText}>{item.tag}</Text>
@@ -64,7 +66,6 @@ export const FoodCard = ({
 
 const localStyles = StyleSheet.create({
   foodCard: {
-    flex: 1,
     borderRadius: 20,
     backgroundColor: '#fff',
     overflow: 'hidden',
