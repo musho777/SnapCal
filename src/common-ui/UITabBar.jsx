@@ -27,7 +27,6 @@ export const UITabBar = ({ tabs, activeTab, onTabChange }) => {
 const localStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
   },
   tab: {
     flex: 1,
