@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Apple, Facebook, Chrome } from 'lucide-react-native';
 import UIInput from '../../../common-ui/uIInput/UIInput';
@@ -49,18 +49,22 @@ const LoginScreen = () => {
             <UIButton title={'Sign in '} />
           </Animated.View>
           <Animated.View entering={FadeInUp.delay(400)} style={styles.row}>
-            <UIButton
-              variant="dark"
-              icon={<Apple color="#fff" size={20} />}
-            />
-            <UIButton
-              variant="dark"
-              icon={<Chrome color="#fff" size={20} />}
-            />
+            <UIButton variant="dark" icon={<Apple color="#fff" size={20} />} />
+            <UIButton variant="dark" icon={<Chrome color="#fff" size={20} />} />
             <UIButton
               variant="dark"
               icon={<Facebook color="#fff" size={20} />}
             />
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInUp.delay(500)}
+            style={styles.signupContainer}
+          >
+            <Text style={styles.signupText}>
+              Don't have an account?{' '}
+              <Text style={styles.signupLink}>Sign Up</Text>
+            </Text>
           </Animated.View>
         </View>
       </ScrollView>
@@ -93,6 +97,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 15,
+  },
+  signupContainer: {
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  signupText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  signupLink: {
+    color: '#272727',
+    fontWeight: '600',
   },
 });
 
