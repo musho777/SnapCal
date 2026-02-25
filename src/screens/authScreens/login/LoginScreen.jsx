@@ -19,7 +19,6 @@ const LoginScreen = () => {
   return (
     <AuthOutlet
       type={{
-        id: 'goal',
         bg: '#FFF8F0',
         accent: '#FF8C42',
         accentLight: '#FFE8D6',

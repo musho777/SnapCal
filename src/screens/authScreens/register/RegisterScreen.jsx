@@ -5,13 +5,19 @@ import { Apple, Facebook, Chrome } from 'lucide-react-native';
 import UIInput from '../../../common-ui/uIInput/UIInput';
 import AuthOutlet from '../AuthOutlet';
 import { UIButton } from '../../../common-ui/uIButton';
+import { useNavigation } from '@react-navigation/native';
 
 const RegisterScreen = () => {
   const [focusedInput, setFocusedInput] = useState(null);
+  const navigation = useNavigation();
+
+  const navigationToLogin = () => {
+    navigation.navigate('LoginScreen');
+  };
+
   return (
     <AuthOutlet
       type={{
-        id: 'goal',
         bg: '#F0FFF6',
         accent: '#3DBE7A',
         accentLight: '#C8F0DA',
@@ -80,10 +86,10 @@ const RegisterScreen = () => {
             onBlur={() => setFocusedInput(null)}
           />
         </Animated.View>
-        <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
+        <Animated.View entering={FadeInUp.delay(500)} style={styles.section}>
           <UIButton title={'Sign in '} />
         </Animated.View>
-        <Animated.View entering={FadeInUp.delay(400)} style={styles.row}>
+        <Animated.View entering={FadeInUp.delay(600)} style={styles.row}>
           <UIButton variant="dark" icon={<Apple color="#fff" size={20} />} />
           <UIButton variant="dark" icon={<Chrome color="#fff" size={20} />} />
           <UIButton variant="dark" icon={<Facebook color="#fff" size={20} />} />
@@ -94,8 +100,10 @@ const RegisterScreen = () => {
           style={styles.signupContainer}
         >
           <Text style={styles.signupText}>
-            Don't have an account?{' '}
-            <Text style={styles.signupLink}>Sign Up</Text>
+            Don't have an account? Already have an account? {'\n'}
+            <Text onPress={navigationToLogin} style={styles.signupLink}>
+              Sign In
+            </Text>
           </Text>
         </Animated.View>
       </View>
@@ -136,6 +144,7 @@ const styles = StyleSheet.create({
   signupText: {
     fontSize: 14,
     color: '#666',
+    textAlign: 'center',
   },
   signupLink: {
     color: '#272727',
