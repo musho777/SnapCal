@@ -30,7 +30,7 @@ const BottomCTA = ({ onPress, disabled, isLastStep, accentColor }) => {
           style={[buttonStyle, buttonColorStyle]}
         >
           <Text style={textStyle}>
-            {isLastStep ? 'Finish Setup 🎉' : 'Contieeen2ue'}
+            {isLastStep ? 'Finish Setup 🎉' : 'Continue'}
           </Text>
         </TouchableOpacity>
       </View>
