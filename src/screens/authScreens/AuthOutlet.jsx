@@ -109,7 +109,7 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 10,
     borderWidth: 4,
     borderColor: 'white',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#fff',
     shadowColor: '#1f1f1f',
     shadowOffset: {
       width: 0,

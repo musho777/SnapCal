@@ -99,7 +99,7 @@ const DoneScreen = ({ data, onFinish }) => {
           style={styles.button}
           activeOpacity={0.9}
         >
-          <Text style={styles.buttonText}>Start Tracking →</Text>
+          <Text style={styles.buttonText}>Start Tracking</Text>
         </TouchableOpacity>
       </View>
     </View>
