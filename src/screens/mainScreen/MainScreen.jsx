@@ -9,24 +9,6 @@ import { FoodCard } from '../../components/cards/FoodCard';
 import { getBgColor } from '../../utils/themesUtils';
 import { getRecipeImage } from '../../utils/imageMapper';
 
-const imageMap = {
-  'chicken.png': require('../../assets/chicken.png'),
-  'snack.png': require('../../assets/snack.png'),
-  'grilledSalmon.png': require('../../assets/grilledSalmon.png'),
-  'pancakes.png': require('../../assets/pancakes.png'),
-  'greekYogurt.png': require('../../assets/greekYogurt.png'),
-  'steak.png': require('../../assets/steak.png'),
-  'apple.png': require('../../assets/apple.png'),
-  'drink.png': require('../../assets/drink.png'),
-  'carb.png': require('../../assets/carb.png'),
-  'protein.png': require('../../assets/protein.png'),
-};
-
-const getImageSource = imagePath => {
-  const filename = imagePath.split('/').pop();
-  return imageMap[filename] || imageMap['snack.png'];
-};
-
 const MainScreen = ({ navigation }) => {
   const data = recipesData.recipes.map(recipe => ({
     id: recipe.id.toString(),
