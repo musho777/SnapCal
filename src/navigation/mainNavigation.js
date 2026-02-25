@@ -53,6 +53,13 @@ export const MainNavigation = () => {
         </RootStack.Screen>
       ) : (
         <>
+          <RootStack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{
+              presentation: 'modal',
+            }}
+          />
           <RootStack.Screen name="MainApp" component={TabNavigator} />
           <RootStack.Screen
             name="CreateMeal"
@@ -60,13 +67,6 @@ export const MainNavigation = () => {
             options={{
               presentation: 'modal',
               animation: 'slide_from_bottom',
-            }}
-          />
-          <RootStack.Screen
-            name="LoginScreen"
-            component={LoginScreen}
-            options={{
-              presentation: 'modal',
             }}
           />
         </>

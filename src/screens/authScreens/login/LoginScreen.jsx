@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { Apple, Facebook, Chrome } from 'lucide-react-native';
 import UIInput from '../../../common-ui/uIInput/UIInput';
 import AuthOutlet from '../AuthOutlet';
 import { UIButton } from '../../../common-ui/uIButton';
@@ -47,6 +48,20 @@ const LoginScreen = () => {
           <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
             <UIButton title={'Sign in '} />
           </Animated.View>
+          <Animated.View entering={FadeInUp.delay(400)} style={styles.row}>
+            <UIButton
+              variant="dark"
+              icon={<Apple color="#fff" size={20} />}
+            />
+            <UIButton
+              variant="dark"
+              icon={<Chrome color="#fff" size={20} />}
+            />
+            <UIButton
+              variant="dark"
+              icon={<Facebook color="#fff" size={20} />}
+            />
+          </Animated.View>
         </View>
       </ScrollView>
     </AuthOutlet>
@@ -72,6 +87,12 @@ const styles = StyleSheet.create({
     paddingRight: 60,
     borderWidth: 2,
     borderColor: '#F0F0F0',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 15,
   },
 });
 

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../themes';
 
 export const UIButton = ({
@@ -7,6 +7,7 @@ export const UIButton = ({
   onPress,
   style,
   textStyle,
+  icon,
 }) => {
   const variantStyles = getVariantStyles(variant);
 
@@ -15,9 +16,12 @@ export const UIButton = ({
       style={[localStyles.button, variantStyles.container, style]}
       onPress={onPress}
     >
-      <Text style={[styles.button, variantStyles.text, textStyle]}>
-        {title}
-      </Text>
+      {icon && <View>{icon}</View>}
+      {title && (
+        <Text style={[styles.button, variantStyles.text, textStyle]}>
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -96,6 +100,9 @@ const localStyles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 25,
     borderRadius: 16,
+    gap: 10,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });
