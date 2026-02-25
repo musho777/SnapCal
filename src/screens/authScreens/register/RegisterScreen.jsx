@@ -37,9 +37,9 @@ const RegisterScreen = () => {
             keyboardType="numeric"
             containerStyle={[
               styles.inputContainer,
-              focusedInput === 'email' && styles.inputWrapperActiveColor,
+              focusedInput === 'fullName' && styles.inputWrapperActiveColor,
             ]}
-            onFocus={() => setFocusedInput('email')}
+            onFocus={() => setFocusedInput('fullName')}
             onBlur={() => setFocusedInput(null)}
           />
         </Animated.View>
@@ -80,9 +80,9 @@ const RegisterScreen = () => {
             keyboardType="decimal-pad"
             containerStyle={[
               styles.inputContainer,
-              focusedInput === 'password' && styles.inputWrapperActiveColor,
+              focusedInput === 'confirm' && styles.inputWrapperActiveColor,
             ]}
-            onFocus={() => setFocusedInput('password')}
+            onFocus={() => setFocusedInput('confirm')}
             onBlur={() => setFocusedInput(null)}
           />
         </Animated.View>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   inputWrapperActiveColor: {
-    borderColor: '#FFD4B3',
+    borderColor: '#C8F0DA',
   },
   inputContainer: {
     backgroundColor: '#FAFAFA',

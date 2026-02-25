@@ -76,7 +76,7 @@ const AuthOutlet = ({ children, type }) => {
               Sign in to continue your nutrition journey
             </Animated.Text>
           </View>
-          <View style={localStyles.container}>{children}</View>
+          <View style={styles.flex}>{children}</View>
         </View>
       </ScrollView>
     </RNAnimated.View>
@@ -84,9 +84,6 @@ const AuthOutlet = ({ children, type }) => {
 };
 
 const localStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   imageContainer: {
     position: 'absolute',
     width: '100%',
@@ -96,7 +93,6 @@ const localStyles = StyleSheet.create({
     height: 400,
     zIndex: 0,
   },
-
   scrollView: {
     flex: 1,
     zIndex: 1,
