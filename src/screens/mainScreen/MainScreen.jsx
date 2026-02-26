@@ -52,11 +52,6 @@ const MainScreen = ({ navigation }) => {
                 onToggleSave={() => {}}
                 onRecipePress={() => handleShowRecipients(elm.id)}
               />
-              {/* <RecipeCard
-                onPress={() => handleShowRecipients(elm.id)}
-                data={elm}
-                key={i}
-              /> */}
             </View>
           );
         })}
