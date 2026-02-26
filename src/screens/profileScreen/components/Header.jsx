@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { UITabBar } from '../../../common-ui/UITabBar';
 
 const Header = ({ userName, userEmail, activeTab, onTabChange }) => {
@@ -46,7 +46,7 @@ const Header = ({ userName, userEmail, activeTab, onTabChange }) => {
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    paddingTop: 52,
+    paddingTop: Platform.OS === 'android' ? 30 : 50,
     paddingHorizontal: 20,
     paddingBottom: 0,
     borderBottomWidth: 1,

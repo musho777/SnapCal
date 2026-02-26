@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 
 const NotificationHeader = ({
   unreadCount,
@@ -55,7 +61,8 @@ const NotificationHeader = ({
 const localStyles = StyleSheet.create({
   header: {
     backgroundColor: '#fff',
-    paddingTop: 52,
+    paddingTop: Platform.OS === 'android' ? 30 : 50,
+
     paddingHorizontal: 20,
     paddingBottom: 0,
     borderBottomWidth: 1,
