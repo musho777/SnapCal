@@ -29,19 +29,14 @@ const CaloriesStep = ({
 
   const inputHeight = useSharedValue(0);
 
-  useEffect(() => {
-    inputHeight.value = withTiming(showCustomInput ? 70 : 0, {
-      duration: 300,
-    });
-  }, [inputHeight, showCustomInput]);
-
   const inputAnimatedStyle = useAnimatedStyle(() => ({
     height: inputHeight.value,
     opacity: inputHeight.value / 70,
   }));
 
-  const handleSetCustom = () => {
-    const value = parseInt(customValue, 10);
+  const handleSetCustom = e => {
+    setCustomValue(e);
+    const value = parseInt(e, 10);
     if (!isNaN(value) && value > 0) {
       onSetCustomCalories(value);
     }
@@ -49,6 +44,11 @@ const CaloriesStep = ({
 
   const displayedCalories = customCalories || suggestedCalories;
   const macros = calculateMacros(displayedCalories, 'maintain');
+  useEffect(() => {
+    inputHeight.value = withTiming(showCustomInput ? 70 : 0, {
+      duration: 300,
+    });
+  }, [inputHeight, showCustomInput]);
 
   return (
     <ScrollView
@@ -123,17 +123,10 @@ const CaloriesStep = ({
               placeholder="2000"
               placeholderTextColor="#C0C0C0"
               value={customValue}
-              onChangeText={setCustomValue}
+              onChangeText={handleSetCustom}
               keyboardType="numeric"
               textAlign="center"
             />
-            <TouchableOpacity
-              onPress={handleSetCustom}
-              style={[styles.setButton, { backgroundColor: accentColor }]}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.setButtonText}>Set</Text>
-            </TouchableOpacity>
           </View>
         </Animated.View>
       </View>
