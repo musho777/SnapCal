@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 
 const Header = () => {
   return (
@@ -14,9 +8,6 @@ const Header = () => {
         <Text style={styles.headerTitle}>Meal Plan</Text>
         <Text style={styles.headerSubtitle}>February 2026</Text>
       </View>
-      <TouchableOpacity style={styles.newPlanButton}>
-        <Text style={styles.newPlanButtonText}>+ New Plan</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -43,17 +34,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#9CA3AF',
     marginTop: 2,
-  },
-  newPlanButton: {
-    backgroundColor: '#272727',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  newPlanButtonText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#fff',
   },
 });
 
