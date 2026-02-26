@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,
@@ -8,13 +8,26 @@ import {
 } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { calculateBMI, getBMICategory } from '../constants';
-import UIInput from '../../../common-ui/uIInput/UIInput';
+import UISelect from '../../../common-ui/uISelect';
 
 const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
-  const [focusedInput, setFocusedInput] = useState(null);
-
   const bmi = calculateBMI(data.weight, data.height);
   const bmiCategory = getBMICategory(bmi);
+
+  const ageOptions = Array.from({ length: 88 }, (_, i) => ({
+    label: `${i + 13} years`,
+    value: (i + 13).toString(),
+  }));
+
+  const weightOptions = Array.from({ length: 171 }, (_, i) => ({
+    label: `${i + 30} kg`,
+    value: (i + 30).toString(),
+  }));
+
+  const heightOptions = Array.from({ length: 151 }, (_, i) => ({
+    label: `${i + 100} cm`,
+    value: (i + 100).toString(),
+  }));
 
   return (
     <ScrollView
@@ -71,69 +84,39 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(100)} style={styles.section}>
-          <View style={styles.inputWrapper}>
-            <UIInput
-              label="Age"
-              variant="meal"
-              placeholder="Enter your age"
-              value={data.age}
-              onChangeText={text => onUpdateData({ age: text })}
-              keyboardType="numeric"
-              containerStyle={[
-                styles.inputContainer,
-                focusedInput === 'age' && {
-                  borderColor: accentColor,
-                },
-              ]}
-              onFocus={() => setFocusedInput('age')}
-              onBlur={() => setFocusedInput(null)}
-            />
-            <Text style={styles.unit}>years</Text>
-          </View>
+          <UISelect
+            label="Age"
+            variant="meal"
+            placeholder="Select your age"
+            value={data.age}
+            onValueChange={value => onUpdateData({ age: value })}
+            options={ageOptions}
+            containerStyle={styles.inputContainer}
+          />
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(200)} style={styles.section}>
-          <View style={styles.inputWrapper}>
-            <UIInput
-              label="Weight"
-              variant="meal"
-              placeholder="Enter your weight"
-              value={data.weight}
-              onChangeText={text => onUpdateData({ weight: text })}
-              keyboardType="decimal-pad"
-              containerStyle={[
-                styles.inputContainer,
-                focusedInput === 'weight' && {
-                  borderColor: accentColor,
-                },
-              ]}
-              onFocus={() => setFocusedInput('weight')}
-              onBlur={() => setFocusedInput(null)}
-            />
-            <Text style={styles.unit}>kg</Text>
-          </View>
+          <UISelect
+            label="Weight"
+            variant="meal"
+            placeholder="Select your weight"
+            value={data.weight}
+            onValueChange={value => onUpdateData({ weight: value })}
+            options={weightOptions}
+            containerStyle={[styles.inputContainer]}
+          />
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
-          <View style={styles.inputWrapper}>
-            <UIInput
-              label="Height"
-              variant="meal"
-              placeholder="Enter your height"
-              value={data.height}
-              onChangeText={text => onUpdateData({ height: text })}
-              keyboardType="numeric"
-              containerStyle={[
-                styles.inputContainer,
-                focusedInput === 'height' && {
-                  borderColor: accentColor,
-                },
-              ]}
-              onFocus={() => setFocusedInput('height')}
-              onBlur={() => setFocusedInput(null)}
-            />
-            <Text style={styles.unit}>cm</Text>
-          </View>
+          <UISelect
+            label="Height"
+            variant="meal"
+            placeholder="Select your height"
+            value={data.height}
+            onValueChange={value => onUpdateData({ height: value })}
+            options={heightOptions}
+            containerStyle={styles.inputContainer}
+          />
         </Animated.View>
 
         {bmi && bmiCategory && (
@@ -200,23 +183,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#6B7280',
   },
-  inputWrapper: {
-    position: 'relative',
-  },
   inputContainer: {
     backgroundColor: '#FAFAFA',
     borderRadius: 16,
-    paddingRight: 60,
     borderWidth: 2,
     borderColor: '#F0F0F0',
-  },
-  unit: {
-    position: 'absolute',
-    right: 20,
-    top: 38,
-    color: '#9CA3AF',
-    fontSize: 13,
-    fontWeight: '600',
   },
   bmiCard: {
     backgroundColor: '#FAFAFA',
