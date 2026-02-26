@@ -14,7 +14,12 @@ export const ProAccessBanner = () => {
         <Text style={styles.whiteTitle}>Upgrade to Pro</Text>
         <Text style={styles.caption}>Get unlimited access to all features</Text>
         <View style={[styles.alignStart, styles.mt5]}>
-          <UIButton title={'Upgrade now'} />
+          <UIButton
+            style={localStyles.buttonStyle}
+            variant="card"
+            title={'Upgrade now'}
+            textStyle={localStyles.textStyle}
+          />
         </View>
       </View>
     </View>
@@ -48,5 +53,11 @@ const localStyles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
+  buttonStyle: {
+    backgroundColor: 'white',
+  },
+  textStyle: {
+    color: '#272727',
   },
 });

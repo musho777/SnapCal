@@ -1,15 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { UITabBar } from '../../../common-ui/UITabBar';
 
-const Header = ({
-  userName,
-  userEmail,
-  savedCount,
-  myRecipesCount,
-  activeTab,
-  onTabChange,
-}) => {
+const Header = ({ userName, userEmail, activeTab, onTabChange }) => {
   const getInitials = name => {
     const names = name.split(' ');
     if (names.length >= 2) {
@@ -41,30 +34,8 @@ const Header = ({
           </View>
         </View>
       </View>
-
-      <View style={localStyles.statsRow}>
-        <TouchableOpacity style={localStyles.statBox}>
-          <Text style={localStyles.statEmoji}>❤️</Text>
-          <Text style={localStyles.statValue}>{savedCount}</Text>
-          <Text style={localStyles.statLabel}>Saved</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={localStyles.statBox}>
-          <Text style={localStyles.statEmoji}>📖</Text>
-          <Text style={localStyles.statValue}>{myRecipesCount}</Text>
-          <Text style={localStyles.statLabel}>My Recipes</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={localStyles.statBox}>
-          <Text style={localStyles.statEmoji}>🔥</Text>
-          <Text style={localStyles.statValue}>5 days</Text>
-          <Text style={localStyles.statLabel}>Streak</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Tab Bar */}
       <UITabBar
-        tabs={['Saved', 'My Recipes', 'Settings']}
+        tabs={['Settings', 'My Recipes', 'Saved']}
         activeTab={activeTab}
         onTabChange={onTabChange}
       />
@@ -75,7 +46,7 @@ const Header = ({
 const localStyles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    paddingTop: 52,
+    paddingTop: Platform.OS === 'android' ? 30 : 50,
     paddingHorizontal: 20,
     paddingBottom: 0,
     borderBottomWidth: 1,

@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { MainNavigation } from './src/navigation/mainNavigation';
@@ -13,14 +14,16 @@ function App() {
   };
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <View style={styles.container}>
-          <MainNavigation />
-        </View>
-      </NavigationContainer>
-      <DraggableAIButton onPress={handleAIButtonPress} />
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <View style={styles.container}>
+            <MainNavigation />
+          </View>
+        </NavigationContainer>
+        <DraggableAIButton onPress={handleAIButtonPress} />
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

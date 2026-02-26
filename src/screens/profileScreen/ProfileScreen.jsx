@@ -4,7 +4,7 @@ import FOOD_DATA from '../../data/recipes.json';
 import { Header, SavedTab, MyRecipesTab, SettingsTab } from './components';
 
 const ProfileScreen = ({ navigation }) => {
-  const [activeTab, setActiveTab] = useState('Saved');
+  const [activeTab, setActiveTab] = useState('Settings');
   const recipes = FOOD_DATA.recipes || [];
   const [savedList, setSavedList] = useState(
     [recipes[0], recipes[1], recipes[2], recipes[3]].filter(Boolean),

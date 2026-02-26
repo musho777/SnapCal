@@ -1,130 +1,94 @@
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
-const { width: screenWidth } = Dimensions.get('window');
 import { styles } from '../../themes';
-import { RecipeCard } from '../../components/cards/RecipeCard';
 import recipesData from '../../data/recipes.json';
 import { ScreenHeader } from '../../components/headers/ScreenHeader';
 import UIInput from '../../common-ui/uIInput';
 import NoResult from '../../components/noResult';
-const imageMap = {
-  'chicken.png': require('../../assets/chicken.png'),
-  'snack.png': require('../../assets/snack.png'),
-  'grilledSalmon.png': require('../../assets/grilledSalmon.png'),
-  'pancakes.png': require('../../assets/pancakes.png'),
-  'greekYogurt.png': require('../../assets/greekYogurt.png'),
-  'steak.png': require('../../assets/steak.png'),
-  'apple.png': require('../../assets/apple.png'),
-  'drink.png': require('../../assets/drink.png'),
-  'carb.png': require('../../assets/carb.png'),
-  'protein.png': require('../../assets/protein.png'),
-};
-
-const getImageSource = imagePath => {
-  const filename = imagePath.split('/').pop();
-  return imageMap[filename] || imageMap['snack.png'];
-};
+import { calculateHealthScore } from '../../utils/healthScore';
+import { getBgColor } from '../../utils/themesUtils';
+import { getRecipeImage } from '../../utils/imageMapper';
+import { FoodCard } from '../../components/cards/FoodCard';
 
 const CategoryScreen = ({ navigation, route }) => {
   const { category } = route.params;
 
-  const filteredRecipes = recipesData.recipes.filter(
-    recipe => recipe.category.toLowerCase() === category.toLowerCase(),
-  );
+  const transformRecipesToFoodData = recipes => {
+    return recipes.map(recipe => {
+      const healthData = calculateHealthScore(recipe.macros);
+      return {
+        id: recipe.id.toString(),
+        name: recipe.name,
+        kcal: recipe.totalCalories,
+        category: recipe.mealType,
+        health: healthData.score,
+        tag: recipe.category,
+        bgColor: getBgColor(recipe.mealType),
+        image: getRecipeImage(recipe.image),
+        rating: recipe.rating,
+      };
+    });
+  };
 
-  const data = filteredRecipes.map(recipe => ({
-    id: recipe.id,
-    title: recipe.name,
-    kcal: recipe.totalCalories.toString(),
-    image: getImageSource(recipe.image),
-  }));
+  const FOOD_DATA = transformRecipesToFoodData(recipesData.recipes);
 
   const handleShowRecipients = recipeId => {
     navigation.navigate('Recipient', { recipeId });
   };
 
+  const renderFoodCard = ({ item }) => (
+    <FoodCard
+      item={item}
+      isSaved={false}
+      onToggleSave={() => {}}
+      onRecipePress={() => {
+        handleShowRecipients(item.id);
+      }}
+    />
+  );
+
+  const renderListHeader = () => (
+    <View style={localStyles.inputWrapper}>
+      <UIInput placeholder="Search" showSearchIcon={true} />
+    </View>
+  );
+
   return (
     <View style={styles.page}>
       <ScreenHeader title={category} />
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={localStyled.scrollContent}
-      >
-        {data.length > 0 && (
-          <UIInput placeholder="Search" showSearchIcon={true} />
-        )}
-        {data.length > 0 ? (
-          <View style={localStyled.gridContainer}>
-            {data.map((elm, i) => (
-              <RecipeCard
-                width={(screenWidth - 30) / 2}
-                key={i}
-                onPress={() => handleShowRecipients(elm.id)}
-                data={elm}
-              />
-            ))}
-          </View>
-        ) : (
-          <NoResult text={`No recipes found for ${category}`} />
-        )}
-      </ScrollView>
+      <View style={localStyles.scrollContent}>
+        <FlatList
+          data={FOOD_DATA}
+          renderItem={renderFoodCard}
+          keyExtractor={item => item.id}
+          numColumns={2}
+          ListHeaderComponent={FOOD_DATA.length > 0 && renderListHeader}
+          style={styles.flex}
+          columnWrapperStyle={localStyles.columnWrapper}
+          contentContainerStyle={localStyles.listContent}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <NoResult text={`No recipes found for ${category}`} />
+          }
+        />
+      </View>
     </View>
   );
 };
 
-const localStyled = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    paddingTop: 50,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backText: {
-    fontSize: 28,
-    color: '#000',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-    color: '#000',
-  },
-  placeholder: {
-    width: 40,
-  },
+const localStyles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 20,
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 10,
+    gap: 20,
     paddingBottom: 80,
-    marginTop: 20,
   },
-  recipeCardWrapper: {
-    marginBottom: 15,
+  columnWrapper: {
+    gap: 12,
+    marginBottom: 12,
+    paddingHorizontal: 2,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 100,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#666',
+  inputWrapper: {
+    marginBottom: 20,
   },
 });
 

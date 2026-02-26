@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import UIInput from '../../../common-ui/uIInput';
 
-export const Header = ({ searchQuery, onSearchChange }) => {
+export const Header = () => {
   return (
     <View style={localStyles.header}>
       <View style={localStyles.headerTop}>
@@ -12,7 +12,7 @@ export const Header = ({ searchQuery, onSearchChange }) => {
         </View>
       </View>
       <View style={localStyles.searchContainer}>
-        <UIInput showSearchIcon />
+        <UIInput style={localStyles.input} showSearchIcon />
       </View>
     </View>
   );
@@ -20,10 +20,12 @@ export const Header = ({ searchQuery, onSearchChange }) => {
 
 const localStyles = StyleSheet.create({
   header: {
-    backgroundColor: '#fff',
-    paddingTop: 40,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: Platform.OS === 'android' ? 30 : 50,
     paddingHorizontal: 20,
-    paddingBottom: 16,
+    paddingBottom: 20,
+    backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
@@ -63,5 +65,8 @@ const localStyles = StyleSheet.create({
     fontSize: 16,
     color: '#9CA3AF',
     marginLeft: 8,
+  },
+  input: {
+    width: '100%',
   },
 });

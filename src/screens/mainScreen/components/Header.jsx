@@ -1,7 +1,11 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { styles } from '../../../themes/index';
 import { NotificationIcon } from '../../../assets/Icons';
+
 export const Header = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={localStyles.header}>
       <View style={localStyles.headerInfo}>
@@ -14,7 +18,11 @@ export const Header = () => {
           <Text style={styles.h5}>Musho Poghosyan</Text>
         </View>
       </View>
-      <TouchableOpacity style={localStyles.notificationWrapper}>
+      <TouchableOpacity
+        style={localStyles.notificationWrapper}
+        onPress={() => navigation.navigate('Notifications')}
+        activeOpacity={0.7}
+      >
         <NotificationIcon />
       </TouchableOpacity>
     </View>
