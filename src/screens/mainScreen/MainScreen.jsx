@@ -61,10 +61,6 @@ const MainScreen = ({ navigation }) => {
 };
 
 const localStyled = StyleSheet.create({
-  buttonContainer: {
-    paddingHorizontal: 20,
-    marginVertical: 15,
-  },
   recipeCardWrapper: {
     marginRight: 15,
     paddingBottom: 10,
