@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Platform,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -71,17 +70,6 @@ const DietOption = ({
         isSelected && {
           borderColor: accentColor,
           backgroundColor: accentLight,
-          ...Platform.select({
-            ios: {
-              shadowColor: accentColor,
-              shadowOpacity: 0.2,
-              shadowRadius: 16,
-              shadowOffset: { width: 0, height: 4 },
-            },
-            android: {
-              elevation: 4,
-            },
-          }),
         },
       ]}
     >

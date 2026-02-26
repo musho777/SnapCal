@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 
 const StepContainer = ({ title, subtitle, children }) => {
@@ -21,26 +21,11 @@ const StepContainer = ({ title, subtitle, children }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    marginTop: -24,
+
     flex: 1,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.06,
-        shadowRadius: 30,
-        shadowOffset: { width: 0, height: -4 },
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
   },
   header: {
-    paddingHorizontal: 24,
-    paddingTop: 28,
-    paddingBottom: 16,
+    paddingBottom: 26,
   },
   title: {
     fontSize: 28,
@@ -53,12 +38,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     lineHeight: 22,
-    marginTop: 4,
+    marginTop: 7,
   },
   content: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingBottom: 120,
+    paddingBottom: 100,
   },
 });
 

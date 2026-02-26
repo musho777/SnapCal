@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Animated as RNAnimated, Easing } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Animated as RNAnimated,
+  Easing,
+  TouchableOpacity,
+} from 'react-native';
 import {
   useSharedValue,
   withTiming,
@@ -7,9 +13,7 @@ import {
 } from 'react-native-reanimated';
 import SplashScreen from './SplashScreen';
 import DoneScreen from './DoneScreen';
-import IllustrationHeader from './components/IllustrationHeader';
 import StepContainer from './components/StepContainer';
-import BackButton from './components/BackButton';
 import BottomCTA from './components/BottomCTA';
 import GoalStep from './steps/GoalStep';
 import StatsStep from './steps/StatsStep';
@@ -24,6 +28,7 @@ import {
   adjustCaloriesForGoal,
 } from './constants';
 import { styles } from '../../themes';
+import { GoBackIcon } from '../../assets/Icons';
 
 const OnboardingFlow = ({ onComplete }) => {
   const [screen, setScreen] = useState('splash');
@@ -55,10 +60,10 @@ const OnboardingFlow = ({ onComplete }) => {
     }
   }, [step, screen, bgColor]);
 
-  const backgroundColor = bgColor.interpolate({
-    inputRange: [0, 1, 2, 3, 4],
-    outputRange: STEPS_META.map(meta => meta.bg),
-  });
+  // const backgroundColor = bgColor.interpolate({
+  //   inputRange: [0, 1, 2, 3, 4],
+  //   outputRange: STEPS_META.map(meta => meta.bg),
+  // });
 
   useEffect(() => {
     if (screen === 'steps' && step === 4 && !data.calorieGoal) {
@@ -145,16 +150,16 @@ const OnboardingFlow = ({ onComplete }) => {
   const currentMeta = STEPS_META[step];
 
   return (
-    <RNAnimated.View style={[styles.flex, { backgroundColor }]}>
-      <View style={localStyles.zIndex}>
-        <BackButton onPress={goBack} />
-      </View>
+    <RNAnimated.View style={[styles.page, localStyles.container]}>
+      <TouchableOpacity onPress={goBack} style={localStyles.zIndex}>
+        <GoBackIcon />
+      </TouchableOpacity>
 
-      <IllustrationHeader
+      {/* <IllustrationHeader
         meta={currentMeta}
         currentStep={step}
         totalSteps={STEPS_META.length}
-      />
+      /> */}
 
       <StepContainer title={currentMeta.title} subtitle={currentMeta.subtitle}>
         <StepContent
@@ -252,8 +257,10 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
 };
 
 const localStyles = StyleSheet.create({
-  zIndex: {
-    zIndex: 999,
+  container: {
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingTop: 50,
   },
 });
 

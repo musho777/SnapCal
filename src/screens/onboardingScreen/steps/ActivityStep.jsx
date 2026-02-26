@@ -65,12 +65,7 @@ const ActivityOption = ({
     transform: [{ scale: radioScale.value }],
   }));
 
-  const optionStyles = [
-    styles.option,
-    isSelected && styles.optionSelected,
-    isSelected && Platform.OS === 'ios' && styles.optionSelectedIOS,
-    isSelected && Platform.OS === 'android' && styles.optionSelectedAndroid,
-  ];
+  const optionStyles = [styles.option];
 
   const optionColorStyle = isSelected
     ? { borderColor: accentColor, backgroundColor: accentLight }
@@ -80,13 +75,15 @@ const ActivityOption = ({
     isSelected && Platform.OS === 'ios' ? { shadowColor: accentColor } : null;
 
   const iconBoxStyle = isSelected
-    ? [styles.iconBox, styles.iconBoxSelected]
+    ? styles.iconBox
     : [styles.iconBox, styles.iconBoxUnselected];
 
-  const iconBoxColorStyle = isSelected ? { backgroundColor: accentColor } : null;
+  const iconBoxColorStyle = isSelected
+    ? { backgroundColor: accentColor }
+    : null;
 
   const radioOuterStyle = isSelected
-    ? [styles.radioOuter, styles.radioOuterSelected]
+    ? styles.radioOuter
     : [styles.radioOuter, styles.radioOuterUnselected];
 
   const radioOuterColorStyle = isSelected
@@ -133,26 +130,13 @@ const styles = StyleSheet.create({
     borderColor: '#F0F0F0',
     backgroundColor: '#fff',
   },
-  optionSelected: {
-    // Color properties are applied via inline styles (borderColor, backgroundColor)
-  },
-  optionSelectedIOS: {
-    shadowOpacity: 0.25,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  optionSelectedAndroid: {
-    elevation: 4,
-  },
+
   iconBox: {
     width: 48,
     height: 48,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  iconBoxSelected: {
-    // backgroundColor is applied via inline style
   },
   iconBoxUnselected: {
     backgroundColor: '#F0F0F0',
@@ -180,9 +164,6 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  radioOuterSelected: {
-    // borderColor and backgroundColor are applied via inline styles
   },
   radioOuterUnselected: {
     borderColor: '#E0E0E0',
