@@ -5,6 +5,8 @@ import {
   Animated as RNAnimated,
   Easing,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {
   useSharedValue,
@@ -161,21 +163,26 @@ const OnboardingFlow = ({ onComplete }) => {
         totalSteps={STEPS_META.length}
       /> */}
 
-      <StepContainer title={currentMeta.title} subtitle={currentMeta.subtitle}>
-        <StepContent
-          step={step}
-          data={data}
-          updateData={updateData}
-          currentMeta={currentMeta}
-          direction={direction}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={localStyles.keyboardAvoidingView}
+      >
+        <StepContainer title={currentMeta.title} subtitle={currentMeta.subtitle}>
+          <StepContent
+            step={step}
+            data={data}
+            updateData={updateData}
+            currentMeta={currentMeta}
+            direction={direction}
+          />
+        </StepContainer>
+        <BottomCTA
+          onPress={goNext}
+          disabled={!canProceed()}
+          isLastStep={step === 4}
+          accentColor={currentMeta.accent}
         />
-      </StepContainer>
-      <BottomCTA
-        onPress={goNext}
-        disabled={!canProceed()}
-        isLastStep={step === 4}
-        accentColor={currentMeta.accent}
-      />
+      </KeyboardAvoidingView>
     </RNAnimated.View>
   );
 };
@@ -261,6 +268,12 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 20,
     paddingTop: 50,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  zIndex: {
+    zIndex: 1,
   },
 });
 

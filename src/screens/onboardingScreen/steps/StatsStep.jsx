@@ -168,6 +168,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 8,
+    paddingBottom: 40,
   },
   container: {
     gap: 20,

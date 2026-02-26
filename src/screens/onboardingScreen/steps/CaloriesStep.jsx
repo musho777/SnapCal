@@ -151,6 +151,7 @@ const MacroPill = ({ label, value, color }) => (
 const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 8,
+    paddingBottom: 40,
   },
   container: {
     gap: 20,
