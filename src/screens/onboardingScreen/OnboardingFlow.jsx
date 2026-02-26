@@ -164,10 +164,13 @@ const OnboardingFlow = ({ onComplete }) => {
       /> */}
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'height' : 'height'}
         style={localStyles.keyboardAvoidingView}
       >
-        <StepContainer title={currentMeta.title} subtitle={currentMeta.subtitle}>
+        <StepContainer
+          title={currentMeta.title}
+          subtitle={currentMeta.subtitle}
+        >
           <StepContent
             step={step}
             data={data}
