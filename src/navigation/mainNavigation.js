@@ -13,6 +13,7 @@ import CreateMealScreen from '../screens/createMealScreen';
 import OnboardingFlow from '../screens/onboardingScreen';
 import LoginScreen from '../screens/authScreens/login/LoginScreen.jsx';
 import RegisterScreen from '../screens/authScreens/register/RegisterScreen.jsx';
+import SplashScreen from '../components/splashScreen';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -63,7 +64,7 @@ export const MainNavigation = () => {
   }, []);
 
   if (!isReady) {
-    return null;
+    return <SplashScreen />;
   }
 
   return (

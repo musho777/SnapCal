@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { styles } from '../../themes';
 
 export const UIButton = ({
@@ -15,13 +15,20 @@ export const UIButton = ({
   return (
     <TouchableOpacity
       style={[localStyles.button, variantStyles.container, style]}
-      onPress={onPress}
+      onPress={loading ? undefined : onPress}
+      disabled={loading}
     >
-      {icon && <View>{icon}</View>}
-      {title && (
-        <Text style={[styles.button, variantStyles.text, textStyle]}>
-          {loading ? 'Loading...' : title}
-        </Text>
+      {loading ? (
+        <ActivityIndicator color={variantStyles.text.color} />
+      ) : (
+        <>
+          {icon && <View>{icon}</View>}
+          {title && (
+            <Text style={[styles.button, variantStyles.text, textStyle]}>
+              {title}
+            </Text>
+          )}
+        </>
       )}
     </TouchableOpacity>
   );
