@@ -5,6 +5,8 @@ import {
   Easing,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -53,32 +55,37 @@ const AuthOutlet = ({ children, type }) => {
       <View style={localStyles.imageContainer}>
         <IllustrationHeader meta={type} />
       </View>
-      <ScrollView
-        style={localStyles.scrollView}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.flexGrow1}
-        bounces={false}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.flex}
       >
-        <View style={localStyles.spacer} />
+        <ScrollView
+          style={localStyles.scrollView}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.flexGrow1}
+          bounces={false}
+        >
+          <View style={localStyles.spacer} />
 
-        <View style={localStyles.details}>
-          <View style={localStyles.header}>
-            <Animated.Text
-              entering={FadeInUp.delay(0)}
-              style={localStyles.title}
-            >
-              Welcome Back
-            </Animated.Text>
-            <Animated.Text
-              entering={FadeInUp.delay(100)}
-              style={localStyles.subtitle}
-            >
-              Sign in to continue your nutrition journey
-            </Animated.Text>
+          <View style={localStyles.details}>
+            <View style={localStyles.header}>
+              <Animated.Text
+                entering={FadeInUp.delay(0)}
+                style={localStyles.title}
+              >
+                Welcome Back
+              </Animated.Text>
+              <Animated.Text
+                entering={FadeInUp.delay(100)}
+                style={localStyles.subtitle}
+              >
+                Sign in to continue your nutrition journey
+              </Animated.Text>
+            </View>
+            <View style={styles.flex}>{children}</View>
           </View>
-          <View style={styles.flex}>{children}</View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </RNAnimated.View>
   );
 };
@@ -119,7 +126,7 @@ const localStyles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 5,
     gap: 10,
-    paddingBottom: 20,
+    paddingBottom: 40,
     flex: 1,
   },
   header: {
