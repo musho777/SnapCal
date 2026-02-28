@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Apple, Facebook, Chrome } from 'lucide-react-native';
@@ -6,14 +6,27 @@ import UIInput from '../../../common-ui/uIInput/UIInput';
 import AuthOutlet from '../AuthOutlet';
 import { UIButton } from '../../../common-ui/uIButton';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { userLogin } from '../../../features/auth/authActions';
 
 const LoginScreen = () => {
   const [focusedInput, setFocusedInput] = useState(null);
-
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const navigationToRegister = () => {
     navigation.navigate('RegisterScreen');
+  };
+
+  const handleLogin = async () => {
+    try {
+      await dispatch(userLogin({ email, password })).unwrap();
+      console.log('Login successful');
+    } catch (error) {
+      console.log('Login failed:', error);
+    }
   };
 
   return (
@@ -36,6 +49,7 @@ const LoginScreen = () => {
             variant="meal"
             placeholder="you@example.com"
             keyboardType="numeric"
+            onChangeText={e => setEmail(e)}
             containerStyle={[
               styles.inputContainer,
               focusedInput === 'email' && styles.inputWrapperActiveColor,
@@ -51,6 +65,7 @@ const LoginScreen = () => {
             variant="meal"
             placeholder="Your Password"
             keyboardType="decimal-pad"
+            onChangeText={e => setPassword(e)}
             containerStyle={[
               styles.inputContainer,
               focusedInput === 'password' && styles.inputWrapperActiveColor,
@@ -60,7 +75,7 @@ const LoginScreen = () => {
           />
         </Animated.View>
         <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
-          <UIButton title={'Sign in '} />
+          <UIButton onPress={handleLogin} title={'Sign in '} />
         </Animated.View>
         <Animated.View entering={FadeInUp.delay(400)} style={styles.row}>
           <UIButton variant="dark" icon={<Apple color="#fff" size={20} />} />

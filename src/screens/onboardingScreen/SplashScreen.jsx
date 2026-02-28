@@ -8,8 +8,15 @@ import {
 } from 'react-native';
 import Animated, { FadeInLeft } from 'react-native-reanimated';
 import { SPLASH_FEATURES } from './constants';
+import { useNavigation } from '@react-navigation/native';
 
 const SplashScreen = ({ onGetStarted }) => {
+  const navigation = useNavigation();
+
+  const handleNavigateLogin = () => {
+    navigation.navigate('LoginScreen');
+  };
+
   return (
     <View style={styles.container}>
       <View style={[styles.blob, styles.blob1]} />
@@ -55,7 +62,7 @@ const SplashScreen = ({ onGetStarted }) => {
 
         <View style={styles.signInContainer}>
           <Text style={styles.signInText}>Already have an account? </Text>
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity onPress={handleNavigateLogin} activeOpacity={0.7}>
             <Text style={styles.signInLink}>Sign In</Text>
           </TouchableOpacity>
         </View>

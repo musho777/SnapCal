@@ -4,6 +4,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { MainNavigation } from './src/navigation/mainNavigation';
 import { DraggableAIButton } from './src/common-ui/uIButton';
+import { Provider } from 'react-redux';
+import { store } from './src/store/store';
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
@@ -18,7 +20,9 @@ function App() {
       <SafeAreaProvider>
         <NavigationContainer>
           <View style={styles.container}>
-            <MainNavigation />
+            <Provider store={store}>
+              <MainNavigation />
+            </Provider>
           </View>
         </NavigationContainer>
         <DraggableAIButton onPress={handleAIButtonPress} />

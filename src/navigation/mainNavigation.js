@@ -47,11 +47,18 @@ export const MainNavigation = () => {
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       {!onboardingCompleted ? (
-        <RootStack.Screen name="Onboarding">
-          {props => (
-            <OnboardingFlow {...props} onComplete={handleOnboardingComplete} />
-          )}
-        </RootStack.Screen>
+        <>
+          <RootStack.Screen name="Onboarding">
+            {props => (
+              <OnboardingFlow
+                {...props}
+                onComplete={handleOnboardingComplete}
+              />
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
+          <RootStack.Screen name="LoginScreen" component={LoginScreen} />
+        </>
       ) : (
         <>
           <RootStack.Screen name="MainApp" component={TabNavigator} />
