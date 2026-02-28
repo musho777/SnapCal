@@ -74,11 +74,11 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     setError('');
-    setLoading(true);
 
     if (!validateForm()) {
       return;
     }
+    setLoading(true);
 
     try {
       await dispatch(userLogin({ email: email.trim(), password })).unwrap();
@@ -195,9 +195,6 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    paddingTop: 8,
-  },
   container: {
     gap: 20,
   },

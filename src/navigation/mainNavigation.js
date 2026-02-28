@@ -47,7 +47,6 @@ export const MainNavigation = () => {
         const onboardingCompleted = await AsyncStorage.getItem(
           'onboardingCompleted',
         );
-        console.log('Onboarding completed:', onboardingCompleted);
         if (onboardingCompleted === 'true') {
           setInitialRoute('MainApp');
         } else {
