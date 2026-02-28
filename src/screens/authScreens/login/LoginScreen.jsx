@@ -15,17 +15,22 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigationToRegister = () => {
     navigation.navigate('RegisterScreen');
   };
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       await dispatch(userLogin({ email, password })).unwrap();
+      navigation.navigate('MainApp');
       console.log('Login successful');
     } catch (error) {
       console.log('Login failed:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +80,11 @@ const LoginScreen = () => {
           />
         </Animated.View>
         <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
-          <UIButton onPress={handleLogin} title={'Sign in '} />
+          <UIButton
+            loading={loading}
+            onPress={handleLogin}
+            title={'Sign in '}
+          />
         </Animated.View>
         <Animated.View entering={FadeInUp.delay(400)} style={styles.row}>
           <UIButton variant="dark" icon={<Apple color="#fff" size={20} />} />

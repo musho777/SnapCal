@@ -24,12 +24,11 @@ export const userLogin = createAsyncThunk(
         email,
         password,
       });
-      console.log('Login response data:', data);
-      // if (data.accessToken && data.refreshToken) {
-      //   await setAccessToken(data.accessToken);
-      //   await setRefreshToken(data.refreshToken);
-      // }
-      // return data;
+      if (data.accessToken && data.refreshToken) {
+        await setAccessToken(data.accessToken);
+        await setRefreshToken(data.refreshToken);
+      }
+      return data;
     } catch (error) {
       console.log('Login error:', error);
       return rejectWithValue(error.response?.data?.message || error.message);

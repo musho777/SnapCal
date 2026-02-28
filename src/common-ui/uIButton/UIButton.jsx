@@ -8,6 +8,7 @@ export const UIButton = ({
   style,
   textStyle,
   icon,
+  loading,
 }) => {
   const variantStyles = getVariantStyles(variant);
 
@@ -19,7 +20,7 @@ export const UIButton = ({
       {icon && <View>{icon}</View>}
       {title && (
         <Text style={[styles.button, variantStyles.text, textStyle]}>
-          {title}
+          {loading ? 'Loading...' : title}
         </Text>
       )}
     </TouchableOpacity>

@@ -58,6 +58,7 @@ export const MainNavigation = () => {
           </RootStack.Screen>
           <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
           <RootStack.Screen name="LoginScreen" component={LoginScreen} />
+          <RootStack.Screen name="MainApp" component={TabNavigator} />
         </>
       ) : (
         <>
