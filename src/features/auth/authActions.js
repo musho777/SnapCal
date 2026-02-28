@@ -18,7 +18,6 @@ export const loadTokens = createAsyncThunk('auth/loadTokens', async () => {
 export const userLogin = createAsyncThunk(
   'auth/login',
   async ({ email, password }, { rejectWithValue }) => {
-    console.log('Attempting to log in with:', { email, password });
     try {
       const data = await ApiClient.post('/api/auth/login', {
         email,
@@ -30,7 +29,6 @@ export const userLogin = createAsyncThunk(
       }
       return data;
     } catch (error) {
-      console.log('Login error:', error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   },

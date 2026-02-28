@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Apple, Facebook, Chrome } from 'lucide-react-native';
@@ -16,19 +16,20 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const navigationToRegister = () => {
     navigation.navigate('RegisterScreen');
   };
 
   const handleLogin = async () => {
+    setError('');
     setLoading(true);
     try {
       await dispatch(userLogin({ email, password })).unwrap();
       navigation.navigate('MainApp');
-      console.log('Login successful');
     } catch (error) {
-      console.log('Login failed:', error);
+      setError('Login failed. Please check your credentials and try again.');
     } finally {
       setLoading(false);
     }
@@ -48,12 +49,18 @@ const LoginScreen = () => {
       }}
     >
       <View style={styles.container}>
+        {error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
         <Animated.View entering={FadeInUp.delay(100)} style={styles.section}>
           <UIInput
             label="Email"
             variant="meal"
             placeholder="you@example.com"
-            keyboardType="numeric"
+            keyboardType="email-address"
+            autoCapitalize="none"
             onChangeText={e => setEmail(e)}
             containerStyle={[
               styles.inputContainer,
@@ -69,7 +76,8 @@ const LoginScreen = () => {
             label="Password"
             variant="meal"
             placeholder="Your Password"
-            keyboardType="decimal-pad"
+            secureTextEntry={true}
+            autoCapitalize="none"
             onChangeText={e => setPassword(e)}
             containerStyle={[
               styles.inputContainer,
@@ -79,6 +87,7 @@ const LoginScreen = () => {
             onBlur={() => setFocusedInput(null)}
           />
         </Animated.View>
+
         <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
           <UIButton
             loading={loading}
@@ -145,6 +154,18 @@ const styles = StyleSheet.create({
   signupLink: {
     color: '#272727',
     fontWeight: '600',
+  },
+  errorContainer: {
+    backgroundColor: '#FEE',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#FCC',
+  },
+  errorText: {
+    color: '#C33',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
 
