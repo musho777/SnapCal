@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import TrackScreen from '../screens/trackScreen';
 import MealPlanScreen from '../screens/mealPlanScreen';
@@ -37,44 +38,52 @@ const TabNavigator = () => {
 };
 
 export const MainNavigation = () => {
-  const [onboardingCompleted, setOnboardingCompleted] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [initialRoute, setInitialRoute] = useState('Onboarding');
 
-  const handleOnboardingComplete = userData => {
-    console.log('Onboarding completed with data:', userData);
-    setOnboardingCompleted(true);
-  };
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        const onboardingCompleted = await AsyncStorage.getItem(
+          'onboardingCompleted',
+        );
+        console.log('Onboarding completed:', onboardingCompleted);
+        if (onboardingCompleted === 'true') {
+          setInitialRoute('MainApp');
+        } else {
+          setInitialRoute('Onboarding');
+        }
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+      } finally {
+        setIsReady(true);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
-    <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      {!onboardingCompleted ? (
-        <>
-          <RootStack.Screen name="Onboarding">
-            {props => (
-              <OnboardingFlow
-                {...props}
-                onComplete={handleOnboardingComplete}
-              />
-            )}
-          </RootStack.Screen>
-          <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <RootStack.Screen name="LoginScreen" component={LoginScreen} />
-          <RootStack.Screen name="MainApp" component={TabNavigator} />
-        </>
-      ) : (
-        <>
-          <RootStack.Screen name="MainApp" component={TabNavigator} />
-          <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <RootStack.Screen name="LoginScreen" component={LoginScreen} />
-          <RootStack.Screen
-            name="CreateMeal"
-            component={CreateMealScreen}
-            options={{
-              presentation: 'modal',
-              animation: 'slide_from_bottom',
-            }}
-          />
-        </>
-      )}
+    <RootStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={initialRoute}
+    >
+      <RootStack.Screen name="Onboarding" component={OnboardingFlow} />
+      <RootStack.Screen name="LoginScreen" component={LoginScreen} />
+      <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
+      <RootStack.Screen name="MainApp" component={TabNavigator} />
+      <RootStack.Screen
+        name="CreateMeal"
+        component={CreateMealScreen}
+        options={{
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
+        }}
+      />
     </RootStack.Navigator>
   );
 };

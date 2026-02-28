@@ -15,6 +15,8 @@ const UIInput = ({
   style,
   containerStyle,
   inputStyle,
+  error = false,
+  errorText = '',
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -41,6 +43,7 @@ const UIInput = ({
           isFocused && variantStyles.containerFocused,
           multiline && variant === 'meal' && localStyles.mealMultiline,
           containerStyle,
+          error && localStyles.containerError,
         ]}
       >
         {showSearchIcon && (
@@ -69,6 +72,9 @@ const UIInput = ({
           {...props}
         />
       </View>
+      {error && errorText ? (
+        <Text style={localStyles.errorText}>{errorText}</Text>
+      ) : null}
     </View>
   );
 };
@@ -104,6 +110,11 @@ const localStyles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 12,
     elevation: 4,
+  },
+  containerError: {
+    borderColor: '#FF6B6B',
+    borderWidth: 1.5,
+    backgroundColor: '#FFF5F5',
   },
   mealContainer: {
     flexDirection: 'row',
@@ -145,5 +156,12 @@ const localStyles = StyleSheet.create({
   },
   inputWithIcon: {
     paddingLeft: 0,
+  },
+  errorText: {
+    color: '#FF6B6B',
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
+    fontWeight: '500',
   },
 });

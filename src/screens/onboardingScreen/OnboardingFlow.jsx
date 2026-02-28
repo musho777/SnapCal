@@ -13,6 +13,8 @@ import {
   withTiming,
   Easing as REasing,
 } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import SplashScreen from './SplashScreen';
 import DoneScreen from './DoneScreen';
 import StepContainer from './components/StepContainer';
@@ -33,6 +35,7 @@ import { styles } from '../../themes';
 import { GoBackIcon } from '../../assets/Icons';
 
 const OnboardingFlow = ({ onComplete }) => {
+  const navigation = useNavigation();
   const [screen, setScreen] = useState('splash');
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState('forward');
@@ -135,9 +138,15 @@ const OnboardingFlow = ({ onComplete }) => {
     setScreen('steps');
   };
 
-  const handleFinish = () => {
-    if (onComplete) {
-      onComplete(data);
+  const handleFinish = async () => {
+    try {
+      await AsyncStorage.setItem('onboardingCompleted', 'true');
+      if (onComplete) {
+        onComplete(data);
+      }
+      navigation.replace('MainApp');
+    } catch (error) {
+      console.error('Error saving onboarding data:', error);
     }
   };
 

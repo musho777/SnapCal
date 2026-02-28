@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Apple, Facebook, Chrome } from 'lucide-react-native';
 import UIInput from '../../../common-ui/uIInput/UIInput';
@@ -8,6 +8,8 @@ import { UIButton } from '../../../common-ui/uIButton';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../../features/auth/authActions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { validateEmail } from '../../../utils/commonUtils';
 
 const LoginScreen = () => {
   const [focusedInput, setFocusedInput] = useState(null);
@@ -16,23 +18,85 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
 
   const navigationToRegister = () => {
     navigation.navigate('RegisterScreen');
   };
 
+  const handleEmailChange = text => {
+    setEmail(text);
+    setEmailError('');
+    setError('');
+  };
+
+  const handlePasswordChange = text => {
+    setPassword(text);
+    setPasswordError('');
+    setError('');
+  };
+
+  const handleFocus = inputName => {
+    setFocusedInput(inputName);
+  };
+
+  const handleBlur = () => {
+    setFocusedInput(null);
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!email.trim()) {
+      setEmailError('Email is required');
+      isValid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email address');
+      isValid = false;
+    } else {
+      setEmailError('');
+    }
+
+    if (!password) {
+      setPasswordError('Password is required');
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      isValid = false;
+    } else {
+      setPasswordError('');
+    }
+
+    return isValid;
+  };
+
   const handleLogin = async () => {
     setError('');
     setLoading(true);
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
-      await dispatch(userLogin({ email, password })).unwrap();
-      navigation.navigate('MainApp');
-    } catch (error) {
+      await dispatch(userLogin({ email: email.trim(), password })).unwrap();
+      await AsyncStorage.setItem('onboardingCompleted', 'true');
+      navigation.replace('MainApp');
+    } catch (err) {
       setError('Login failed. Please check your credentials and try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPassword = () => {
+    Alert.alert(
+      'Forgot Password',
+      'Password reset functionality will be available soon.',
+      [{ text: 'OK' }],
+    );
   };
 
   return (
@@ -61,13 +125,16 @@ const LoginScreen = () => {
             placeholder="you@example.com"
             keyboardType="email-address"
             autoCapitalize="none"
-            onChangeText={e => setEmail(e)}
+            value={email}
+            onChangeText={handleEmailChange}
             containerStyle={[
               styles.inputContainer,
               focusedInput === 'email' && styles.inputWrapperActiveColor,
             ]}
-            onFocus={() => setFocusedInput('email')}
-            onBlur={() => setFocusedInput(null)}
+            onFocus={() => handleFocus('email')}
+            onBlur={handleBlur}
+            error={!!emailError}
+            errorText={emailError}
           />
         </Animated.View>
 
@@ -78,21 +145,31 @@ const LoginScreen = () => {
             placeholder="Your Password"
             secureTextEntry={true}
             autoCapitalize="none"
-            onChangeText={e => setPassword(e)}
+            value={password}
+            onChangeText={handlePasswordChange}
             containerStyle={[
               styles.inputContainer,
               focusedInput === 'password' && styles.inputWrapperActiveColor,
             ]}
-            onFocus={() => setFocusedInput('password')}
-            onBlur={() => setFocusedInput(null)}
+            onFocus={() => handleFocus('password')}
+            onBlur={handleBlur}
+            error={!!passwordError}
+            errorText={passwordError}
           />
+          <TouchableOpacity
+            onPress={handleForgotPassword}
+            style={styles.forgotPassword}
+          >
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(300)} style={styles.section}>
           <UIButton
             loading={loading}
             onPress={handleLogin}
-            title={'Sign in '}
+            title="Sign in"
+            disabled={loading}
           />
         </Animated.View>
         <Animated.View entering={FadeInUp.delay(400)} style={styles.row}>
@@ -137,6 +214,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#F0F0F0',
   },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginTop: 8,
+  },
+  forgotPasswordText: {
+    color: '#FF8C42',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -156,16 +242,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   errorContainer: {
-    backgroundColor: '#FEE',
+    backgroundColor: '#FEE2E2',
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#FCC',
+    borderColor: '#FECACA',
   },
   errorText: {
-    color: '#C33',
+    color: '#DC2626',
     fontSize: 14,
     textAlign: 'center',
+    fontWeight: '500',
   },
 });
 
