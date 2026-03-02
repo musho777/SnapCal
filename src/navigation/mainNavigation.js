@@ -63,6 +63,12 @@ export const MainNavigation = () => {
     checkOnboardingStatus();
   }, []);
 
+  // useEffect(() => {
+  //   AsyncStorage.removeItem('accessToken');
+  //   AsyncStorage.removeItem('refreshToken');
+  //   AsyncStorage.removeItem('onboardingCompleted', 'false');
+  // }, []);
+
   if (!isReady) {
     return <SplashScreen />;
   }

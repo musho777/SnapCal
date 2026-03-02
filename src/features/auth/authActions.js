@@ -19,13 +19,13 @@ export const userLogin = createAsyncThunk(
   'auth/login',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const data = await ApiClient.post('/api/auth/login', {
+      const data = await ApiClient.post('/auth/login', {
         email,
         password,
       });
-      if (data.accessToken && data.refreshToken) {
-        await setAccessToken(data.accessToken);
-        await setRefreshToken(data.refreshToken);
+      if (data.access_token && data.refresh_token) {
+        await setAccessToken(data.access_token);
+        await setRefreshToken(data.refresh_token);
       }
       return data;
     } catch (error) {
