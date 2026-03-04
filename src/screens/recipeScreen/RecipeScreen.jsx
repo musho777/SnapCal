@@ -40,16 +40,18 @@ const RecipeScreen = ({ route }) => {
   const dispatch = useDispatch();
   const singleData = useSelector(selectSingleData);
   const loading = useSelector(selectSingleLoading);
-  console.log('singleData', singleData);
-  const recipeId = route?.params?.recipeId || 1;
+  const recipeId = route?.params?.recipeId;
   const recipe =
     recipesData.recipes.find(r => r.id === recipeId) || recipesData.recipes[0];
 
-  const data = recipe.macros;
   const ingredients = recipe.ingredients;
   const cookingSteps = recipe.cookingSteps;
 
-  const healthScoreData = calculateHealthScore(data);
+  const healthScoreData = calculateHealthScore({
+    carbs_g: singleData.carbs_g,
+    protein_g: singleData.protein_g,
+    fats_g: singleData.fats_g,
+  });
 
   useEffect(() => {
     dispatch(getSingleDeash({ id: recipeId }));
@@ -98,7 +100,10 @@ const RecipeScreen = ({ route }) => {
 
           <Ingredients ingredients={ingredients} />
 
-          <CookingSteps steps={cookingSteps} cookTime={singleData?.cook_time_minutes} />
+          <CookingSteps
+            steps={cookingSteps}
+            cookTime={singleData?.cook_time_minutes}
+          />
         </View>
       </ScrollView>
     </View>
