@@ -58,7 +58,7 @@ export const CountdownModal = ({ visible, onClose, cookTime, stepText }) => {
             duration: 1000,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       ).start();
     } else {
       scaleAnim.setValue(0);
@@ -72,7 +72,7 @@ export const CountdownModal = ({ visible, onClose, cookTime, stepText }) => {
     if (!visible || timeLeft <= 0) return;
 
     const interval = setInterval(() => {
-      setTimeLeft((prev) => {
+      setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(interval);
           return 0;
@@ -96,7 +96,7 @@ export const CountdownModal = ({ visible, onClose, cookTime, stepText }) => {
     }).start();
   }, [timeLeft]);
 
-  const formatTime = (seconds) => {
+  const formatTime = seconds => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
@@ -131,7 +131,7 @@ export const CountdownModal = ({ visible, onClose, cookTime, stepText }) => {
       animationType="none"
       onRequestClose={handleClose}
     >
-      <Pressable style={styles.overlay} onPress={handleClose}>
+      <View style={styles.overlay}>
         <Animated.View
           style={[
             styles.modalContent,
@@ -141,69 +141,62 @@ export const CountdownModal = ({ visible, onClose, cookTime, stepText }) => {
             },
           ]}
         >
-          <Pressable>
-            <View style={styles.header}>
-              <Text style={styles.stepLabel}>Cooking Timer</Text>
+          <View style={styles.header}>
+            <Text style={styles.stepLabel}>Cooking Timer</Text>
+          </View>
+
+          {stepText && (
+            <View style={styles.stepTextContainer}>
+              <Text style={styles.stepText} numberOfLines={2}>
+                {stepText}
+              </Text>
             </View>
+          )}
 
-            {stepText && (
-              <View style={styles.stepTextContainer}>
-                <Text style={styles.stepText} numberOfLines={2}>
-                  {stepText}
-                </Text>
-              </View>
-            )}
+          <Animated.View style={[styles.clockContainer]}>
+            <Svg width={CLOCK_SIZE} height={CLOCK_SIZE}>
+              <G rotation="-90" origin={`${CLOCK_SIZE / 2}, ${CLOCK_SIZE / 2}`}>
+                <Circle
+                  cx={CLOCK_SIZE / 2}
+                  cy={CLOCK_SIZE / 2}
+                  r={RADIUS}
+                  stroke="#F3F4F6"
+                  strokeWidth={STROKE_WIDTH}
+                  fill="none"
+                />
+                <AnimatedCircle
+                  cx={CLOCK_SIZE / 2}
+                  cy={CLOCK_SIZE / 2}
+                  r={RADIUS}
+                  stroke="#10B981"
+                  strokeWidth={STROKE_WIDTH}
+                  fill="none"
+                  strokeDasharray={CIRCUMFERENCE}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                />
+              </G>
+            </Svg>
 
-            <Animated.View
-              style={[
-                styles.clockContainer,
-                { transform: [{ scale: pulseAnim }] },
-              ]}
+            <View style={styles.timeContainer}>
+              <Text style={styles.timeText}>{formatTime(timeLeft)}</Text>
+              <Text style={styles.timeLabel}>
+                {timeLeft > 60 ? 'minutes left' : 'seconds left'}
+              </Text>
+            </View>
+          </Animated.View>
+
+          <View style={styles.buttonContainer}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={handleClose}
+              android_ripple={{ color: '#E5E7EB' }}
             >
-              <Svg width={CLOCK_SIZE} height={CLOCK_SIZE}>
-                <G rotation="-90" origin={`${CLOCK_SIZE / 2}, ${CLOCK_SIZE / 2}`}>
-                  <Circle
-                    cx={CLOCK_SIZE / 2}
-                    cy={CLOCK_SIZE / 2}
-                    r={RADIUS}
-                    stroke="#F3F4F6"
-                    strokeWidth={STROKE_WIDTH}
-                    fill="none"
-                  />
-                  <AnimatedCircle
-                    cx={CLOCK_SIZE / 2}
-                    cy={CLOCK_SIZE / 2}
-                    r={RADIUS}
-                    stroke="#10B981"
-                    strokeWidth={STROKE_WIDTH}
-                    fill="none"
-                    strokeDasharray={CIRCUMFERENCE}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                  />
-                </G>
-              </Svg>
-
-              <View style={styles.timeContainer}>
-                <Text style={styles.timeText}>{formatTime(timeLeft)}</Text>
-                <Text style={styles.timeLabel}>
-                  {timeLeft > 60 ? 'minutes left' : 'seconds left'}
-                </Text>
-              </View>
-            </Animated.View>
-
-            <View style={styles.buttonContainer}>
-              <Pressable
-                style={styles.closeButton}
-                onPress={handleClose}
-                android_ripple={{ color: '#E5E7EB' }}
-              >
-                <Text style={styles.closeButtonText}>Close Timer</Text>
-              </Pressable>
-            </View>
-          </Pressable>
+              <Text style={styles.closeButtonText}>Close Timer</Text>
+            </Pressable>
+          </View>
         </Animated.View>
-      </Pressable>
+      </View>
     </Modal>
   );
 };
@@ -280,6 +273,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   closeButton: {
     backgroundColor: '#F3F4F6',
