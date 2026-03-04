@@ -98,7 +98,7 @@ const RecipeScreen = ({ route }) => {
 
           <Ingredients ingredients={ingredients} />
 
-          <CookingSteps steps={cookingSteps} />
+          <CookingSteps steps={cookingSteps} cookTime={singleData?.cook_time_minutes} />
         </View>
       </ScrollView>
     </View>

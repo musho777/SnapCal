@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, Pressable, Animated } from 'react-native';
+import { CountdownModal } from './CountdownModal';
 
 const StepItem = ({ step, index, isCompleted, onToggle }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -104,16 +105,21 @@ const StepItem = ({ step, index, isCompleted, onToggle }) => {
   );
 };
 
-export const CookingSteps = ({ steps }) => {
+export const CookingSteps = ({ steps, cookTime }) => {
   const [completedSteps, setCompletedSteps] = useState(new Set());
+  const [showClock, setShowClock] = useState(false);
 
-  const toggleStep = (index) => {
-    setCompletedSteps((prev) => {
+  const toggleStep = index => {
+    setCompletedSteps(prev => {
       const newSet = new Set(prev);
       if (newSet.has(index)) {
         newSet.delete(index);
       } else {
         newSet.add(index);
+
+        if (newSet.size === steps.length) {
+          setShowClock(true);
+        }
       }
       return newSet;
     });
@@ -144,6 +150,15 @@ export const CookingSteps = ({ steps }) => {
           />
         ))}
       </View>
+
+      <CountdownModal
+        visible={showClock}
+        onClose={() => setShowClock(false)}
+        cookTime={cookTime}
+        stepText={
+          'All steps completed! Time to cook for ' + cookTime + ' minutes.'
+        }
+      />
     </View>
   );
 };
