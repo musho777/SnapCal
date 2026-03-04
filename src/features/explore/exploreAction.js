@@ -13,3 +13,18 @@ export const getDeash = createAsyncThunk(
     }
   },
 );
+
+export const getSingleDeash = createAsyncThunk(
+  'get/single/deash',
+  async (params, { rejectWithValue }) => {
+    console.log('Fetching single dish with params:', params);
+    try {
+      const data = await ApiClient.get(`/dishes/${params.id}`);
+      console.log('Single Dish Data:', data);
+      return data;
+    } catch (error) {
+      console.log('Error fetching single dish:', error);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);

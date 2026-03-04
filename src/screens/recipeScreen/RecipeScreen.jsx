@@ -9,6 +9,10 @@ import { Ingredients } from './components/Ingredients';
 import { CookingSteps } from './components/CookingSteps';
 import { calculateHealthScore } from '../../utils/healthScore';
 import recipesData from '../../data/recipes.json';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSingleDeash } from '../../features/explore/exploreAction';
+import { selectSingleData } from '../../features/explore/exploreSlice';
 
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
@@ -29,16 +33,22 @@ const getImageSource = imagePath => {
 };
 
 const RecipeScreen = ({ route }) => {
+  const dispatch = useDispatch();
+  const singleData = useSelector(selectSingleData);
+  console.log('singleData', singleData);
   const recipeId = route?.params?.recipeId || 1;
   const recipe =
     recipesData.recipes.find(r => r.id === recipeId) || recipesData.recipes[0];
 
   const data = recipe.macros;
-  const recipeInfo = recipe.recipeInfo;
   const ingredients = recipe.ingredients;
   const cookingSteps = recipe.cookingSteps;
 
   const healthScoreData = calculateHealthScore(data);
+
+  useEffect(() => {
+    dispatch(getSingleDeash({ id: recipeId }));
+  }, [dispatch, recipeId]);
 
   return (
     <View style={localStyles.container}>
@@ -54,27 +64,27 @@ const RecipeScreen = ({ route }) => {
         <View style={localStyles.spacer} />
         <View style={localStyles.details}>
           <View style={localStyles.titleWrapper}>
-            <Text style={styles.title}>{recipe.name}</Text>
-            <Text style={styles.caption}>{recipe.rating}</Text>
+            <Text style={styles.title}>{singleData?.name}</Text>
+            <Text style={styles.caption}>{singleData?.average_rating}</Text>
           </View>
           <View style={localStyles.kcal}>
             <Text style={styles.captionPrimary}>
-              Total {recipe.totalCalories} Kcal
+              Total {singleData?.calories} Kcal
             </Text>
             <FireIcon />
           </View>
           <View style={localStyles.row}>
-            {data.map((elm, i) => {
-              return <CaloriesCard key={i} data={elm} />;
-            })}
+            <CaloriesCard type="Carbs" data={singleData.carbs_g} />
+            <CaloriesCard type="Protein" data={singleData.protein_g} />
+            <CaloriesCard type="Fat" data={singleData.fats_g} />
           </View>
           <HealthScoreBar score={healthScoreData.score} />
 
           <RecipeInfo
-            description={recipeInfo.description}
-            prepTime={recipeInfo.prepTime}
-            cookTime={recipeInfo.cookTime}
-            servings={recipeInfo.servings}
+            description={singleData?.description}
+            prepTime={singleData?.prep_time_minutes}
+            cookTime={singleData?.cook_time_minutes}
+            servings={singleData?.servings}
           />
 
           <Ingredients ingredients={ingredients} />

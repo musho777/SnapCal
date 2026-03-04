@@ -18,7 +18,6 @@ const MEAL_TABS = [
 
 const ExploreScreen = ({ navigation }) => {
   const data = useSelector(selectData);
-  console.log('Data from Redux:', data?.dishes);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDeash({}));
@@ -39,7 +38,7 @@ const ExploreScreen = ({ navigation }) => {
       onToggleSave={toggleSave}
       onRecipePress={() => {
         navigation.navigate('ExploreRecipient', {
-          recipeId: parseInt(item.id, 10),
+          recipeId: item.id,
         });
       }}
     />

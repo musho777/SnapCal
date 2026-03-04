@@ -1,9 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getDeash } from './exploreAction';
+import { getDeash, getSingleDeash } from './exploreAction';
 
 const initialState = {
-  login: false,
-  data: {},
+  login: {
+    explore: false,
+    single: false,
+  },
+  data: {
+    explore: {},
+    single: {},
+  },
 };
 
 const exploreSlice = createSlice({
@@ -13,21 +19,35 @@ const exploreSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(getDeash.pending, state => {
-        state.login = false;
+        state.login.explore = false;
       })
       .addCase(getDeash.fulfilled, (state, { payload }) => {
-        state.login = true;
-        state.data = payload;
+        state.login.explore = true;
+        state.data.explore = payload;
       })
       .addCase(getDeash.rejected, (state, { payload }) => {
-        state.login = false;
+        state.login.explore = false;
+        state.error = payload;
+      })
+
+      .addCase(getSingleDeash.pending, state => {
+        state.login.single = false;
+      })
+      .addCase(getSingleDeash.fulfilled, (state, { payload }) => {
+        state.login.single = true;
+        state.data.single = payload;
+      })
+      .addCase(getSingleDeash.rejected, (state, { payload }) => {
+        state.login.single = false;
         state.error = payload;
       });
   },
 });
 export const { resetOtp, resetLogin, setResetError } = exploreSlice.actions;
 
-export const selectLoading = state => state?.dishList?.login;
-export const selectData = state => state?.dishList?.data;
+export const selectLoading = state => state?.dishList?.login.explore;
+export const selectData = state => state?.dishList?.data?.explore;
+export const selectSingleLoading = state => state?.dishList?.login.single;
+export const selectSingleData = state => state?.dishList?.data?.single;
 
 export default exploreSlice.reducer;

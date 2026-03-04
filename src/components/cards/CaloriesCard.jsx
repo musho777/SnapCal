@@ -2,10 +2,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import { CarbsIcon, FatIcon, ProteinIcon } from '../../assets/Icons';
 import { styles } from '../../themes';
 
-export const CaloriesCard = ({ data, themes = 'light' }) => {
+export const CaloriesCard = ({ type, data, themes = 'light' }) => {
   const getBackgroundStyle = () => {
-    if (data.type === 'Protein') return localStyled.proteinBg;
-    if (data.type === 'Fat') return localStyled.fatBg;
+    if (type === 'Protein') return localStyled.proteinBg;
+    if (type === 'Fat') return localStyled.fatBg;
     return null;
   };
 
@@ -20,15 +20,15 @@ export const CaloriesCard = ({ data, themes = 'light' }) => {
     >
       <View style={styles.alignEnd}>
         <View style={[localStyled.iconWrapper, getBackgroundStyle()]}>
-          {data.type === 'Carbs' && <CarbsIcon />}
-          {data.type === 'Protein' && <ProteinIcon />}
-          {data.type === 'Fat' && <FatIcon />}
+          {type === 'Carbs' && <CarbsIcon />}
+          {type === 'Protein' && <ProteinIcon />}
+          {type === 'Fat' && <FatIcon />}
         </View>
       </View>
 
       <View>
-        <Text style={styles.title}>{data?.weight}G</Text>
-        <Text style={styles.small}>{data?.type}</Text>
+        <Text style={styles.title}>{data}G</Text>
+        <Text style={styles.small}>{type}</Text>
       </View>
     </View>
   );
