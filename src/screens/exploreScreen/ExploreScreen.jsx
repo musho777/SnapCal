@@ -20,7 +20,6 @@ const MEAL_TABS = [
 const ExploreScreen = ({ navigation }) => {
   const data = useSelector(selectData);
   const loading = useSelector(selectLoading);
-  console.log(loading);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDeash({}));
