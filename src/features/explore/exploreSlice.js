@@ -3,7 +3,7 @@ import { getDeash, getSingleDeash } from './exploreAction';
 
 const initialState = {
   login: {
-    explore: false,
+    explore: true,
     single: false,
   },
   data: {
@@ -19,10 +19,10 @@ const exploreSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(getDeash.pending, state => {
-        state.login.explore = false;
+        state.login.explore = true;
       })
       .addCase(getDeash.fulfilled, (state, { payload }) => {
-        state.login.explore = true;
+        state.login.explore = false;
         state.data.explore = payload;
       })
       .addCase(getDeash.rejected, (state, { payload }) => {
@@ -31,10 +31,10 @@ const exploreSlice = createSlice({
       })
 
       .addCase(getSingleDeash.pending, state => {
-        state.login.single = false;
+        state.login.single = true;
       })
       .addCase(getSingleDeash.fulfilled, (state, { payload }) => {
-        state.login.single = true;
+        state.login.single = false;
         state.data.single = payload;
       })
       .addCase(getSingleDeash.rejected, (state, { payload }) => {

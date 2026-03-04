@@ -12,7 +12,11 @@ import recipesData from '../../data/recipes.json';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSingleDeash } from '../../features/explore/exploreAction';
-import { selectSingleData } from '../../features/explore/exploreSlice';
+import {
+  selectSingleData,
+  selectSingleLoading,
+} from '../../features/explore/exploreSlice';
+import Loading from '../../components/loading/Loading';
 
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
@@ -35,6 +39,7 @@ const getImageSource = imagePath => {
 const RecipeScreen = ({ route }) => {
   const dispatch = useDispatch();
   const singleData = useSelector(selectSingleData);
+  const loading = useSelector(selectSingleLoading);
   console.log('singleData', singleData);
   const recipeId = route?.params?.recipeId || 1;
   const recipe =
@@ -49,6 +54,10 @@ const RecipeScreen = ({ route }) => {
   useEffect(() => {
     dispatch(getSingleDeash({ id: recipeId }));
   }, [dispatch, recipeId]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <View style={localStyles.container}>

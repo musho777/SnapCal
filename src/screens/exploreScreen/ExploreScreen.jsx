@@ -6,7 +6,8 @@ import { styles } from '../../themes';
 import NoResult from '../../components/noResult';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDeash } from '../../features/explore/exploreAction';
-import { selectData } from '../../features/explore/exploreSlice';
+import { selectData, selectLoading } from '../../features/explore/exploreSlice';
+import Loading from '../../components/loading/Loading';
 
 const MEAL_TABS = [
   { id: 'all', label: 'All', emoji: '✨', time: '' },
@@ -18,6 +19,8 @@ const MEAL_TABS = [
 
 const ExploreScreen = ({ navigation }) => {
   const data = useSelector(selectData);
+  const loading = useSelector(selectLoading);
+  console.log(loading);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDeash({}));
@@ -64,6 +67,9 @@ const ExploreScreen = ({ navigation }) => {
       </ScrollView>
     </View>
   );
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <View style={localStyles.container}>
