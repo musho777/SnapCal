@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import LottieView from 'lottie-react-native';
 import loadingAnimation from '../../assets/loading.json';
 
-const Loading = ({ size = 200, text = '', useLottie = false }) => {
-  const [showLottie, setShowLottie] = useState(false);
-
+const Loading = ({ size = 200, text = '', showLottie = false }) => {
   if (!showLottie) {
     return (
       <View style={styles.container}>
