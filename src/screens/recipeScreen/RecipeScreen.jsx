@@ -95,12 +95,16 @@ const RecipeScreen = ({ route }) => {
             servings={singleData?.servings}
           />
 
-          <Ingredients ingredients={singleData?.ingredients || []} />
+          {singleData?.ingredients.length > 0 && (
+            <Ingredients ingredients={singleData?.ingredients} />
+          )}
 
-          <CookingSteps
-            steps={singleData.cooking_steps}
-            cookTime={singleData?.cook_time_minutes}
-          />
+          {singleData?.cooking_steps.length > 0 && (
+            <CookingSteps
+              steps={singleData?.cooking_steps}
+              cookTime={singleData?.cook_time_minutes}
+            />
+          )}
         </View>
       </ScrollView>
     </View>
