@@ -44,9 +44,6 @@ const RecipeScreen = ({ route }) => {
   const recipe =
     recipesData.recipes.find(r => r.id === recipeId) || recipesData.recipes[0];
 
-  const ingredients = recipe.ingredients;
-  const cookingSteps = recipe.cookingSteps;
-
   const healthScoreData = calculateHealthScore({
     carbs_g: singleData.carbs_g,
     protein_g: singleData.protein_g,
@@ -98,10 +95,10 @@ const RecipeScreen = ({ route }) => {
             servings={singleData?.servings}
           />
 
-          <Ingredients ingredients={ingredients} />
+          <Ingredients ingredients={singleData?.ingredients || []} />
 
           <CookingSteps
-            steps={cookingSteps}
+            steps={singleData.cooking_steps}
             cookTime={singleData?.cook_time_minutes}
           />
         </View>

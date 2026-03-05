@@ -14,7 +14,9 @@ export const Ingredients = ({ ingredients }) => {
             <View style={localStyles.bullet} />
             <View style={localStyles.ingredientContent}>
               <Text style={localStyles.ingredientName}>{ingredient.name}</Text>
-              <Text style={localStyles.ingredientAmount}>{ingredient.amount}</Text>
+              <Text style={localStyles.ingredientAmount}>
+                {ingredient.quantity} {ingredient.unit}
+              </Text>
             </View>
           </View>
         ))}

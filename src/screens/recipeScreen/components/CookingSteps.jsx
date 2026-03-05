@@ -125,6 +125,11 @@ export const CookingSteps = ({ steps, cookTime }) => {
     });
   };
 
+  const handleCloseModal = () => {
+    setShowClock(false);
+    setCompletedSteps(new Set());
+  };
+
   return (
     <View style={localStyles.container}>
       <View style={localStyles.header}>
@@ -143,7 +148,7 @@ export const CookingSteps = ({ steps, cookTime }) => {
         {steps.map((step, index) => (
           <StepItem
             key={index}
-            step={step}
+            step={step?.instruction}
             index={index}
             isCompleted={completedSteps.has(index)}
             onToggle={() => toggleStep(index)}
@@ -153,7 +158,7 @@ export const CookingSteps = ({ steps, cookTime }) => {
 
       <CountdownModal
         visible={showClock}
-        onClose={() => setShowClock(false)}
+        onClose={handleCloseModal}
         cookTime={cookTime}
         stepText={
           'All steps completed! Time to cook for ' + cookTime + ' minutes.'
