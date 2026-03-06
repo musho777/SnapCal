@@ -95,11 +95,11 @@ const RecipeScreen = ({ route }) => {
             servings={singleData?.servings}
           />
 
-          {singleData?.ingredients.length > 0 && (
+          {singleData?.ingredients?.length > 0 && (
             <Ingredients ingredients={singleData?.ingredients} />
           )}
 
-          {singleData?.cooking_steps.length > 0 && (
+          {singleData?.cooking_steps?.length > 0 && (
             <CookingSteps
               steps={singleData?.cooking_steps}
               cookTime={singleData?.cook_time_minutes}

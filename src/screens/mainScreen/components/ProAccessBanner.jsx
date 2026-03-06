@@ -33,7 +33,6 @@ const localStyles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     position: 'relative',
-    marginVertical: 10,
   },
   fon: {
     width: '100%',
