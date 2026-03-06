@@ -29,7 +29,6 @@ const MealPlanScreen = ({ navigation }) => {
       const dayName = dayNames[currentDate.getDay()];
       const date = currentDate.getDate();
       const dateString = currentDate.toISOString().split('T')[0];
-      console.log(dateString);
       const dayData = data[i];
 
       newData.push({

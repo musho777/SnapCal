@@ -41,7 +41,6 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    console.log('11');
     if (visible) {
       scaleAnim.setValue(0);
       fadeAnim.setValue(0);
