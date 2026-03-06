@@ -43,6 +43,9 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
   useEffect(() => {
     console.log('11');
     if (visible) {
+      scaleAnim.setValue(0);
+      fadeAnim.setValue(0);
+
       Animated.parallel([
         Animated.spring(scaleAnim, {
           toValue: 1,
