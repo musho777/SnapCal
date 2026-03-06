@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getMainPlanRange } from './mealPlanAction';
+import { getMainPlanRange, deleteMealDish } from './mealPlanAction';
 
 const initialState = {
   login: {
@@ -25,6 +25,28 @@ const mealPlanSlice = createSlice({
         state.data.mealPlan = payload;
       })
       .addCase(getMainPlanRange.rejected, (state, { payload }) => {
+        state.login.mealPlan = false;
+        state.error = payload;
+      })
+      .addCase(deleteMealDish.pending, state => {
+        state.login.mealPlan = true;
+      })
+      .addCase(deleteMealDish.fulfilled, (state, { payload }) => {
+        state.login.mealPlan = false;
+        const { mealDishId } = payload;
+
+        // Remove the deleted dish from the meal plan
+        state.data.mealPlan = state.data.mealPlan.map(dayPlan => ({
+          ...dayPlan,
+          meals: dayPlan.meals.map(meal => ({
+            ...meal,
+            meal_dishes: meal.meal_dishes.filter(
+              dish => dish.id !== mealDishId,
+            ),
+          })),
+        }));
+      })
+      .addCase(deleteMealDish.rejected, (state, { payload }) => {
         state.login.mealPlan = false;
         state.error = payload;
       });

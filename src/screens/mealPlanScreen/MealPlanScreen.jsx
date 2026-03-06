@@ -9,7 +9,10 @@ import {
 } from './components';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainPlan } from '../../features/mealPlan/mealPlanSlice';
-import { getMainPlanRange } from '../../features/mealPlan/mealPlanAction';
+import {
+  getMainPlanRange,
+  deleteMealDish,
+} from '../../features/mealPlan/mealPlanAction';
 
 const MealPlanScreen = ({ navigation }) => {
   const data = useSelector(selectMainPlan);
@@ -93,8 +96,8 @@ const MealPlanScreen = ({ navigation }) => {
     setExpandedSections({ ...expandedSections, [sectionId]: newExpanded });
   };
 
-  const deleteFood = () => {
-    // setPlan();
+  const deleteFood = mealDishId => {
+    dispatch(deleteMealDish(mealDishId));
   };
 
   const handleAddFood = mealType => {
@@ -153,7 +156,7 @@ const MealPlanScreen = ({ navigation }) => {
               foods={foods}
               isExpanded={isExpanded}
               onToggle={() => toggleSection(section.id)}
-              onDeleteFood={foodId => deleteFood(section.id, foodId)}
+              onDeleteFood={mealDishId => deleteFood(mealDishId)}
               onAddFood={() => handleAddFood(section.id)}
             />
           );

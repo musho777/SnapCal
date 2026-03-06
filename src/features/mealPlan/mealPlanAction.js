@@ -15,3 +15,15 @@ export const getMainPlanRange = createAsyncThunk(
     }
   },
 );
+
+export const deleteMealDish = createAsyncThunk(
+  'mealPlan/deleteDish',
+  async (mealDishId, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.del(`/meals/dish/${mealDishId}`);
+      return { mealDishId, data };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
