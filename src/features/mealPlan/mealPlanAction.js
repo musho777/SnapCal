@@ -52,10 +52,9 @@ export const burnCalory = createAsyncThunk(
       const data = await ApiClient.post(
         `/logs/daily/${date}/meals/${mealId}/burned-dishes/${dishId}`,
       );
-      console.log(data);
-      return data;
+      return { ...data, requestParams: { date, dishId, mealId } };
     } catch (error) {
-      console.log(error, 'error');
+      console.error('burnCalory error:', error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   },

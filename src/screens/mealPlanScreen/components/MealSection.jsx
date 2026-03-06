@@ -11,6 +11,7 @@ import { DownAndUpIcon } from '../../../assets/Icons';
 const MealSection = ({
   section,
   foods,
+  burnedDishes,
   isExpanded,
   onToggle,
   onDeleteFood,
@@ -69,30 +70,78 @@ const MealSection = ({
             </View>
           ) : (
             foods?.meal_dishes?.map(food => {
+              // Check if this dish is already burned/tracked
+              const isBurned = burnedDishes?.some(
+                burned =>
+                  burned.dish_id === food.dish_id &&
+                  burned.meal_id === food.meal_id,
+              );
+
               return (
                 <TouchableOpacity
                   key={food.id}
-                  style={styles.foodItem}
+                  style={[styles.foodItem, isBurned && styles.foodItemBurned]}
                   onPress={() => onFoodPress?.(food)}
                   activeOpacity={0.7}
                 >
-                  <View style={styles.foodThumbnail}>
+                  <View
+                    style={[
+                      styles.foodThumbnail,
+                      isBurned && styles.foodThumbnailBurned,
+                    ]}
+                  >
                     <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text>
                   </View>
                   <View style={styles.foodInfo}>
-                    <Text style={styles.foodName}>{food.dish.name}</Text>
-                    <View style={styles.foodMeta}>
-                      <Text style={styles.foodPortion}>
-                        {food.protein_at_time_g}
+                    <View style={styles.foodNameContainer}>
+                      <Text
+                        style={[
+                          styles.foodName,
+                          isBurned && styles.foodNameBurned,
+                        ]}
+                      >
+                        {food.dish.name}
                       </Text>
-                      <Text style={styles.foodDot}>•</Text>
-                      <Text style={styles.foodKcal}>
+                    </View>
+                    <View style={styles.foodMeta}>
+                      <Text
+                        style={[
+                          styles.foodPortion,
+                          isBurned && styles.foodMetaBurned,
+                        ]}
+                      >
+                        {food.protein_at_time_g}g protein
+                      </Text>
+                      <Text
+                        style={[
+                          styles.foodDot,
+                          isBurned && styles.foodMetaBurned,
+                        ]}
+                      >
+                        •
+                      </Text>
+                      <Text
+                        style={[
+                          styles.foodKcal,
+                          isBurned && styles.foodKcalBurned,
+                        ]}
+                      >
                         {food.calories_at_time} Kcal
                       </Text>
                     </View>
                   </View>
-                  <View style={styles.proteinBadge}>
-                    <Text style={styles.proteinBadgeText}>
+                  <View
+                    style={[
+                      styles.proteinBadge,
+                      isBurned && styles.proteinBadgeBurned,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.proteinBadgeText,
+                        isBurned && styles.proteinBadgeTextBurned,
+                      ]}
+                    >
                       {food.servings} share
                     </Text>
                   </View>
@@ -203,6 +252,11 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  foodItemBurned: {
+    backgroundColor: '#F0FDF4',
+    borderColor: '#86EFAC',
+    borderWidth: 1.5,
+  },
   foodThumbnail: {
     width: 38,
     height: 38,
@@ -211,6 +265,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  foodThumbnailBurned: {
+    backgroundColor: '#DCFCE7',
+  },
   foodEmoji: {
     fontSize: 20,
   },
@@ -218,10 +275,29 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
   },
+  foodNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   foodName: {
     fontSize: 13,
     fontWeight: '600',
     color: '#272727',
+  },
+  foodNameBurned: {
+    color: '#16A34A',
+  },
+  burnedBadge: {
+    backgroundColor: '#22C55E',
+    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  burnedBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: '#fff',
   },
   foodMeta: {
     flexDirection: 'row',
@@ -242,6 +318,13 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     fontWeight: '600',
   },
+  foodMetaBurned: {
+    color: '#16A34A',
+  },
+  foodKcalBurned: {
+    color: '#16A34A',
+    fontWeight: '700',
+  },
   proteinBadge: {
     backgroundColor: '#F0F4FF',
     borderRadius: 6,
@@ -253,6 +336,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '700',
     color: '#6366F1',
+  },
+  proteinBadgeBurned: {
+    backgroundColor: '#DCFCE7',
+  },
+  proteinBadgeTextBurned: {
+    color: '#16A34A',
   },
   deleteButton: {
     width: 26,

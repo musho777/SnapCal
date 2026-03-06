@@ -8,7 +8,11 @@ import {
   WeeklyChart,
 } from './components';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectMainPlan } from '../../features/mealPlan/mealPlanSlice';
+import {
+  selectMainPlan,
+  toggleBurnedDishOptimistic,
+  revertBurnedDishOptimistic,
+} from '../../features/mealPlan/mealPlanSlice';
 import {
   getMainPlanRange,
   deleteMealDish,
@@ -101,17 +105,21 @@ const MealPlanScreen = ({ navigation }) => {
     dispatch(deleteMealDish(mealDishId));
   };
 
-  const handleFoodPress = food => {
-    console.log(food, 'food');
+  const handleFoodPress = async food => {
     const selectedDay = weeklyData.find(day => day.date === activeDay);
-    if (selectedDay) {
-      dispatch(
-        burnCalory({
-          date: selectedDay.fullDate,
-          dishId: food.dish_id,
-          mealId: food.meal_id,
-        }),
-      );
+    if (!selectedDay) return;
+
+    const params = {
+      date: selectedDay.fullDate,
+      dishId: food.dish_id,
+      mealId: food.meal_id,
+    };
+
+    dispatch(toggleBurnedDishOptimistic(params));
+    try {
+      await dispatch(burnCalory(params)).unwrap();
+    } catch (error) {
+      dispatch(revertBurnedDishOptimistic(params));
     }
   };
 
@@ -171,6 +179,7 @@ const MealPlanScreen = ({ navigation }) => {
               key={section.id}
               section={section}
               foods={foods}
+              burnedDishes={data[0]?.burned_dishes || []}
               isExpanded={isExpanded}
               onToggle={() => toggleSection(section.id)}
               onDeleteFood={mealDishId => deleteFood(mealDishId)}
