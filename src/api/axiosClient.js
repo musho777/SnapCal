@@ -37,7 +37,6 @@ const getBaseURL = async () => {
     if (company && company.url) {
       return company.url.endsWith('/') ? company.url : `${company.url}/`;
     }
-    console.log(company, 'company');
   } catch (error) {
     console.warn('Failed to get selected company, using default URL:', error);
   }
