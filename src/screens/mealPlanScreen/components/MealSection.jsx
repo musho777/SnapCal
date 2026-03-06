@@ -16,7 +16,7 @@ const MealSection = ({
   onDeleteFood,
   onAddFood,
 }) => {
-  const sectionKcal = foods.reduce((sum, food) => sum + food.kcal, 0);
+  const sectionKcal = foods.reduce((sum, food) => sum + food.total_calories, 0);
   const rotationAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
 
   useEffect(() => {
@@ -40,9 +40,7 @@ const MealSection = ({
         onPress={onToggle}
         activeOpacity={0.7}
       >
-        <View
-          style={[styles.sectionIcon, { backgroundColor: section.color }]}
-        >
+        <View style={[styles.sectionIcon, { backgroundColor: section.color }]}>
           <Text style={styles.sectionEmoji}>{section.emoji}</Text>
         </View>
         <View style={styles.sectionInfo}>
@@ -72,18 +70,22 @@ const MealSection = ({
             foods.map(food => (
               <View key={food.id} style={styles.foodItem}>
                 <View style={styles.foodThumbnail}>
-                  <Text style={styles.foodEmoji}>{food.emoji}</Text>
+                  <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text>
                 </View>
                 <View style={styles.foodInfo}>
                   <Text style={styles.foodName}>{food.name}</Text>
                   <View style={styles.foodMeta}>
-                    <Text style={styles.foodPortion}>{food.portion}</Text>
+                    <Text style={styles.foodPortion}>
+                      {food.total_calories}
+                    </Text>
                     <Text style={styles.foodDot}>•</Text>
                     <Text style={styles.foodKcal}>{food.kcal} Kcal</Text>
                   </View>
                 </View>
                 <View style={styles.proteinBadge}>
-                  <Text style={styles.proteinBadgeText}>{food.protein}g</Text>
+                  <Text style={styles.proteinBadgeText}>
+                    {food.total_protein_g}g
+                  </Text>
                 </View>
                 <TouchableOpacity
                   style={styles.deleteButton}

@@ -1,7 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated, StyleSheet } from 'react-native';
 
-const SummaryCard = ({ totalKcal, goalKcal, totalCarbs, totalProtein, totalFat }) => {
+const SummaryCard = ({
+  totalKcal,
+  goalKcal,
+  totalCarbs,
+  totalProtein,
+  totalFat,
+}) => {
   const percentComplete = Math.min(
     Math.round((totalKcal / goalKcal) * 100),
     100,
@@ -24,6 +30,8 @@ const SummaryCard = ({ totalKcal, goalKcal, totalCarbs, totalProtein, totalFat }
     outputRange: ['0%', '100%'],
     extrapolate: 'clamp',
   });
+
+  console.log(progressWidth);
 
   return (
     <View style={styles.summaryCard}>

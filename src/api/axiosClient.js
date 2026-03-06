@@ -32,16 +32,6 @@ class ApiError extends AppError {
 
 // Function to get the current base URL
 const getBaseURL = async () => {
-  try {
-    const company = await getSelectedCompany();
-    if (company && company.url) {
-      return company.url.endsWith('/') ? company.url : `${company.url}/`;
-    }
-  } catch (error) {
-    console.warn('Failed to get selected company, using default URL:', error);
-  }
-
-  // Fallback to default config
   return process.env.NODE_ENV === 'development'
     ? config.APP_BASE_URL_LOCAL
     : config.APP_BASE_URL_SERVER;

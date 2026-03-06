@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import {
   Header,
@@ -7,9 +7,14 @@ import {
   MealSection,
   WeeklyChart,
 } from './components';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectMainPlan } from '../../features/mealPlan/mealPlanSlice';
+import { getMainPlanRange } from '../../features/mealPlan/mealPlanAction';
 
 const MealPlanScreen = ({ navigation }) => {
   const [activeDay, setActiveDay] = useState('mon');
+  const data = useSelector(selectMainPlan);
+  const dispatch = useDispatch();
   const [expandedSections, setExpandedSections] = useState({
     breakfast: true,
     lunch: false,
@@ -152,18 +157,6 @@ const MealPlanScreen = ({ navigation }) => {
     },
   ];
 
-  const activeDayPlan = plan[activeDay] || {
-    breakfast: [],
-    lunch: [],
-    dinner: [],
-    snacks: [],
-  };
-  const allFoods = Object.values(activeDayPlan).flat();
-  const totalKcal = allFoods.reduce((sum, food) => sum + food.kcal, 0);
-  const totalProtein = allFoods.reduce((sum, food) => sum + food.protein, 0);
-  const totalCarbs = Math.round((totalKcal * 0.5) / 4);
-  const totalFat = Math.round((totalKcal * 0.3) / 9);
-
   const goalKcal = 2000;
 
   const toggleSection = sectionId => {
@@ -190,6 +183,15 @@ const MealPlanScreen = ({ navigation }) => {
     });
   };
 
+  useEffect(() => {
+    dispatch(
+      getMainPlanRange({ start_date: '2026-03-05', end_date: '2026-03-07' }),
+    );
+  }, [dispatch]);
+  if (data.length === 0) {
+    return;
+  }
+
   return (
     <View style={styles.container}>
       <Header />
@@ -205,17 +207,18 @@ const MealPlanScreen = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
       >
         <SummaryCard
-          totalKcal={totalKcal}
-          goalKcal={goalKcal}
-          totalCarbs={totalCarbs}
-          totalProtein={totalProtein}
-          totalFat={totalFat}
+          totalKcal={data[0]?.calories_burned}
+          goalKcal={data[0]?.calories_consumed || null}
+          totalCarbs={data[0]?.carbs_consumed_g}
+          totalProtein={data[0]?.protein_consumed_g}
+          totalFat={data[0]?.fats_consumed_g}
         />
 
         {mealSections.map(section => {
-          const foods = activeDayPlan[section.id] || [];
+          // data[0]?.meals?
+          const foods =
+            data[0]?.meals.filter(e => e.meal_type === section.id) || [];
           const isExpanded = expandedSections[section.id];
-
           return (
             <MealSection
               key={section.id}
