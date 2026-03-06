@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getDeash, getSingleDeash } from './exploreAction';
+import { getDeash, getSingleDeash, addDishToMeal } from './exploreAction';
 
 const initialState = {
   login: {
     explore: true,
     single: false,
+    addToMeal: false,
   },
   data: {
     explore: {},
@@ -40,6 +41,17 @@ const exploreSlice = createSlice({
       .addCase(getSingleDeash.rejected, (state, { payload }) => {
         state.login.single = false;
         state.error = payload;
+      })
+
+      .addCase(addDishToMeal.pending, state => {
+        state.login.addToMeal = true;
+      })
+      .addCase(addDishToMeal.fulfilled, state => {
+        state.login.addToMeal = false;
+      })
+      .addCase(addDishToMeal.rejected, (state, { payload }) => {
+        state.login.addToMeal = false;
+        state.error = payload;
       });
   },
 });
@@ -49,5 +61,6 @@ export const selectLoading = state => state?.dishList?.login.explore;
 export const selectData = state => state?.dishList?.data?.explore;
 export const selectSingleLoading = state => state?.dishList?.login.single;
 export const selectSingleData = state => state?.dishList?.data?.single;
+export const selectAddToMealLoading = state => state?.dishList?.login.addToMeal;
 
 export default exploreSlice.reducer;
