@@ -141,7 +141,6 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
       setServings(String(current - 1));
     }
   };
-  console.log('AddToMealModal Props:', { visible, dishId, loading });
   return (
     <Modal
       visible={visible}

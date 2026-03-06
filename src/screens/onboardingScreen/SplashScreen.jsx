@@ -36,7 +36,6 @@ const SplashScreen = ({ onGetStarted }) => {
 
         <View style={styles.features}>
           {SPLASH_FEATURES.map((feature, index) => {
-            console.log(feature);
             return (
               <Animated.View
                 key={index}

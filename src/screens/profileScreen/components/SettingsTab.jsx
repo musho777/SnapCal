@@ -26,15 +26,9 @@ const SettingsTab = ({
   const navigation = useNavigation();
   const handleLogout = () => {
     navigation.navigate('LoginScreen');
-    console.log('Logout pressed');
-
-    // Implement logout logic
   };
 
-  const handleChangePassword = () => {
-    console.log('Change password pressed');
-    // Navigate to change password screen
-  };
+  const handleChangePassword = () => {};
 
   return (
     <ScrollView

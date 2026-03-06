@@ -66,7 +66,6 @@ const RecipeScreen = ({ route }) => {
     title: '',
     message: '',
   });
-  console.log('Single Recipe Data:', showModal);
   const healthScoreData = calculateHealthScore({
     carbs_g: singleData.carbs_g,
     protein_g: singleData.protein_g,

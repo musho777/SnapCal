@@ -4,8 +4,6 @@
  * @returns {Object} - Health score (0-10) and breakdown
  */
 export const calculateHealthScore = nutritionData => {
-  console.log(nutritionData);
-  // Extract macro weights
   const carbs = +nutritionData.carbs_g || 0;
   const protein = +nutritionData.protein_g || 0;
   const fat = +nutritionData.fat_g || 0;

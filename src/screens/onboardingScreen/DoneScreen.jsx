@@ -19,7 +19,6 @@ const DoneScreen = ({ data, onFinish }) => {
   const confettiScale = useSharedValue(0.5);
 
   useEffect(() => {
-    console.log('confettiScale');
     confettiScale.value = withSpring(1, {
       damping: 8,
       stiffness: 100,

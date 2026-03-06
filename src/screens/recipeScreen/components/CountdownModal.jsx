@@ -27,9 +27,7 @@ export const CountdownModal = ({ visible, onClose, cookTime, stepText }) => {
 
   useEffect(() => {
     if (visible) {
-      console.log('Modal opened with cookTime:', cookTime, 'visible:', visible);
       const minutes = parseInt(cookTime) || 0;
-      console.log('Starting countdown for minutes:', minutes);
       setTimeLeft(minutes * 60);
 
       Animated.parallel([
