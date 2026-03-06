@@ -35,7 +35,6 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [servings, setServings] = useState('1');
-  const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState({});
 
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -122,7 +121,6 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
       meal_type: mealType,
       date: formatDate(date),
       servings: parseInt(servings, 10),
-      notes: notes.trim() || undefined,
     };
 
     onSubmit(data);

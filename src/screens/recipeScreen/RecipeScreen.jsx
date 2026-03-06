@@ -5,7 +5,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { styles } from '../../themes';
 import { Header } from './components/Header';
@@ -30,6 +29,7 @@ import {
 } from '../../features/explore/exploreSlice';
 import Loading from '../../components/loading/Loading';
 import AddToMealModal from '../../components/addToMealModal/AddToMealModal';
+import AlertModal from '../../components/alertModal/AlertModal';
 
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
@@ -59,6 +59,12 @@ const RecipeScreen = ({ route }) => {
     recipesData.recipes.find(r => r.id === recipeId) || recipesData.recipes[0];
 
   const [showModal, setShowModal] = useState(false);
+  const [alertModal, setAlertModal] = useState({
+    visible: false,
+    type: 'success',
+    title: '',
+    message: '',
+  });
   console.log('Single Recipe Data:', showModal);
   const healthScoreData = calculateHealthScore({
     carbs_g: singleData.carbs_g,
@@ -74,15 +80,19 @@ const RecipeScreen = ({ route }) => {
     try {
       await dispatch(addDishToMeal(data)).unwrap();
       setShowModal(false);
-      Alert.alert('Success', 'Recipe added to your meal successfully!', [
-        { text: 'OK' },
-      ]);
+      setAlertModal({
+        visible: true,
+        type: 'success',
+        title: 'Success',
+        message: 'Recipe added to your meal successfully!',
+      });
     } catch (error) {
-      Alert.alert(
-        'Error',
-        error || 'Failed to add recipe to meal. Please try again.',
-        [{ text: 'OK' }],
-      );
+      setAlertModal({
+        visible: true,
+        type: 'error',
+        title: 'Error',
+        message: error || 'Failed to add recipe to meal. Please try again.',
+      });
     }
   };
 
@@ -155,6 +165,14 @@ const RecipeScreen = ({ route }) => {
         onSubmit={handleAddToMeal}
         dishId={singleData?.id}
         loading={addToMealLoading}
+      />
+
+      <AlertModal
+        visible={alertModal.visible}
+        type={alertModal.type}
+        title={alertModal.title}
+        message={alertModal.message}
+        onClose={() => setAlertModal({ ...alertModal, visible: false })}
       />
     </View>
   );
