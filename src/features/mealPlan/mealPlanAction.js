@@ -27,3 +27,20 @@ export const deleteMealDish = createAsyncThunk(
     }
   },
 );
+
+export const updateDailyLog = createAsyncThunk(
+  'mealPlan/updateDailyLog',
+  async ({ date, calories_burned }, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.put(`/logs/daily/${date}`, {
+        log_date: date,
+        calories_burned: calories_burned,
+      });
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error, 'error');
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);

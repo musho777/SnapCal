@@ -14,6 +14,7 @@ const MealSection = ({
   isExpanded,
   onToggle,
   onDeleteFood,
+  onFoodPress,
   onAddFood,
 }) => {
   const rotationAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
@@ -69,7 +70,12 @@ const MealSection = ({
           ) : (
             foods?.meal_dishes?.map(food => {
               return (
-                <View key={food.id} style={styles.foodItem}>
+                <TouchableOpacity
+                  key={food.id}
+                  style={styles.foodItem}
+                  onPress={() => onFoodPress?.(food)}
+                  activeOpacity={0.7}
+                >
                   <View style={styles.foodThumbnail}>
                     <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text>
                   </View>
@@ -92,11 +98,14 @@ const MealSection = ({
                   </View>
                   <TouchableOpacity
                     style={styles.deleteButton}
-                    onPress={() => onDeleteFood(food.id)}
+                    onPress={e => {
+                      e.stopPropagation();
+                      onDeleteFood(food.id);
+                    }}
                   >
                     <Text style={styles.deleteIcon}>×</Text>
                   </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
               );
             })
           )}

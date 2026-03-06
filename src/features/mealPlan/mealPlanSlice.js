@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getMainPlanRange, deleteMealDish } from './mealPlanAction';
+import {
+  getMainPlanRange,
+  deleteMealDish,
+  updateDailyLog,
+} from './mealPlanAction';
 
 const initialState = {
   login: {
@@ -47,6 +51,17 @@ const mealPlanSlice = createSlice({
         }));
       })
       .addCase(deleteMealDish.rejected, (state, { payload }) => {
+        state.login.mealPlan = false;
+        state.error = payload;
+      })
+      .addCase(updateDailyLog.pending, state => {
+        state.login.mealPlan = true;
+      })
+      .addCase(updateDailyLog.fulfilled, (state, { payload }) => {
+        state.login.mealPlan = false;
+        // Optionally update the state with the response data if needed
+      })
+      .addCase(updateDailyLog.rejected, (state, { payload }) => {
         state.login.mealPlan = false;
         state.error = payload;
       });

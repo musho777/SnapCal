@@ -12,6 +12,7 @@ import { selectMainPlan } from '../../features/mealPlan/mealPlanSlice';
 import {
   getMainPlanRange,
   deleteMealDish,
+  updateDailyLog,
 } from '../../features/mealPlan/mealPlanAction';
 
 const MealPlanScreen = ({ navigation }) => {
@@ -100,6 +101,19 @@ const MealPlanScreen = ({ navigation }) => {
     dispatch(deleteMealDish(mealDishId));
   };
 
+  const handleFoodPress = food => {
+    console.log(food, 'food');
+    const selectedDay = weeklyData.find(day => day.date === activeDay);
+    if (selectedDay) {
+      dispatch(
+        updateDailyLog({
+          date: selectedDay.fullDate,
+          calories_burned: food.calories_at_time || 0,
+        }),
+      );
+    }
+  };
+
   const handleAddFood = mealType => {
     navigation.navigate('Explore', {
       screen: 'Search',
@@ -157,6 +171,7 @@ const MealPlanScreen = ({ navigation }) => {
               isExpanded={isExpanded}
               onToggle={() => toggleSection(section.id)}
               onDeleteFood={mealDishId => deleteFood(mealDishId)}
+              onFoodPress={food => handleFoodPress(food)}
               onAddFood={() => handleAddFood(section.id)}
             />
           );
