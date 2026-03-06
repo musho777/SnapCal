@@ -41,6 +41,7 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    console.log('11');
     if (visible) {
       Animated.parallel([
         Animated.spring(scaleAnim, {
@@ -109,8 +110,8 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
     setShowDatePicker(false);
   };
 
-  const formatDate = date => {
-    return date.toISOString().split('T')[0];
+  const formatDate = selectedDate => {
+    return selectedDate.toISOString().split('T')[0];
   };
 
   const handleSubmit = () => {

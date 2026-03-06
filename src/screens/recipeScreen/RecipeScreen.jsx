@@ -30,6 +30,7 @@ import {
 import Loading from '../../components/loading/Loading';
 import AddToMealModal from '../../components/addToMealModal/AddToMealModal';
 import AlertModal from '../../components/alertModal/AlertModal';
+import { Plus } from 'lucide-react-native';
 
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
@@ -155,7 +156,7 @@ const RecipeScreen = ({ route }) => {
         onPress={() => setShowModal(true)}
         activeOpacity={0.8}
       >
-        {/* <Icon name="add" size={28} color="#FFFFFF" /> */}
+        <Plus name="add" size={20} color="#FFFFFF" />
         <Text style={localStyles.fabText}>Add to Meal</Text>
       </TouchableOpacity>
 
@@ -223,7 +224,7 @@ const localStyles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 5,
     gap: 10,
-    paddingBottom: 90,
+    paddingBottom: 150,
   },
   titleWrapper: {
     flexDirection: 'row',
@@ -252,11 +253,12 @@ const localStyles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    bottom: 130,
-    right: 20,
+    bottom: 100,
+    left: '50%',
+    alignItems: 'center',
+    transform: [{ translateX: -75 }],
     flexDirection: 'row',
     zIndex: 1,
-    alignItems: 'center',
     backgroundColor: '#10B981',
     paddingVertical: 14,
     paddingHorizontal: 20,
