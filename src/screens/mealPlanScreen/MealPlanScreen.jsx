@@ -36,8 +36,11 @@ const MealPlanScreen = ({ navigation }) => {
 
       const dayName = dayNames[currentDate.getDay()];
       const date = currentDate.getDate();
-      const dateString = currentDate.toISOString().split('T')[0];
-      const dayData = data[i];
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const dateString = `${year}-${month}-${day}`;
+      const dayData = data.find(d => d.log_date === dateString);
 
       newData.push({
         day: dayName,
@@ -51,6 +54,7 @@ const MealPlanScreen = ({ navigation }) => {
     return newData;
   }, [data]);
 
+  console.log(data);
   const [activeDay, setActiveDay] = useState(
     weeklyData[1]?.date || new Date().getDate(),
   );
@@ -119,6 +123,7 @@ const MealPlanScreen = ({ navigation }) => {
     try {
       await dispatch(burnCalory(params)).unwrap();
     } catch (error) {
+      console.error('Error burning calories:', error);
       dispatch(revertBurnedDishOptimistic(params));
     }
   };
@@ -146,7 +151,11 @@ const MealPlanScreen = ({ navigation }) => {
     return;
   }
 
-  console.log(data);
+  // Find the active day's data based on the selected date
+  const selectedDay = weeklyData.find(day => day.date === activeDay);
+  const activeDayData = data.find(
+    dayData => dayData.log_date === selectedDay?.fullDate,
+  );
 
   return (
     <View style={styles.container}>
@@ -163,23 +172,23 @@ const MealPlanScreen = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
       >
         <SummaryCard
-          totalKcal={data[0]?.calories_burned}
-          goalKcal={data[0]?.calories_consumed || null}
-          totalCarbs={data[0]?.carbs_consumed_g}
-          totalProtein={data[0]?.protein_consumed_g}
-          totalFat={data[0]?.fats_consumed_g}
+          totalKcal={activeDayData?.calories_burned || null}
+          goalKcal={activeDayData?.calories_consumed || null}
+          totalCarbs={activeDayData?.carbs_consumed_g || 0}
+          totalProtein={activeDayData?.protein_consumed_g || 0}
+          totalFat={activeDayData?.fats_consumed_g || 0}
         />
 
         {mealSections.map(section => {
           const foods =
-            data[0]?.meals.find(e => e.meal_type === section.id) || {};
+            activeDayData?.meals.find(e => e.meal_type === section.id) || {};
           const isExpanded = expandedSections[section.id];
           return (
             <MealSection
               key={section.id}
               section={section}
               foods={foods}
-              burnedDishes={data[0]?.burned_dishes || []}
+              burnedDishes={activeDayData?.burned_dishes || []}
               isExpanded={isExpanded}
               onToggle={() => toggleSection(section.id)}
               onDeleteFood={mealDishId => deleteFood(mealDishId)}

@@ -13,7 +13,6 @@ const SummaryCard = ({
     100,
   );
   const kcalLeft = Math.max(goalKcal - totalKcal, 0);
-
   // Animated values
   const progressAnim = useRef(new Animated.Value(0)).current;
 
@@ -26,7 +25,7 @@ const SummaryCard = ({
   }, [totalKcal]);
 
   const progressWidth = progressAnim.interpolate({
-    inputRange: [0, goalKcal],
+    inputRange: [0, goalKcal || 0],
     outputRange: ['0%', '100%'],
     extrapolate: 'clamp',
   });
@@ -52,8 +51,8 @@ const SummaryCard = ({
         <View>
           <Text style={styles.summaryLabel}>TODAY'S CALORIES</Text>
           <View style={styles.summaryCalorieRow}>
-            <Text style={styles.summaryCalories}>{totalKcal}</Text>
-            <Text style={styles.summaryGoal}> / {goalKcal} Kcal</Text>
+            <Text style={styles.summaryCalories}>{totalKcal || 0}</Text>
+            <Text style={styles.summaryGoal}> / {goalKcal || 0} Kcal</Text>
           </View>
         </View>
         <View style={styles.summaryIcon}>
@@ -70,7 +69,7 @@ const SummaryCard = ({
         </View>
         <View style={styles.progressLabels}>
           <Text style={styles.progressLabel}>
-            {percentComplete}% of daily goal
+            {percentComplete || 0}% of daily goal
           </Text>
           <Text style={styles.progressLabel}>{kcalLeft} Kcal left</Text>
         </View>

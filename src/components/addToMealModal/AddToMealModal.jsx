@@ -111,11 +111,11 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
   const closeDatePicker = () => {
     setShowDatePicker(false);
   };
-
   const formatDate = selectedDate => {
-    return selectedDate.toISOString().split('T')[0];
+    const offset = selectedDate.getTimezoneOffset();
+    const localDate = new Date(selectedDate.getTime() - offset * 60000);
+    return localDate.toISOString().split('T')[0];
   };
-
   const handleSubmit = () => {
     if (!validateForm()) return;
 

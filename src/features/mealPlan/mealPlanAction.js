@@ -7,7 +7,7 @@ export const getMainPlanRange = createAsyncThunk(
     const query = Object.entries(params);
     try {
       const data = await ApiClient.get(
-        `/logs/range?start_date=2026-03-05&end_date=2026-03-06`,
+        `/logs/range?start_date=2026-03-06&end_date=2026-03-12`,
       );
       return data;
     } catch (error) {
