@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import {
   Header,
@@ -12,24 +12,47 @@ import { selectMainPlan } from '../../features/mealPlan/mealPlanSlice';
 import { getMainPlanRange } from '../../features/mealPlan/mealPlanAction';
 
 const MealPlanScreen = ({ navigation }) => {
-  const [activeDay, setActiveDay] = useState(6);
   const data = useSelector(selectMainPlan);
   const dispatch = useDispatch();
+
+  const weeklyData = useMemo(() => {
+    const newData = [];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(yesterday);
+      currentDate.setDate(yesterday.getDate() + i);
+
+      const dayName = dayNames[currentDate.getDay()];
+      const date = currentDate.getDate();
+      const dateString = currentDate.toISOString().split('T')[0];
+      console.log(dateString);
+      const dayData = data[i];
+
+      newData.push({
+        day: dayName,
+        date: date,
+        id: date,
+        calories: dayData?.calories_consumed || undefined,
+        fullDate: dateString,
+      });
+    }
+
+    return newData;
+  }, [data]);
+
+  const [activeDay, setActiveDay] = useState(
+    weeklyData[1]?.date || new Date().getDate(),
+  );
   const [expandedSections, setExpandedSections] = useState({
     breakfast: true,
     lunch: false,
     dinner: false,
     snacks: false,
   });
-  const weeklyData = [
-    { day: 'Mon', date: 6, id: 6, calories: 1745 },
-    { day: 'Tue', date: 7, id: 7 },
-    { day: 'Wed', date: 8, id: 8 },
-    { day: 'Thu', date: 9, id: 9 },
-    { day: 'Fri', date: 10, id: 10 },
-    { day: 'Sat', date: 11, id: 11 },
-    { day: 'Sun', date: 12, id: 12 },
-  ];
 
   const mealSections = [
     {
@@ -71,7 +94,7 @@ const MealPlanScreen = ({ navigation }) => {
     setExpandedSections({ ...expandedSections, [sectionId]: newExpanded });
   };
 
-  const deleteFood = (sectionId, foodId) => {
+  const deleteFood = () => {
     // setPlan();
   };
 
@@ -83,9 +106,16 @@ const MealPlanScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    dispatch(
-      getMainPlanRange({ start_date: '2026-03-05', end_date: '2026-03-07' }),
-    );
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const endDate = new Date(yesterday);
+    endDate.setDate(yesterday.getDate() + 6);
+
+    const start_date = yesterday.toISOString().split('T')[0];
+    const end_date = endDate.toISOString().split('T')[0];
+
+    dispatch(getMainPlanRange({ start_date, end_date }));
   }, [dispatch]);
   if (data.length === 0) {
     return;
