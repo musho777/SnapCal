@@ -11,17 +11,29 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { StyleSheet } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  X,
+  Calendar,
+  Sun,
+  CloudSun,
+  Moon,
+  Pizza,
+  Minus,
+  Plus,
+} from 'lucide-react-native';
 
 const MEAL_TYPES = [
-  { label: 'Breakfast', value: 'breakfast', icon: 'sunny-outline' },
-  { label: 'Lunch', value: 'lunch', icon: 'partly-sunny-outline' },
-  { label: 'Dinner', value: 'dinner', icon: 'moon-outline' },
-  { label: 'Snack', value: 'snack', icon: 'fast-food-outline' },
+  { label: 'Breakfast', value: 'breakfast', Icon: Sun },
+  { label: 'Lunch', value: 'lunch', Icon: CloudSun },
+  { label: 'Dinner', value: 'dinner', Icon: Moon },
+  { label: 'Snack', value: 'snack', Icon: Pizza },
 ];
 
 const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
   const [mealType, setMealType] = useState('breakfast');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [servings, setServings] = useState('1');
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState({});
@@ -85,13 +97,30 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleDateChange = (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
+  };
+
+  const closeDatePicker = () => {
+    setShowDatePicker(false);
+  };
+
+  const formatDate = date => {
+    return date.toISOString().split('T')[0];
+  };
+
   const handleSubmit = () => {
     if (!validateForm()) return;
 
     const data = {
       dish_id: dishId,
       meal_type: mealType,
-      date: date,
+      date: formatDate(date),
       servings: parseInt(servings, 10),
       notes: notes.trim() || undefined,
     };
@@ -145,7 +174,7 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
               onPress={handleClose}
               style={localStyles.closeButton}
             >
-              {/* <Icon name="close" size={24} color="#272727" /> */}
+              <X size={18} color="#272727" />
             </TouchableOpacity>
           </View>
 
@@ -157,34 +186,34 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
             <View style={localStyles.section}>
               <Text style={localStyles.label}>Meal Type</Text>
               <View style={localStyles.mealTypeContainer}>
-                {MEAL_TYPES.map(type => (
-                  <TouchableOpacity
-                    key={type.value}
-                    style={[
-                      localStyles.mealTypeButton,
-                      mealType === type.value &&
-                        localStyles.mealTypeButtonActive,
-                    ]}
-                    onPress={() => setMealType(type.value)}
-                  >
-                    {/* <Icon
-                      name={type.icon}
-                      size={24}
-                      color={
-                        mealType === type.value ? '#FFFFFF' : '#272727'
-                      }
-                    /> */}
-                    <Text
+                {MEAL_TYPES.map(type => {
+                  const IconComponent = type.Icon;
+                  return (
+                    <TouchableOpacity
+                      key={type.value}
                       style={[
-                        localStyles.mealTypeText,
+                        localStyles.mealTypeButton,
                         mealType === type.value &&
-                          localStyles.mealTypeTextActive,
+                          localStyles.mealTypeButtonActive,
                       ]}
+                      onPress={() => setMealType(type.value)}
                     >
-                      {type.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <IconComponent
+                        size={18}
+                        color={mealType === type.value ? '#FFFFFF' : '#272727'}
+                      />
+                      <Text
+                        style={[
+                          localStyles.mealTypeText,
+                          mealType === type.value &&
+                            localStyles.mealTypeTextActive,
+                        ]}
+                      >
+                        {type.label}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
               {errors.mealType && (
                 <Text style={localStyles.errorText}>{errors.mealType}</Text>
@@ -194,21 +223,36 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
             {/* Date Input */}
             <View style={localStyles.section}>
               <Text style={localStyles.label}>Date</Text>
-              <View style={localStyles.inputContainer}>
-                {/* <Icon
-                  name="calendar-outline"
-                  size={20}
+              <TouchableOpacity
+                style={localStyles.inputContainer}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Calendar
+                  size={18}
                   color="#6B39F4"
                   style={localStyles.inputIcon}
-                /> */}
-                <TextInput
-                  style={localStyles.input}
-                  value={date}
-                  onChangeText={setDate}
-                  placeholder="YYYY-MM-DD"
-                  placeholderTextColor="#999999"
                 />
-              </View>
+                <Text style={localStyles.dateText}>{formatDate(date)}</Text>
+              </TouchableOpacity>
+              {showDatePicker && (
+                <>
+                  <DateTimePicker
+                    value={date}
+                    mode="date"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={handleDateChange}
+                    minimumDate={new Date()}
+                  />
+                  {Platform.OS === 'ios' && (
+                    <TouchableOpacity
+                      style={localStyles.datePickerDoneButton}
+                      onPress={closeDatePicker}
+                    >
+                      <Text style={localStyles.datePickerDoneText}>Done</Text>
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
               {errors.date && (
                 <Text style={localStyles.errorText}>{errors.date}</Text>
               )}
@@ -222,7 +266,7 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
                   style={localStyles.servingsButton}
                   onPress={decrementServings}
                 >
-                  {/* <Icon name="remove" size={20} color="#6B39F4" /> */}
+                  <Minus size={18} color="#6B39F4" />
                 </TouchableOpacity>
                 <TextInput
                   style={localStyles.servingsInput}
@@ -235,7 +279,7 @@ const AddToMealModal = ({ visible, onClose, onSubmit, dishId, loading }) => {
                   style={localStyles.servingsButton}
                   onPress={incrementServings}
                 >
-                  {/* <Icon name="add" size={20} color="#6B39F4" /> */}
+                  <Plus size={18} color="#6B39F4" />
                 </TouchableOpacity>
               </View>
               {errors.servings && (
@@ -308,7 +352,7 @@ const localStyles = StyleSheet.create({
     borderBottomColor: '#F3F4F6',
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: '700',
     color: '#272727',
   },
@@ -383,10 +427,24 @@ const localStyles = StyleSheet.create({
     color: '#272727',
     padding: 0,
   },
-  notesInput: {
-    minHeight: 60,
-    paddingTop: 0,
+  dateText: {
+    flex: 1,
+    fontSize: 16,
+    color: '#272727',
   },
+  datePickerDoneButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    backgroundColor: '#6B39F4',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  datePickerDoneText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
   servingsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
