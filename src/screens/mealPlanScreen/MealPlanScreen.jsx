@@ -12,7 +12,7 @@ import { selectMainPlan } from '../../features/mealPlan/mealPlanSlice';
 import {
   getMainPlanRange,
   deleteMealDish,
-  updateDailyLog,
+  burnCalory,
 } from '../../features/mealPlan/mealPlanAction';
 
 const MealPlanScreen = ({ navigation }) => {
@@ -106,9 +106,10 @@ const MealPlanScreen = ({ navigation }) => {
     const selectedDay = weeklyData.find(day => day.date === activeDay);
     if (selectedDay) {
       dispatch(
-        updateDailyLog({
+        burnCalory({
           date: selectedDay.fullDate,
-          calories_burned: food.calories_at_time || 0,
+          dishId: food.dish_id,
+          mealId: food.meal_id,
         }),
       );
     }
@@ -136,6 +137,8 @@ const MealPlanScreen = ({ navigation }) => {
   if (data.length === 0) {
     return;
   }
+
+  console.log(data);
 
   return (
     <View style={styles.container}>

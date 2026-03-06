@@ -59,7 +59,6 @@ const mealPlanSlice = createSlice({
       })
       .addCase(updateDailyLog.fulfilled, (state, { payload }) => {
         state.login.mealPlan = false;
-        // Optionally update the state with the response data if needed
       })
       .addCase(updateDailyLog.rejected, (state, { payload }) => {
         state.login.mealPlan = false;

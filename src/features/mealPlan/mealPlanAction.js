@@ -44,3 +44,19 @@ export const updateDailyLog = createAsyncThunk(
     }
   },
 );
+
+export const burnCalory = createAsyncThunk(
+  'mealPlan/burnCalory',
+  async ({ date, dishId, mealId }, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.post(
+        `/logs/daily/${date}/meals/${mealId}/burned-dishes/${dishId}`,
+      );
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error, 'error');
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
