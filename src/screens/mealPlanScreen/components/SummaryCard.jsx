@@ -31,8 +31,6 @@ const SummaryCard = ({
     extrapolate: 'clamp',
   });
 
-  console.log(progressWidth);
-
   return (
     <View style={styles.summaryCard}>
       {/* Decorative circles */}

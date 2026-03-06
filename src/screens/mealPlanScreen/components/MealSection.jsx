@@ -16,7 +16,6 @@ const MealSection = ({
   onDeleteFood,
   onAddFood,
 }) => {
-  const sectionKcal = foods.reduce((sum, food) => sum + food.total_calories, 0);
   const rotationAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
 
   useEffect(() => {
@@ -34,7 +33,6 @@ const MealSection = ({
 
   return (
     <View style={styles.mealSection}>
-      {/* Section Header */}
       <TouchableOpacity
         style={styles.sectionHeader}
         onPress={onToggle}
@@ -47,54 +45,60 @@ const MealSection = ({
           <Text style={styles.sectionLabel}>{section.label}</Text>
           <Text style={styles.sectionTime}>{section.time}</Text>
         </View>
-        <View style={styles.sectionStats}>
-          <Text style={styles.sectionKcal}>{sectionKcal} Kcal</Text>
-          <Text style={styles.sectionCount}>{foods.length} items</Text>
-        </View>
+        {foods?.total_calories && (
+          <View style={styles.sectionStats}>
+            <Text style={styles.sectionKcal}>{foods?.total_calories} Kcal</Text>
+            <Text style={styles.sectionCount}>
+              {foods?.meal_dishes?.length} items
+            </Text>
+          </View>
+        )}
         <Animated.View
           style={[styles.sectionChevron, { transform: [{ rotate: rotation }] }]}
         >
           <DownAndUpIcon />
         </Animated.View>
       </TouchableOpacity>
-
-      {/* Food Items */}
       {isExpanded && (
         <View style={styles.sectionContent}>
-          {foods.length === 0 ? (
+          {foods?.length === 0 ? (
             <View style={styles.emptyState}>
               <Text style={styles.emptyEmoji}>🍽</Text>
               <Text style={styles.emptyText}>No meals added yet</Text>
             </View>
           ) : (
-            foods.map(food => (
-              <View key={food.id} style={styles.foodItem}>
-                <View style={styles.foodThumbnail}>
-                  <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text>
-                </View>
-                <View style={styles.foodInfo}>
-                  <Text style={styles.foodName}>{food.name}</Text>
-                  <View style={styles.foodMeta}>
-                    <Text style={styles.foodPortion}>
-                      {food.total_calories}
-                    </Text>
-                    <Text style={styles.foodDot}>•</Text>
-                    <Text style={styles.foodKcal}>{food.kcal} Kcal</Text>
+            foods?.meal_dishes?.map(food => {
+              return (
+                <View key={food.id} style={styles.foodItem}>
+                  <View style={styles.foodThumbnail}>
+                    <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text>
                   </View>
+                  <View style={styles.foodInfo}>
+                    <Text style={styles.foodName}>{food.dish.name}</Text>
+                    <View style={styles.foodMeta}>
+                      <Text style={styles.foodPortion}>
+                        {food.protein_at_time_g}
+                      </Text>
+                      <Text style={styles.foodDot}>•</Text>
+                      <Text style={styles.foodKcal}>
+                        {food.calories_at_time} Kcal
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.proteinBadge}>
+                    <Text style={styles.proteinBadgeText}>
+                      {food.servings} share
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => onDeleteFood(food.id)}
+                  >
+                    <Text style={styles.deleteIcon}>×</Text>
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.proteinBadge}>
-                  <Text style={styles.proteinBadgeText}>
-                    {food.total_protein_g}g
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => onDeleteFood(food.id)}
-                >
-                  <Text style={styles.deleteIcon}>×</Text>
-                </TouchableOpacity>
-              </View>
-            ))
+              );
+            })
           )}
 
           {/* Add Food Button */}

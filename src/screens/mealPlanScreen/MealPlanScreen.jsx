@@ -144,7 +144,7 @@ const MealPlanScreen = ({ navigation }) => {
 
         {mealSections.map(section => {
           const foods =
-            data[0]?.meals.filter(e => e.meal_type === section.id) || [];
+            data[0]?.meals.find(e => e.meal_type === section.id) || {};
           const isExpanded = expandedSections[section.id];
           return (
             <MealSection
