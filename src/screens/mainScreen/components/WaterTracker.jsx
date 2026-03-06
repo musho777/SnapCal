@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   Animated,
   StyleSheet,
 } from 'react-native';
@@ -11,6 +11,10 @@ export const WaterTracker = ({ water = 0, onWaterChange }) => {
   const [waterIntake, setWaterIntake] = useState(water);
 
   const scaleAnims = useRef(
+    Array.from({ length: 8 }).map(() => new Animated.Value(1)),
+  ).current;
+
+  const pressScaleAnims = useRef(
     Array.from({ length: 8 }).map(() => new Animated.Value(1)),
   ).current;
 
@@ -54,6 +58,22 @@ export const WaterTracker = ({ water = 0, onWaterChange }) => {
     if (onWaterChange) {
       onWaterChange(newWater);
     }
+  };
+
+  const handlePressIn = index => {
+    Animated.spring(pressScaleAnims[index], {
+      toValue: 0.96,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = index => {
+    Animated.spring(pressScaleAnims[index], {
+      toValue: 1,
+      friction: 4,
+      tension: 100,
+      useNativeDriver: true,
+    }).start();
   };
 
   const getStatusColor = () => {
@@ -120,20 +140,24 @@ export const WaterTracker = ({ water = 0, onWaterChange }) => {
               style={[
                 styles.glassWrapper,
                 {
-                  transform: [{ scale: scaleAnims[i] }],
+                  transform: [
+                    { scale: scaleAnims[i] },
+                    { scale: pressScaleAnims[i] },
+                  ],
                 },
               ]}
             >
-              <TouchableOpacity
+              <Pressable
                 onPress={() => handleGlassTap(i)}
-                activeOpacity={0.7}
+                onPressIn={() => handlePressIn(i)}
+                onPressOut={() => handlePressOut(i)}
                 style={[
                   styles.glass,
                   filled ? styles.glassFilled : styles.glassEmpty,
                 ]}
               >
                 <Text style={styles.dropEmoji}>{filled ? '💧' : ''}</Text>
-              </TouchableOpacity>
+              </Pressable>
             </Animated.View>
           );
         })}
