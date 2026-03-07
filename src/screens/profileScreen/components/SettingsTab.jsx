@@ -123,9 +123,9 @@ const SettingsTab = ({
         </View>
       </View>
 
-      {/* Units Section */}
+      {/* Physical Data Section */}
       <View style={localStyles.section}>
-        <Text style={localStyles.sectionLabel}>UNITS</Text>
+        <Text style={localStyles.sectionLabel}>PHYSICAL DATA</Text>
         <View style={localStyles.card}>
           <UIOptionRow
             icon="⚖️"
