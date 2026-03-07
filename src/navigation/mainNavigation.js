@@ -13,8 +13,9 @@ import CreateMealScreen from '../screens/createMealScreen';
 import OnboardingFlow from '../screens/onboardingScreen';
 import LoginScreen from '../screens/authScreens/login/LoginScreen.jsx';
 import RegisterScreen from '../screens/authScreens/register/RegisterScreen.jsx';
-import SplashScreen from '../components/splashScreen';
 import Loading from '../components/loading/Loading.jsx';
+import { useDispatch } from 'react-redux';
+import { getUserInfo } from '../features/auth/authActions.js';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -42,6 +43,7 @@ const TabNavigator = () => {
 export const MainNavigation = () => {
   const [isReady, setIsReady] = useState(false);
   const [initialRoute, setInitialRoute] = useState('Onboarding');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
@@ -63,6 +65,10 @@ export const MainNavigation = () => {
 
     checkOnboardingStatus();
   }, []);
+
+  useEffect(() => {
+    dispatch(getUserInfo());
+  }, [dispatch]);
 
   // useEffect(() => {
   //   AsyncStorage.removeItem('accessToken');

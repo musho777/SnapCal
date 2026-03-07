@@ -165,7 +165,7 @@ const MealPlanScreen = ({ navigation }) => {
       >
         <SummaryCard
           totalKcal={activeDayData?.calories_burned || null}
-          goalKcal={activeDayData?.calories_consumed || null}
+          goalKcal={activeDayData?.target_calories || null}
           totalCarbs={activeDayData?.carbs_consumed_g || 0}
           totalProtein={activeDayData?.protein_consumed_g || 0}
           totalFat={activeDayData?.fats_consumed_g || 0}

@@ -8,6 +8,7 @@ import {
   setRefreshToken,
 } from '../../api/TokenService';
 import ApiClient from '../../api/axiosClient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const loadTokens = createAsyncThunk('auth/loadTokens', async () => {
   const accessToken = await getAccessToken();
@@ -48,10 +49,11 @@ export const userLogout = createAsyncThunk(
 );
 
 export const getUserInfo = createAsyncThunk(
-  'get/contact',
+  'get/user',
   async (_, { rejectWithValue }) => {
     try {
-      const { user } = await ApiClient.get('/users/me');
+      const user = await ApiClient.get('/users/profile');
+      await AsyncStorage.setItem('user', JSON.stringify(user));
       return user;
     } catch (error) {
       if (error.response && error.response.data.message) {
