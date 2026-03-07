@@ -126,7 +126,6 @@ const MealPlanScreen = ({ navigation }) => {
     try {
       await dispatch(burnCalory(params)).unwrap();
     } catch (error) {
-      console.error('Error burning calories:', error);
       dispatch(revertBurnedDishOptimistic(params));
     }
   };

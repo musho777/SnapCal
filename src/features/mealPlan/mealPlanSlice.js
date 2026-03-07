@@ -143,7 +143,6 @@ const mealPlanSlice = createSlice({
         state.login.mealPlan = false;
         const { mealDishId } = payload;
 
-        // Remove the deleted dish from the meal plan
         state.data.mealPlan = state.data.mealPlan.map(dayPlan => ({
           ...dayPlan,
           meals: dayPlan.meals.map(meal => ({
