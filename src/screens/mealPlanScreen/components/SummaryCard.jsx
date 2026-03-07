@@ -13,6 +13,17 @@ const SummaryCard = ({
     100,
   );
   const kcalLeft = Math.max(goalKcal - totalKcal, 0);
+
+  // Calculate target macros based on standard ratios
+  // Carbs: 50% of calories (4 cal/g), Protein: 25% (4 cal/g), Fat: 25% (9 cal/g)
+  const targetCarbs = Math.round((goalKcal * 0.5) / 4);
+  const targetProtein = Math.round((goalKcal * 0.25) / 4);
+  const targetFat = Math.round((goalKcal * 0.25) / 9);
+
+  // Calculate macro percentages
+  const carbsPercent = Math.min((totalCarbs / targetCarbs) * 100, 100);
+  const proteinPercent = Math.min((totalProtein / targetProtein) * 100, 100);
+  const fatPercent = Math.min((totalFat / targetFat) * 100, 100);
   // Animated values
   const progressAnim = useRef(new Animated.Value(0)).current;
 
@@ -33,18 +44,8 @@ const SummaryCard = ({
   return (
     <View style={styles.summaryCard}>
       {/* Decorative circles */}
-      <View
-        style={[
-          styles.decorativeCircle,
-          { width: 120, height: 120, top: -20, right: -20 },
-        ]}
-      />
-      <View
-        style={[
-          styles.decorativeCircle,
-          { width: 80, height: 80, bottom: 20, left: -10 },
-        ]}
-      />
+      <View style={styles.decorativeCircleLarge} />
+      <View style={styles.decorativeCircleSmall} />
 
       {/* Top Row */}
       <View style={styles.summaryTop}>
@@ -84,7 +85,8 @@ const SummaryCard = ({
             <View
               style={[
                 styles.macroPillProgressBar,
-                { width: '65%', backgroundColor: '#F59E0B' },
+                styles.carbsProgressBar,
+                { width: `${carbsPercent}%` },
               ]}
             />
           </View>
@@ -96,7 +98,8 @@ const SummaryCard = ({
             <View
               style={[
                 styles.macroPillProgressBar,
-                { width: '78%', backgroundColor: '#6366F1' },
+                styles.proteinProgressBar,
+                { width: `${proteinPercent}%` },
               ]}
             />
           </View>
@@ -108,7 +111,8 @@ const SummaryCard = ({
             <View
               style={[
                 styles.macroPillProgressBar,
-                { width: '52%', backgroundColor: '#22C55E' },
+                styles.fatProgressBar,
+                { width: `${fatPercent}%` },
               ]}
             />
           </View>
@@ -130,6 +134,24 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 9999,
     backgroundColor: 'rgba(255,255,255,0.04)',
+  },
+  decorativeCircleLarge: {
+    position: 'absolute',
+    borderRadius: 9999,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    width: 120,
+    height: 120,
+    top: -20,
+    right: -20,
+  },
+  decorativeCircleSmall: {
+    position: 'absolute',
+    borderRadius: 9999,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    width: 80,
+    height: 80,
+    bottom: 20,
+    left: -10,
   },
   summaryTop: {
     flexDirection: 'row',
@@ -226,6 +248,15 @@ const styles = StyleSheet.create({
   macroPillProgressBar: {
     height: '100%',
     borderRadius: 2,
+  },
+  carbsProgressBar: {
+    backgroundColor: '#F59E0B',
+  },
+  proteinProgressBar: {
+    backgroundColor: '#6366F1',
+  },
+  fatProgressBar: {
+    backgroundColor: '#22C55E',
   },
 });
 
