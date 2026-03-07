@@ -17,6 +17,7 @@ const MealSection = ({
   onDeleteFood,
   onFoodPress,
   onAddFood,
+  activeDate,
 }) => {
   const rotationAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
 
@@ -32,6 +33,18 @@ const MealSection = ({
     inputRange: [0, 1],
     outputRange: ['0deg', '180deg'],
   });
+
+  // Check if activeDate is in the past
+  const isDatePast = () => {
+    if (!activeDate) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const active = new Date(activeDate);
+    active.setHours(0, 0, 0, 0);
+    return active < today;
+  };
+
+  const isPastDate = isDatePast();
 
   return (
     <View style={styles.mealSection}>
@@ -83,6 +96,7 @@ const MealSection = ({
                   style={[styles.foodItem, isBurned && styles.foodItemBurned]}
                   onPress={() => onFoodPress?.(food)}
                   activeOpacity={0.7}
+                  disabled={isPastDate}
                 >
                   <View
                     style={[
@@ -145,15 +159,17 @@ const MealSection = ({
                       {food.servings} share
                     </Text>
                   </View>
-                  <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={e => {
-                      e.stopPropagation();
-                      onDeleteFood(food.id);
-                    }}
-                  >
-                    <Text style={styles.deleteIcon}>×</Text>
-                  </TouchableOpacity>
+                  {!isPastDate && (
+                    <TouchableOpacity
+                      style={styles.deleteButton}
+                      onPress={e => {
+                        e.stopPropagation();
+                        onDeleteFood(food.id);
+                      }}
+                    >
+                      <Text style={styles.deleteIcon}>×</Text>
+                    </TouchableOpacity>
+                  )}
                 </TouchableOpacity>
               );
             })

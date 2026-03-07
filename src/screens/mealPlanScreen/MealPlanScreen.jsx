@@ -187,6 +187,7 @@ const MealPlanScreen = ({ navigation }) => {
               onDeleteFood={mealDishId => deleteFood(mealDishId)}
               onFoodPress={food => handleFoodPress(food)}
               onAddFood={() => handleAddFood(section.id)}
+              activeDate={selectedDay?.fullDate}
             />
           );
         })}
