@@ -2,9 +2,28 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from '../../../themes/index';
 import { NotificationIcon } from '../../../assets/Icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 export const Header = () => {
   const navigation = useNavigation();
+  const [user, setUser] = useState({
+    name: '',
+    surname: '',
+  });
+
+  const getUserData = async () => {
+    const response = await AsyncStorage.getItem('user');
+    const data = JSON.parse(response);
+    setUser({
+      name: data.profile.first_name,
+      surname: data.profile.last_name,
+    });
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
 
   return (
     <View style={localStyles.header}>
@@ -15,7 +34,9 @@ export const Header = () => {
         />
         <View>
           <Text style={styles.caption}>Hello</Text>
-          <Text style={styles.h5}>Musho Poghosyan</Text>
+          <Text style={styles.h5}>
+            {user.name} {user.surname}
+          </Text>
         </View>
       </View>
       <TouchableOpacity
