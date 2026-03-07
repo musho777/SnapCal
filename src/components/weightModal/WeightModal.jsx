@@ -154,7 +154,7 @@ const WeightModal = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <View style={styles.unitToggle}>
+        {/* <View style={styles.unitToggle}>
           {['kg', 'lbs'].map(u => (
             <TouchableOpacity
               key={u}
@@ -171,7 +171,7 @@ const WeightModal = ({
               </Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </View> */}
 
         {/* Big display */}
         <View style={styles.displayContainer}>
@@ -195,7 +195,6 @@ const WeightModal = ({
             </View>
           </View>
 
-          {/* Ideal range text */}
           <Text style={styles.idealText}>
             Ideal for your height:{' '}
             <Text style={styles.idealRange}>
@@ -204,20 +203,8 @@ const WeightModal = ({
           </Text>
         </View>
 
-        {/* Slider */}
         <View style={styles.sliderContainer}>
           <View style={styles.sliderWrapper}>
-            {/* Ideal zone overlay */}
-            <View
-              style={[
-                styles.idealZone,
-                {
-                  left: `${idealMinPct}%`,
-                  width: `${idealMaxPct - idealMinPct}%`,
-                },
-              ]}
-            />
-
             <Slider
               value={kg}
               onValueChange={val => setKg(Math.round(val * 2) / 2)}
@@ -231,7 +218,6 @@ const WeightModal = ({
             />
           </View>
 
-          {/* Min / Ideal label / Max */}
           <View style={styles.sliderLabels}>
             <Text style={styles.sliderLabel}>{MIN} kg</Text>
             <Text style={styles.sliderIdealLabel}>
@@ -297,7 +283,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 14,
+    paddingTop: 7,
+    paddingBottom: 14,
   },
   cancelText: {
     fontSize: 13,
@@ -419,14 +406,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginBottom: 8,
   },
-  idealZone: {
-    position: 'absolute',
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#22C55E33',
-    top: 17,
-    zIndex: 1,
-  },
+
   slider: {
     width: '100%',
     height: 40,

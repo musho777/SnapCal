@@ -72,7 +72,6 @@ export const updateUserMeasurements = createAsyncThunk(
       const data = await ApiClient.post('/users/measurements', {
         weight_kg,
       });
-      await AsyncStorage.setItem('user', JSON.stringify(data));
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

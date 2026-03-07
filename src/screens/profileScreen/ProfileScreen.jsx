@@ -45,7 +45,7 @@ const ProfileScreen = ({ navigation }) => {
   const getUserData = async () => {
     const response = await AsyncStorage.getItem('user');
     const data = JSON.parse(response);
-    setWeight(+data.settings.target_weight_kg);
+    setWeight(+data.profile.current_weight_kg);
     setUser(data);
   };
 
