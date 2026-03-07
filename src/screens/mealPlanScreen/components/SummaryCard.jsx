@@ -43,11 +43,9 @@ const SummaryCard = ({
 
   return (
     <View style={styles.summaryCard}>
-      {/* Decorative circles */}
       <View style={styles.decorativeCircleLarge} />
       <View style={styles.decorativeCircleSmall} />
 
-      {/* Top Row */}
       <View style={styles.summaryTop}>
         <View>
           <Text style={styles.summaryLabel}>TODAY'S CALORIES</Text>
@@ -61,7 +59,6 @@ const SummaryCard = ({
         </View>
       </View>
 
-      {/* Progress Bar */}
       <View style={styles.progressContainer}>
         <View style={styles.progressTrack}>
           <Animated.View
@@ -76,7 +73,6 @@ const SummaryCard = ({
         </View>
       </View>
 
-      {/* Macro Pills */}
       <View style={styles.macroPills}>
         <View style={styles.macroPill}>
           <Text style={styles.macroPillValue}>{totalCarbs}g</Text>

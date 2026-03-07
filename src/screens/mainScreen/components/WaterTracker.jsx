@@ -1,11 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  Animated,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, Pressable, Animated, StyleSheet } from 'react-native';
 
 export const WaterTracker = ({ water = 0, onWaterChange }) => {
   const [waterIntake, setWaterIntake] = useState(water);

@@ -175,7 +175,6 @@ const MealSection = ({
             })
           )}
 
-          {/* Add Food Button */}
           <TouchableOpacity
             style={[styles.addFoodButton, { borderColor: section.accent }]}
             onPress={onAddFood}
