@@ -26,7 +26,7 @@ const ProfileScreen = ({ navigation }) => {
   const [heightUnit, setHeightUnit] = useState('cm');
   const [language, setLanguage] = useState('English');
   const [weight, setWeight] = useState(70); // kg
-  const [height, setHeight] = useState(175); // cm
+  const height = 175;
 
   const handleUnsave = id => {
     setSavedList(prev => prev.filter(item => item.id !== id));

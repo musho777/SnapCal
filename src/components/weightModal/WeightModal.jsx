@@ -37,7 +37,7 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
   useEffect(() => {
     displayAnim.value = withSequence(
       withTiming(0.85, { duration: 80 }),
-      withSpring(1, { damping: 10, stiffness: 300 })
+      withSpring(1, { damping: 10, stiffness: 300 }),
     );
   }, [kg]);
 
@@ -61,7 +61,7 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
   };
 
   // BMI calculation
-  const bmiVal = (kg / ((height / 100) ** 2)).toFixed(1);
+  const bmiVal = (kg / (height / 100) ** 2).toFixed(1);
 
   const getBmiInfo = () => {
     const b = parseFloat(bmiVal);
@@ -74,8 +74,8 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
   const bmiInfo = getBmiInfo();
 
   // Ideal weight range (BMI 18.5–24.9)
-  const idealMin = Math.round(18.5 * ((height / 100) ** 2));
-  const idealMax = Math.round(24.9 * ((height / 100) ** 2));
+  const idealMin = Math.round(18.5 * (height / 100) ** 2);
+  const idealMax = Math.round(24.9 * (height / 100) ** 2);
 
   // Slider positions (0–100%)
   const idealMinPct = ((idealMin - MIN) / (MAX - MIN)) * 100;
@@ -83,8 +83,6 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
 
   // Display value: kg or lbs
   const displayVal = unit === 'kg' ? kg : Math.round(kg * 2.2046);
-
-  const QUICK_WEIGHTS = [50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 
   if (!visible) return null;
 
@@ -97,10 +95,7 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
     >
       <View style={StyleSheet.absoluteFillObject}>
         {/* Backdrop */}
-        <Pressable
-          onPress={handleClose}
-          style={styles.backdrop}
-        />
+        <Pressable onPress={handleClose} style={styles.backdrop} />
 
         {/* Sheet */}
         <Animated.View style={[styles.sheet, sheetStyle]}>
@@ -126,14 +121,11 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
           >
             {/* Unit toggle */}
             <View style={styles.unitToggle}>
-              {['kg', 'lbs'].map((u) => (
+              {['kg', 'lbs'].map(u => (
                 <TouchableOpacity
                   key={u}
                   onPress={() => setUnit(u)}
-                  style={[
-                    styles.unitBtn,
-                    unit === u && styles.unitBtnActive,
-                  ]}
+                  style={[styles.unitBtn, unit === u && styles.unitBtnActive]}
                 >
                   <Text
                     style={[
@@ -194,7 +186,7 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
 
                 <Slider
                   value={kg}
-                  onValueChange={(val) => setKg(Math.round(val * 2) / 2)}
+                  onValueChange={val => setKg(Math.round(val * 2) / 2)}
                   minimumValue={MIN}
                   maximumValue={MAX}
                   step={0.5}
@@ -215,39 +207,13 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
               </View>
             </View>
 
-            {/* Quick select */}
-            <View style={styles.quickSelectContainer}>
-              <Text style={styles.sectionLabel}>Quick Select</Text>
-              <View style={styles.pillsContainer}>
-                {QUICK_WEIGHTS.map((w) => (
-                  <TouchableOpacity
-                    key={w}
-                    onPress={() => setKg(w)}
-                    style={[
-                      styles.pill,
-                      kg === w && styles.pillActive,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.pillText,
-                        kg === w && styles.pillTextActive,
-                      ]}
-                    >
-                      {w} kg
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
             {/* Manual ± */}
             <View style={styles.manualRow}>
               <Text style={styles.manualLabel}>Enter manually</Text>
               <View style={styles.manualControls}>
                 <TouchableOpacity
                   onPress={() =>
-                    setKg((k) => Math.max(MIN, parseFloat((k - 0.5).toFixed(1))))
+                    setKg(k => Math.max(MIN, parseFloat((k - 0.5).toFixed(1))))
                   }
                   style={styles.minusBtn}
                 >
@@ -258,7 +224,7 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
                 </View>
                 <TouchableOpacity
                   onPress={() =>
-                    setKg((k) => Math.min(MAX, parseFloat((k + 0.5).toFixed(1))))
+                    setKg(k => Math.min(MAX, parseFloat((k + 0.5).toFixed(1))))
                   }
                   style={styles.plusBtn}
                 >
