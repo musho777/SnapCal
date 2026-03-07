@@ -89,11 +89,16 @@ const MealSection = ({
                   burned.dish_id === food.dish_id &&
                   burned.meal_id === food.meal_id,
               );
+              const isNotBurnedInPast = !isBurned && isPastDate;
 
               return (
                 <TouchableOpacity
                   key={food.id}
-                  style={[styles.foodItem, isBurned && styles.foodItemBurned]}
+                  style={[
+                    styles.foodItem,
+                    isBurned && styles.foodItemBurned,
+                    isNotBurnedInPast && styles.foodItemNotBurned,
+                  ]}
                   onPress={() => onFoodPress?.(food)}
                   activeOpacity={0.7}
                   disabled={isPastDate}
@@ -102,6 +107,7 @@ const MealSection = ({
                     style={[
                       styles.foodThumbnail,
                       isBurned && styles.foodThumbnailBurned,
+                      isNotBurnedInPast && styles.foodThumbnailNotBurned,
                     ]}
                   >
                     <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text>
@@ -112,6 +118,7 @@ const MealSection = ({
                         style={[
                           styles.foodName,
                           isBurned && styles.foodMetaBurned,
+                          isNotBurnedInPast && styles.foodMetaNotBurned,
                         ]}
                       >
                         {food.dish.name}
@@ -122,6 +129,7 @@ const MealSection = ({
                         style={[
                           styles.foodPortion,
                           isBurned && styles.foodMetaBurned,
+                          isNotBurnedInPast && styles.foodMetaNotBurned,
                         ]}
                       >
                         {food.protein_at_time_g}g protein
@@ -130,6 +138,7 @@ const MealSection = ({
                         style={[
                           styles.foodDot,
                           isBurned && styles.foodMetaBurned,
+                          isNotBurnedInPast && styles.foodMetaNotBurned,
                         ]}
                       >
                         •
@@ -138,6 +147,7 @@ const MealSection = ({
                         style={[
                           styles.foodKcal,
                           isBurned && styles.foodKcalBurned,
+                          isNotBurnedInPast && styles.foodKcalNotBurned,
                         ]}
                       >
                         {food.calories_at_time} Kcal
@@ -148,12 +158,14 @@ const MealSection = ({
                     style={[
                       styles.proteinBadge,
                       isBurned && styles.proteinBadgeBurned,
+                      isNotBurnedInPast && styles.proteinBadgeNotBurned,
                     ]}
                   >
                     <Text
                       style={[
                         styles.proteinBadgeText,
                         isBurned && styles.proteinBadgeTextBurned,
+                        isNotBurnedInPast && styles.proteinBadgeTextNotBurned,
                       ]}
                     >
                       {food.servings} share
@@ -272,6 +284,11 @@ const styles = StyleSheet.create({
     borderColor: '#86EFAC',
     borderWidth: 1.5,
   },
+  foodItemNotBurned: {
+    backgroundColor: '#FEF2F2',
+    borderColor: '#FCA5A5',
+    borderWidth: 1.5,
+  },
   foodThumbnail: {
     width: 38,
     height: 38,
@@ -282,6 +299,9 @@ const styles = StyleSheet.create({
   },
   foodThumbnailBurned: {
     backgroundColor: '#DCFCE7',
+  },
+  foodThumbnailNotBurned: {
+    backgroundColor: '#FEE2E2',
   },
   foodEmoji: {
     fontSize: 20,
@@ -337,6 +357,13 @@ const styles = StyleSheet.create({
     color: '#16A34A',
     fontWeight: '700',
   },
+  foodMetaNotBurned: {
+    color: '#DC2626',
+  },
+  foodKcalNotBurned: {
+    color: '#DC2626',
+    fontWeight: '700',
+  },
   proteinBadge: {
     backgroundColor: '#F0F4FF',
     borderRadius: 6,
@@ -354,6 +381,12 @@ const styles = StyleSheet.create({
   },
   proteinBadgeTextBurned: {
     color: '#16A34A',
+  },
+  proteinBadgeNotBurned: {
+    backgroundColor: '#FEE2E2',
+  },
+  proteinBadgeTextNotBurned: {
+    color: '#DC2626',
   },
   deleteButton: {
     width: 26,
