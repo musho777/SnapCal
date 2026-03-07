@@ -77,7 +77,8 @@ const WeightModal = ({
 
   const handleSave = useCallback(() => {
     onSave(kg);
-  }, [kg, onSave]);
+    onClose();
+  }, [kg, onSave, onClose]);
 
   // Render custom backdrop
   const renderBackdrop = useCallback(

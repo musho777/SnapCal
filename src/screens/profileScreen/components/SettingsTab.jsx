@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import EditProfileCard from './EditProfileCard';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
 import { useNavigation } from '@react-navigation/native';
 import WeightModal from '../../../components/weightModal';
+import AlertModal from '../../../components/alertModal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserMeasurements } from '../../../features/auth/authActions';
 
@@ -31,6 +32,8 @@ const SettingsTab = ({
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [weightModalVisible, setWeightModalVisible] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const { measurementsLoading } = useSelector(state => state.auth);
 
   const handleLogout = () => {
@@ -47,9 +50,9 @@ const SettingsTab = ({
     try {
       await dispatch(updateUserMeasurements({ weight_kg: newWeight })).unwrap();
       setWeight(newWeight);
-      setWeightModalVisible(false);
     } catch (error) {
-      Alert.alert('Error', error || 'Failed to update weight');
+      setAlertMessage(error || 'Failed to update weight');
+      setAlertVisible(true);
     }
   };
 
@@ -170,6 +173,14 @@ const SettingsTab = ({
         onSave={handleSaveWeight}
         onClose={() => setWeightModalVisible(false)}
         loading={measurementsLoading}
+      />
+
+      <AlertModal
+        visible={alertVisible}
+        type="error"
+        title="Error"
+        message={alertMessage}
+        onClose={() => setAlertVisible(false)}
       />
     </ScrollView>
   );
