@@ -15,7 +15,6 @@ export const Header = () => {
   const getUserData = async () => {
     const response = await AsyncStorage.getItem('user');
     const data = JSON.parse(response);
-    console.log(data);
     setUser({
       name: data.profile.first_name,
       surname: data.profile.last_name,
