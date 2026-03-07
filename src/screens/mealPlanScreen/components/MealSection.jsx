@@ -187,14 +187,14 @@ const MealSection = ({
             })
           )}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.addFoodButton, { borderColor: section.accent }]}
             onPress={onAddFood}
           >
             <Text style={[styles.addFoodText, { color: section.accent }]}>
               + Add Food
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       )}
     </View>
