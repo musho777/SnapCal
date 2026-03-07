@@ -6,6 +6,7 @@ import { MainNavigation } from './src/navigation/mainNavigation';
 import { DraggableAIButton } from './src/common-ui/uIButton';
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
@@ -15,14 +16,16 @@ function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <View style={styles.container}>
-            <Provider store={store}>
-              <MainNavigation />
-            </Provider>
-          </View>
-        </NavigationContainer>
-        <DraggableAIButton onPress={handleAIButtonPress} />
+        <BottomSheetModalProvider>
+          <NavigationContainer>
+            <View style={styles.container}>
+              <Provider store={store}>
+                <MainNavigation />
+              </Provider>
+            </View>
+          </NavigationContainer>
+          <DraggableAIButton onPress={handleAIButtonPress} />
+        </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

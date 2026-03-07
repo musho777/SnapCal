@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
-  ScrollView,
-  Pressable,
-  StyleSheet,
-} from 'react-native';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withSpring,
-  withTiming,
   withSequence,
-  runOnJS,
+  withTiming,
+  withSpring,
 } from 'react-native-reanimated';
 import Slider from '@react-native-community/slider';
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetBackdrop,
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
 
 const MIN = 30;
 const MAX = 200;
@@ -25,15 +28,21 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
   const [unit, setUnit] = useState('kg');
   const [kg, setKg] = useState(current || 70);
 
-  const translateY = useSharedValue(600);
+  const bottomSheetRef = useRef(null);
   const displayAnim = useSharedValue(1);
+
+  const snapPoints = useMemo(() => ['66%'], []);
 
   useEffect(() => {
     if (visible) {
-      translateY.value = withSpring(0, { damping: 18, stiffness: 200 });
+      setKg(current || 70);
+      bottomSheetRef.current?.present();
+    } else {
+      bottomSheetRef.current?.dismiss();
     }
-  }, [visible]);
+  }, [visible, current]);
 
+  // Animate display value when kg changes
   useEffect(() => {
     displayAnim.value = withSequence(
       withTiming(0.85, { duration: 80 }),
@@ -41,24 +50,36 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
     );
   }, [kg]);
 
-  const sheetStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-  }));
-
   const displayStyle = useAnimatedStyle(() => ({
     transform: [{ scale: displayAnim.value }],
   }));
 
-  const handleClose = () => {
-    translateY.value = withTiming(600, { duration: 280 }, () => {
-      runOnJS(onClose)();
-    });
-  };
+  const handleClose = useCallback(() => {
+    bottomSheetRef.current?.dismiss();
+  }, []);
 
-  const handleSave = () => {
+  const handleDismiss = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
+  const handleSave = useCallback(() => {
     onSave(kg);
     handleClose();
-  };
+  }, [kg, onSave, handleClose]);
+
+  // Render custom backdrop
+  const renderBackdrop = useCallback(
+    props => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        opacity={0.5}
+        pressBehavior="close"
+      />
+    ),
+    [],
+  );
 
   // BMI calculation
   const bmiVal = (kg / (height / 100) ** 2).toFixed(1);
@@ -84,190 +105,167 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
   // Display value: kg or lbs
   const displayVal = unit === 'kg' ? kg : Math.round(kg * 2.2046);
 
-  if (!visible) return null;
-
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="none"
-      onRequestClose={handleClose}
+    <BottomSheetModal
+      ref={bottomSheetRef}
+      snapPoints={snapPoints}
+      onDismiss={handleDismiss}
+      enablePanDownToClose={true}
+      backdropComponent={renderBackdrop}
+      handleIndicatorStyle={styles.handleIndicator}
+      backgroundStyle={styles.bottomSheetBackground}
     >
-      <View style={StyleSheet.absoluteFillObject}>
-        {/* Backdrop */}
-        <Pressable onPress={handleClose} style={styles.backdrop} />
+      <BottomSheetView style={styles.headerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleClose}>
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Edit Weight</Text>
+          <TouchableOpacity onPress={handleSave} style={styles.saveBtn}>
+            <Text style={styles.saveBtnText}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      </BottomSheetView>
 
-        {/* Sheet */}
-        <Animated.View style={[styles.sheet, sheetStyle]}>
-          {/* Handle */}
-          <View style={styles.handleContainer}>
-            <View style={styles.handle} />
-          </View>
-
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity onPress={handleClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
+      <BottomSheetScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.unitToggle}>
+          {['kg', 'lbs'].map(u => (
+            <TouchableOpacity
+              key={u}
+              onPress={() => setUnit(u)}
+              style={[styles.unitBtn, unit === u && styles.unitBtnActive]}
+            >
+              <Text
+                style={[
+                  styles.unitBtnText,
+                  unit === u && styles.unitBtnTextActive,
+                ]}
+              >
+                {u === 'kg' ? 'Kilograms' : 'Pounds'}
+              </Text>
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Edit Weight</Text>
-            <TouchableOpacity onPress={handleSave} style={styles.saveBtn}>
-              <Text style={styles.saveBtnText}>Save</Text>
-            </TouchableOpacity>
-          </View>
+          ))}
+        </View>
 
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
-          >
-            {/* Unit toggle */}
-            <View style={styles.unitToggle}>
-              {['kg', 'lbs'].map(u => (
-                <TouchableOpacity
-                  key={u}
-                  onPress={() => setUnit(u)}
-                  style={[styles.unitBtn, unit === u && styles.unitBtnActive]}
-                >
-                  <Text
-                    style={[
-                      styles.unitBtnText,
-                      unit === u && styles.unitBtnTextActive,
-                    ]}
-                  >
-                    {u === 'kg' ? 'Kilograms' : 'Pounds'}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+        {/* Big display */}
+        <View style={styles.displayContainer}>
+          <Animated.View style={[styles.displayRow, displayStyle]}>
+            <Text style={styles.bigNumber}>{displayVal}</Text>
+            <Text style={styles.bigUnit}>{unit}</Text>
+          </Animated.View>
 
-            {/* Big display */}
-            <View style={styles.displayContainer}>
-              <Animated.View style={[styles.displayRow, displayStyle]}>
-                <Text style={styles.bigNumber}>{displayVal}</Text>
-                <Text style={styles.bigUnit}>{unit}</Text>
-              </Animated.View>
-
-              {/* BMI badge */}
-              <View style={styles.bmiRow}>
-                <Text style={styles.bmiText}>BMI {bmiVal}</Text>
-                <View
-                  style={[
-                    styles.bmiBadge,
-                    { backgroundColor: bmiInfo.color + '18' },
-                  ]}
-                >
-                  <Text style={[styles.bmiLabel, { color: bmiInfo.color }]}>
-                    {bmiInfo.label}
-                  </Text>
-                </View>
-              </View>
-
-              {/* Ideal range text */}
-              <Text style={styles.idealText}>
-                Ideal for your height:{' '}
-                <Text style={styles.idealRange}>
-                  {idealMin}–{idealMax} kg
-                </Text>
+          {/* BMI badge */}
+          <View style={styles.bmiRow}>
+            <Text style={styles.bmiText}>BMI {bmiVal}</Text>
+            <View
+              style={[
+                styles.bmiBadge,
+                { backgroundColor: bmiInfo.color + '18' },
+              ]}
+            >
+              <Text style={[styles.bmiLabel, { color: bmiInfo.color }]}>
+                {bmiInfo.label}
               </Text>
             </View>
+          </View>
 
-            {/* Slider */}
-            <View style={styles.sliderContainer}>
-              <View style={styles.sliderWrapper}>
-                {/* Ideal zone overlay */}
-                <View
-                  style={[
-                    styles.idealZone,
-                    {
-                      left: `${idealMinPct}%`,
-                      width: `${idealMaxPct - idealMinPct}%`,
-                    },
-                  ]}
-                />
+          {/* Ideal range text */}
+          <Text style={styles.idealText}>
+            Ideal for your height:{' '}
+            <Text style={styles.idealRange}>
+              {idealMin}–{idealMax} kg
+            </Text>
+          </Text>
+        </View>
 
-                <Slider
-                  value={kg}
-                  onValueChange={val => setKg(Math.round(val * 2) / 2)}
-                  minimumValue={MIN}
-                  maximumValue={MAX}
-                  step={0.5}
-                  minimumTrackTintColor={bmiInfo.color}
-                  maximumTrackTintColor="#F0F0F0"
-                  thumbTintColor="#1A1A1A"
-                  style={styles.slider}
-                />
-              </View>
+        {/* Slider */}
+        <View style={styles.sliderContainer}>
+          <View style={styles.sliderWrapper}>
+            {/* Ideal zone overlay */}
+            <View
+              style={[
+                styles.idealZone,
+                {
+                  left: `${idealMinPct}%`,
+                  width: `${idealMaxPct - idealMinPct}%`,
+                },
+              ]}
+            />
 
-              {/* Min / Ideal label / Max */}
-              <View style={styles.sliderLabels}>
-                <Text style={styles.sliderLabel}>{MIN} kg</Text>
-                <Text style={styles.sliderIdealLabel}>
-                  ✓ Ideal: {idealMin}–{idealMax} kg
-                </Text>
-                <Text style={styles.sliderLabel}>{MAX} kg</Text>
-              </View>
+            <Slider
+              value={kg}
+              onValueChange={val => setKg(Math.round(val * 2) / 2)}
+              minimumValue={MIN}
+              maximumValue={MAX}
+              step={0.5}
+              minimumTrackTintColor={bmiInfo.color}
+              maximumTrackTintColor="#F0F0F0"
+              thumbTintColor="#1A1A1A"
+              style={styles.slider}
+            />
+          </View>
+
+          {/* Min / Ideal label / Max */}
+          <View style={styles.sliderLabels}>
+            <Text style={styles.sliderLabel}>{MIN} kg</Text>
+            <Text style={styles.sliderIdealLabel}>
+              ✓ Ideal: {idealMin}–{idealMax} kg
+            </Text>
+            <Text style={styles.sliderLabel}>{MAX} kg</Text>
+          </View>
+        </View>
+
+        {/* Manual ± */}
+        <View style={styles.manualRow}>
+          <Text style={styles.manualLabel}>Enter manually</Text>
+          <View style={styles.manualControls}>
+            <TouchableOpacity
+              onPress={() =>
+                setKg(k => Math.max(MIN, parseFloat((k - 0.5).toFixed(1))))
+              }
+              style={styles.minusBtn}
+            >
+              <Text style={styles.minusBtnText}>−</Text>
+            </TouchableOpacity>
+            <View style={styles.valueBox}>
+              <Text style={styles.valueBoxText}>{kg}</Text>
             </View>
-
-            {/* Manual ± */}
-            <View style={styles.manualRow}>
-              <Text style={styles.manualLabel}>Enter manually</Text>
-              <View style={styles.manualControls}>
-                <TouchableOpacity
-                  onPress={() =>
-                    setKg(k => Math.max(MIN, parseFloat((k - 0.5).toFixed(1))))
-                  }
-                  style={styles.minusBtn}
-                >
-                  <Text style={styles.minusBtnText}>−</Text>
-                </TouchableOpacity>
-                <View style={styles.valueBox}>
-                  <Text style={styles.valueBoxText}>{kg}</Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() =>
-                    setKg(k => Math.min(MAX, parseFloat((k + 0.5).toFixed(1))))
-                  }
-                  style={styles.plusBtn}
-                >
-                  <Text style={styles.plusBtnText}>+</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
-        </Animated.View>
-      </View>
-    </Modal>
+            <TouchableOpacity
+              onPress={() =>
+                setKg(k => Math.min(MAX, parseFloat((k + 0.5).toFixed(1))))
+              }
+              style={styles.plusBtn}
+            >
+              <Text style={styles.plusBtnText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </BottomSheetScrollView>
+    </BottomSheetModal>
   );
 };
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  sheet: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff',
+  bottomSheetBackground: {
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 40,
-    shadowOffset: { width: 0, height: -8 },
-    elevation: 20,
+    backgroundColor: '#fff',
   },
-  handleContainer: {
-    alignItems: 'center',
-    paddingTop: 12,
-    paddingBottom: 4,
-  },
-  handle: {
+  handleIndicator: {
+    backgroundColor: '#E5E7EB',
     width: 36,
     height: 4,
-    borderRadius: 2,
-    backgroundColor: '#E5E7EB',
+  },
+  headerContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  scrollContent: {
+    paddingTop: 80,
+    paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',
@@ -275,8 +273,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
   },
   cancelText: {
     fontSize: 13,
@@ -305,16 +301,12 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#fff',
   },
-  scrollContent: {
-    paddingBottom: 40,
-  },
   unitToggle: {
     flexDirection: 'row',
     backgroundColor: '#F7F8FA',
     borderRadius: 14,
     padding: 4,
     marginHorizontal: 20,
-    marginTop: 20,
     marginBottom: 24,
     borderWidth: 1.5,
     borderColor: '#F0F0F0',
