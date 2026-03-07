@@ -51,7 +51,7 @@ const ExploreScreen = ({ navigation }) => {
       isSaved={savedItems[item.id]}
       onToggleSave={toggleSave}
       onRecipePress={() => {
-        navigation.navigate('ExploreRecipient', {
+        navigation.navigate('Recipient', {
           recipeId: item.id,
         });
       }}

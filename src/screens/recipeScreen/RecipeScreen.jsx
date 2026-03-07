@@ -225,7 +225,7 @@ const localStyles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 5,
     gap: 10,
-    paddingBottom: 150,
+    paddingBottom: 80,
   },
   titleWrapper: {
     flexDirection: 'row',
@@ -254,7 +254,7 @@ const localStyles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 25,
     left: '50%',
     alignItems: 'center',
     transform: [{ translateX: -75 }],
