@@ -143,15 +143,66 @@ const mealPlanSlice = createSlice({
         state.login.mealPlan = false;
         const { mealDishId } = payload;
 
-        state.data.mealPlan = state.data.mealPlan.map(dayPlan => ({
-          ...dayPlan,
-          meals: dayPlan.meals.map(meal => ({
-            ...meal,
-            meal_dishes: meal.meal_dishes.filter(
+        state.data.mealPlan = state.data.mealPlan.map(dayPlan => {
+          // Find the dish being deleted to get its info
+          let deletedDish = null;
+          let deletedDishMealId = null;
+          for (const meal of dayPlan.meals) {
+            const dish = meal.meal_dishes.find(d => d.id === mealDishId);
+            if (dish) {
+              deletedDish = dish;
+              deletedDishMealId = meal.id;
+              break;
+            }
+          }
+
+          // Check if the deleted dish was burned
+          let caloriesDiff = 0;
+          let newBurnedDishes = dayPlan.burned_dishes || [];
+
+          if (deletedDish && deletedDishMealId) {
+            const burnedIndex = newBurnedDishes.findIndex(
+              burned =>
+                burned.dish_id === deletedDish.dish_id &&
+                burned.meal_id === deletedDishMealId,
+            );
+
+            if (burnedIndex >= 0) {
+              // Dish was burned, subtract its calories
+              const burnedDish = newBurnedDishes[burnedIndex];
+              caloriesDiff = -(burnedDish.calories_burned || 0);
+              newBurnedDishes = newBurnedDishes.filter(
+                (_, idx) => idx !== burnedIndex,
+              );
+            }
+          }
+
+          // Update meals and recalculate total_calories
+          const updatedMeals = dayPlan.meals.map(meal => {
+            const filteredDishes = meal.meal_dishes.filter(
               dish => dish.id !== mealDishId,
-            ),
-          })),
-        }));
+            );
+
+            // Recalculate total_calories for this meal
+            const totalCalories = filteredDishes.reduce(
+              (sum, dish) => sum + (dish.calories_at_time || 0),
+              0,
+            );
+
+            return {
+              ...meal,
+              meal_dishes: filteredDishes,
+              total_calories: totalCalories,
+            };
+          });
+
+          return {
+            ...dayPlan,
+            meals: updatedMeals,
+            burned_dishes: newBurnedDishes,
+            calories_burned: (dayPlan.calories_burned || 0) + caloriesDiff,
+          };
+        });
       })
       .addCase(deleteMealDish.rejected, (state, { payload }) => {
         state.login.mealPlan = false;
