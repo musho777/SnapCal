@@ -47,7 +47,7 @@ const MealSection = ({
           <Text style={styles.sectionLabel}>{section.label}</Text>
           <Text style={styles.sectionTime}>{section.time}</Text>
         </View>
-        {foods?.total_calories && (
+        {foods?.total_calories > 0 && (
           <View style={styles.sectionStats}>
             <Text style={styles.sectionKcal}>{foods?.total_calories} Kcal</Text>
             <Text style={styles.sectionCount}>
@@ -63,14 +63,14 @@ const MealSection = ({
       </TouchableOpacity>
       {isExpanded && (
         <View style={styles.sectionContent}>
-          {foods?.length === 0 ? (
+          {Object.keys(foods).length === 0 ||
+          foods?.meal_dishes?.length === 0 ? (
             <View style={styles.emptyState}>
               <Text style={styles.emptyEmoji}>🍽</Text>
               <Text style={styles.emptyText}>No meals added yet</Text>
             </View>
           ) : (
             foods?.meal_dishes?.map(food => {
-              // Check if this dish is already burned/tracked
               const isBurned = burnedDishes?.some(
                 burned =>
                   burned.dish_id === food.dish_id &&
@@ -97,7 +97,7 @@ const MealSection = ({
                       <Text
                         style={[
                           styles.foodName,
-                          isBurned && styles.foodNameBurned,
+                          isBurned && styles.foodMetaBurned,
                         ]}
                       >
                         {food.dish.name}
@@ -284,9 +284,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: '#272727',
-  },
-  foodNameBurned: {
-    color: '#16A34A',
   },
   burnedBadge: {
     backgroundColor: '#22C55E',

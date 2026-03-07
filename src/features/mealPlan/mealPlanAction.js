@@ -3,11 +3,10 @@ import ApiClient from '../../api/axiosClient';
 
 export const getMainPlanRange = createAsyncThunk(
   'get/daily',
-  async (params, { rejectWithValue }) => {
-    const query = Object.entries(params);
+  async ({ start_date, end_date }, { rejectWithValue }) => {
     try {
       const data = await ApiClient.get(
-        `/logs/range?start_date=2026-03-06&end_date=2026-03-12`,
+        `/logs/range?start_date=${start_date}&end_date=${end_date}`,
       );
       return data;
     } catch (error) {

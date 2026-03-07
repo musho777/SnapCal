@@ -12,15 +12,18 @@ import {
   selectMainPlan,
   toggleBurnedDishOptimistic,
   revertBurnedDishOptimistic,
+  selectLoading,
 } from '../../features/mealPlan/mealPlanSlice';
 import {
   getMainPlanRange,
   deleteMealDish,
   burnCalory,
 } from '../../features/mealPlan/mealPlanAction';
+import Loading from '../../components/loading/Loading';
 
 const MealPlanScreen = ({ navigation }) => {
   const data = useSelector(selectMainPlan);
+  const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
 
   const weeklyData = useMemo(() => {
@@ -147,11 +150,11 @@ const MealPlanScreen = ({ navigation }) => {
 
     dispatch(getMainPlanRange({ start_date, end_date }));
   }, [dispatch]);
-  if (data.length === 0) {
-    return;
+
+  if (loading) {
+    return <Loading />;
   }
 
-  // Find the active day's data based on the selected date
   const selectedDay = weeklyData.find(day => day.date === activeDay);
   const activeDayData = data.find(
     dayData => dayData.log_date === selectedDay?.fullDate,
@@ -187,7 +190,7 @@ const MealPlanScreen = ({ navigation }) => {
             <MealSection
               key={section.id}
               section={section}
-              foods={foods}
+              foods={foods || null}
               burnedDishes={activeDayData?.burned_dishes || []}
               isExpanded={isExpanded}
               onToggle={() => toggleSection(section.id)}
