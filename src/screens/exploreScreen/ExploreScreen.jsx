@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDeash } from '../../features/explore/exploreAction';
 import { selectData, selectLoading } from '../../features/explore/exploreSlice';
 import Loading from '../../components/loading/Loading';
+import { useDebounce } from '../../hooks';
 
 const MEAL_TABS = [
   { id: 'all', label: 'All', emoji: '✨', time: '' },
@@ -21,13 +22,24 @@ const ExploreScreen = ({ navigation }) => {
   const data = useSelector(selectData);
   const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getDeash({}));
-  }, [dispatch]);
 
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedItems, setSavedItems] = useState({});
+
+  // Debounce the search query
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  useEffect(() => {
+    const params = {};
+    if (debouncedSearchQuery) {
+      params.q = debouncedSearchQuery;
+    }
+    if (activeTab !== 'all') {
+      params.dish_type = activeTab;
+    }
+    dispatch(getDeash(params));
+  }, [dispatch, debouncedSearchQuery, activeTab]);
 
   const toggleSave = id => {
     setSavedItems(prev => ({ ...prev, [id]: !prev[id] }));
@@ -66,25 +78,27 @@ const ExploreScreen = ({ navigation }) => {
       </ScrollView>
     </View>
   );
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <View style={localStyles.container}>
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      <FlatList
-        data={data?.dishes}
-        renderItem={renderFoodCard}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        style={styles.flex}
-        columnWrapperStyle={localStyles.columnWrapper}
-        contentContainerStyle={localStyles.listContent}
-        ListHeaderComponent={renderListHeader}
-        ListEmptyComponent={<NoResult />}
-        showsVerticalScrollIndicator={false}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={data?.dishes}
+          renderItem={renderFoodCard}
+          keyExtractor={item => item.id}
+          numColumns={2}
+          style={styles.flex}
+          keyboardDismissMode="on-drag"
+          columnWrapperStyle={localStyles.columnWrapper}
+          contentContainerStyle={localStyles.listContent}
+          ListHeaderComponent={renderListHeader}
+          ListEmptyComponent={<NoResult />}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };

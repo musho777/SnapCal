@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import UIInput from '../../../common-ui/uIInput';
 
-export const Header = () => {
+export const Header = ({ onSearchChange }) => {
   return (
     <View style={localStyles.header}>
       <View style={localStyles.headerTop}>
@@ -12,7 +12,11 @@ export const Header = () => {
         </View>
       </View>
       <View style={localStyles.searchContainer}>
-        <UIInput style={localStyles.input} showSearchIcon />
+        <UIInput
+          onChangeText={onSearchChange}
+          style={localStyles.input}
+          showSearchIcon
+        />
       </View>
     </View>
   );

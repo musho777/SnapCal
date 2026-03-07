@@ -24,6 +24,12 @@ export const WaterTracker = ({ water = 0, onWaterChange }) => {
     });
   }, [waterIntake]);
 
+  useEffect(() => {
+    if (water) {
+      setWaterIntake(water);
+    }
+  }, [water]);
+
   const handleGlassTap = index => {
     let newWater;
 
