@@ -5,7 +5,13 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -24,7 +30,14 @@ import {
 const MIN = 30;
 const MAX = 200;
 
-const WeightModal = ({ visible, current, height, onSave, onClose }) => {
+const WeightModal = ({
+  visible,
+  current,
+  height,
+  onSave,
+  onClose,
+  loading = false,
+}) => {
   const [unit, setUnit] = useState('kg');
   const [kg, setKg] = useState(current || 70);
 
@@ -64,8 +77,7 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
 
   const handleSave = useCallback(() => {
     onSave(kg);
-    handleClose();
-  }, [kg, onSave, handleClose]);
+  }, [kg, onSave]);
 
   // Render custom backdrop
   const renderBackdrop = useCallback(
@@ -117,12 +129,22 @@ const WeightModal = ({ visible, current, height, onSave, onClose }) => {
     >
       <BottomSheetView style={styles.headerContainer}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClose}>
-            <Text style={styles.cancelText}>Cancel</Text>
+          <TouchableOpacity onPress={handleClose} disabled={loading}>
+            <Text style={[styles.cancelText, loading && styles.disabledText]}>
+              Cancel
+            </Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Edit Weight</Text>
-          <TouchableOpacity onPress={handleSave} style={styles.saveBtn}>
-            <Text style={styles.saveBtnText}>Save</Text>
+          <TouchableOpacity
+            onPress={handleSave}
+            style={[styles.saveBtn, loading && styles.saveBtnDisabled]}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.saveBtnText}>Save</Text>
+            )}
           </TouchableOpacity>
         </View>
       </BottomSheetView>
@@ -262,6 +284,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
+    zIndex: 10,
+    backgroundColor: '#fff',
   },
   scrollContent: {
     paddingTop: 80,
@@ -279,6 +303,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#9CA3AF',
   },
+  disabledText: {
+    opacity: 0.4,
+  },
   headerTitle: {
     fontSize: 16,
     fontWeight: '900',
@@ -295,6 +322,12 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 2 },
     elevation: 4,
+    minWidth: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveBtnDisabled: {
+    opacity: 0.6,
   },
   saveBtnText: {
     fontSize: 13,

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Alert } from 'react-native';
 import EditProfileCard from './EditProfileCard';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
 import { useNavigation } from '@react-navigation/native';
 import WeightModal from '../../../components/weightModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserMeasurements } from '../../../features/auth/authActions';
 
 const SettingsTab = ({
   userName,
@@ -17,8 +19,7 @@ const SettingsTab = ({
   setNotifWater,
   notifTips,
   setNotifTips,
-  weightUnit,
-  setWeightUnit,
+
   heightUnit,
   setHeightUnit,
   language,
@@ -28,7 +29,9 @@ const SettingsTab = ({
   height,
 }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [weightModalVisible, setWeightModalVisible] = useState(false);
+  const { measurementsLoading } = useSelector(state => state.auth);
 
   const handleLogout = () => {
     navigation.navigate('LoginScreen');
@@ -40,8 +43,14 @@ const SettingsTab = ({
     setWeightModalVisible(true);
   };
 
-  const handleSaveWeight = (newWeight) => {
-    setWeight(newWeight);
+  const handleSaveWeight = async newWeight => {
+    try {
+      await dispatch(updateUserMeasurements({ weight_kg: newWeight })).unwrap();
+      setWeight(newWeight);
+      setWeightModalVisible(false);
+    } catch (error) {
+      Alert.alert('Error', error || 'Failed to update weight');
+    }
   };
 
   return (
@@ -154,13 +163,13 @@ const SettingsTab = ({
         </View>
       </View>
 
-      {/* Weight Modal */}
       <WeightModal
         visible={weightModalVisible}
         current={weight}
         height={height}
         onSave={handleSaveWeight}
         onClose={() => setWeightModalVisible(false)}
+        loading={measurementsLoading}
       />
     </ScrollView>
   );
