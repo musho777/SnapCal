@@ -13,6 +13,7 @@ import { selectData, selectLoading } from '../../features/explore/exploreSlice';
 import Loading from '../../components/loading/Loading';
 import {
   loadWaterIntake,
+  saveWaterIntake,
   checkAndResetWaterData,
 } from '../../utils/waterStorage';
 
@@ -34,6 +35,10 @@ const MainScreen = ({ navigation }) => {
     };
     loadWater();
   }, []);
+
+  useEffect(() => {
+    saveWaterIntake(waterIntake);
+  }, [waterIntake]);
 
   useEffect(() => {
     dispatch(getDeash({}));
