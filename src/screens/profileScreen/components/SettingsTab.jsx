@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import EditProfileCard from './EditProfileCard';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
 import { useNavigation } from '@react-navigation/native';
+import WeightModal from '../../../components/weightModal';
 
 const SettingsTab = ({
   userName,
@@ -22,13 +23,26 @@ const SettingsTab = ({
   setHeightUnit,
   language,
   setLanguage,
+  weight,
+  setWeight,
+  height,
 }) => {
   const navigation = useNavigation();
+  const [weightModalVisible, setWeightModalVisible] = useState(false);
+
   const handleLogout = () => {
     navigation.navigate('LoginScreen');
   };
 
   const handleChangePassword = () => {};
+
+  const handleOpenWeightModal = () => {
+    setWeightModalVisible(true);
+  };
+
+  const handleSaveWeight = (newWeight) => {
+    setWeight(newWeight);
+  };
 
   return (
     <ScrollView
@@ -90,10 +104,9 @@ const SettingsTab = ({
           <UIOptionRow
             icon="⚖️"
             label="Weight"
-            type="select"
-            value={weightUnit}
-            onValueChange={setWeightUnit}
-            options={['kg', 'lbs']}
+            type="arrow"
+            value={`${weight} kg`}
+            onPress={handleOpenWeightModal}
           />
           <UIOptionRow
             icon="📏"
@@ -140,6 +153,15 @@ const SettingsTab = ({
           />
         </View>
       </View>
+
+      {/* Weight Modal */}
+      <WeightModal
+        visible={weightModalVisible}
+        current={weight}
+        height={height}
+        onSave={handleSaveWeight}
+        onClose={() => setWeightModalVisible(false)}
+      />
     </ScrollView>
   );
 };

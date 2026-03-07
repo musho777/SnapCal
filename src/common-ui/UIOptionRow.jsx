@@ -45,11 +45,16 @@ export const UIOptionRow = ({
       case 'arrow':
       case 'danger':
         return (
-          <Text
-            style={[localStyles.arrow, isDanger && localStyles.arrowDanger]}
-          >
-            ›
-          </Text>
+          <View style={localStyles.arrowContainer}>
+            {value && (
+              <Text style={localStyles.arrowValue}>{value}</Text>
+            )}
+            <Text
+              style={[localStyles.arrow, isDanger && localStyles.arrowDanger]}
+            >
+              ›
+            </Text>
+          </View>
         );
 
       default:
@@ -152,6 +157,16 @@ const localStyles = StyleSheet.create({
   },
   pillTextActive: {
     color: '#fff',
+  },
+  arrowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  arrowValue: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#9CA3AF',
   },
   arrow: {
     fontSize: 16,

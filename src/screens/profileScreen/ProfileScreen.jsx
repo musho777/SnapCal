@@ -25,6 +25,8 @@ const ProfileScreen = ({ navigation }) => {
   const [weightUnit, setWeightUnit] = useState('kg');
   const [heightUnit, setHeightUnit] = useState('cm');
   const [language, setLanguage] = useState('English');
+  const [weight, setWeight] = useState(70); // kg
+  const [height, setHeight] = useState(175); // cm
 
   const handleUnsave = id => {
     setSavedList(prev => prev.filter(item => item.id !== id));
@@ -89,6 +91,9 @@ const ProfileScreen = ({ navigation }) => {
             setHeightUnit={setHeightUnit}
             language={language}
             setLanguage={setLanguage}
+            weight={weight}
+            setWeight={setWeight}
+            height={height}
           />
         );
       default:
