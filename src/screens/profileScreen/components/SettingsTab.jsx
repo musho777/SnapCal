@@ -4,6 +4,7 @@ import EditProfileCard from './EditProfileCard';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
 import { useNavigation } from '@react-navigation/native';
 import WeightModal from '../../../components/weightModal';
+import HeightModal from '../../../components/heightModal';
 import AlertModal from '../../../components/alertModal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserMeasurements } from '../../../features/auth/authActions';
@@ -20,18 +21,17 @@ const SettingsTab = ({
   setNotifWater,
   notifTips,
   setNotifTips,
-
-  heightUnit,
-  setHeightUnit,
   language,
   setLanguage,
   weight,
   setWeight,
   height,
+  setHeight,
 }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [weightModalVisible, setWeightModalVisible] = useState(false);
+  const [heightModalVisible, setHeightModalVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const { measurementsLoading } = useSelector(state => state.auth);
@@ -52,6 +52,20 @@ const SettingsTab = ({
       setWeight(newWeight);
     } catch (error) {
       setAlertMessage(error || 'Failed to update weight');
+      setAlertVisible(true);
+    }
+  };
+
+  const handleOpenHeightModal = () => {
+    setHeightModalVisible(true);
+  };
+
+  const handleSaveHeight = async newHeight => {
+    try {
+      await dispatch(updateUserMeasurements({ height_cm: newHeight })).unwrap();
+      setHeight(newHeight);
+    } catch (error) {
+      setAlertMessage(error || 'Failed to update height');
       setAlertVisible(true);
     }
   };
@@ -123,10 +137,9 @@ const SettingsTab = ({
           <UIOptionRow
             icon="📏"
             label="Height"
-            type="select"
-            value={heightUnit}
-            onValueChange={setHeightUnit}
-            options={['cm', 'ft']}
+            type="arrow"
+            value={`${height} cm`}
+            onPress={handleOpenHeightModal}
           />
         </View>
       </View>
@@ -172,6 +185,14 @@ const SettingsTab = ({
         height={height}
         onSave={handleSaveWeight}
         onClose={() => setWeightModalVisible(false)}
+        loading={measurementsLoading}
+      />
+
+      <HeightModal
+        visible={heightModalVisible}
+        current={height}
+        onSave={handleSaveHeight}
+        onClose={() => setHeightModalVisible(false)}
         loading={measurementsLoading}
       />
 

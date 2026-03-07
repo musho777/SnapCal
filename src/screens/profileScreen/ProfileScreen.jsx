@@ -25,8 +25,8 @@ const ProfileScreen = ({ navigation }) => {
   const [weightUnit, setWeightUnit] = useState('kg');
   const [heightUnit, setHeightUnit] = useState('cm');
   const [language, setLanguage] = useState('English');
-  const [weight, setWeight] = useState(70); // kg
-  const height = 175;
+  const [weight, setWeight] = useState(70);
+  const [height, setHeight] = useState(175);
 
   const handleUnsave = id => {
     setSavedList(prev => prev.filter(item => item.id !== id));
@@ -46,6 +46,7 @@ const ProfileScreen = ({ navigation }) => {
     const response = await AsyncStorage.getItem('user');
     const data = JSON.parse(response);
     setWeight(+data.profile.current_weight_kg);
+    setHeight(+data.profile.height_cm);
     setUser(data);
   };
 
@@ -95,6 +96,7 @@ const ProfileScreen = ({ navigation }) => {
             weight={weight}
             setWeight={setWeight}
             height={height}
+            setHeight={setHeight}
           />
         );
       default:

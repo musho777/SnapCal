@@ -67,10 +67,11 @@ export const getUserInfo = createAsyncThunk(
 
 export const updateUserMeasurements = createAsyncThunk(
   'auth/updateMeasurements',
-  async ({ weight_kg }, { rejectWithValue }) => {
+  async ({ weight_kg, height_cm }, { rejectWithValue }) => {
     try {
       const data = await ApiClient.post('/users/measurements', {
         weight_kg,
+        height_cm,
       });
       return data;
     } catch (error) {
