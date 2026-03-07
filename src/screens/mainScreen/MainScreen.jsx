@@ -28,22 +28,6 @@ const MainScreen = ({ navigation }) => {
     navigation.navigate('Recipient', { recipeId });
   };
 
-  useEffect(() => {
-    const loadWater = async () => {
-      const savedWater = await loadWaterIntake();
-      setWaterIntake(savedWater);
-    };
-    loadWater();
-  }, []);
-
-  useEffect(() => {
-    saveWaterIntake(waterIntake);
-  }, [waterIntake]);
-
-  useEffect(() => {
-    dispatch(getDeash({}));
-  }, [dispatch]);
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     const wasReset = await checkAndResetWaterData();
@@ -57,6 +41,20 @@ const MainScreen = ({ navigation }) => {
     setRefreshing(false);
   }, [dispatch]);
 
+  const onWaterChange = e => {
+    setWaterIntake(e);
+    saveWaterIntake(e);
+  };
+
+  useEffect(() => {
+    dispatch(getDeash({}));
+    const loadWater = async () => {
+      const savedWater = await loadWaterIntake();
+      setWaterIntake(savedWater);
+    };
+    loadWater();
+  }, []);
+
   return (
     <ScrollView
       contentContainerStyle={localStyled.contentContainerStyle}
@@ -67,7 +65,7 @@ const MainScreen = ({ navigation }) => {
     >
       <Header />
       <ProAccessBanner />
-      <WaterTracker water={waterIntake} onWaterChange={setWaterIntake} />
+      <WaterTracker waterIntake={waterIntake} onWaterChange={onWaterChange} />
       <Category navigation={navigation} />
 
       {loading ? (

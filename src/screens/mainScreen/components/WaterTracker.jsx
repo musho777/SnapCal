@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { View, Text, Pressable, Animated, StyleSheet } from 'react-native';
 
-export const WaterTracker = ({ water = 0, onWaterChange }) => {
-  const [waterIntake, setWaterIntake] = useState(water);
-
+export const WaterTracker = ({ waterIntake = 0, onWaterChange }) => {
   const scaleAnims = useRef(
     Array.from({ length: 8 }).map(() => new Animated.Value(1)),
   ).current;
@@ -23,12 +21,6 @@ export const WaterTracker = ({ water = 0, onWaterChange }) => {
       }).start();
     });
   }, [waterIntake]);
-
-  useEffect(() => {
-    if (water) {
-      setWaterIntake(water);
-    }
-  }, [water]);
 
   const handleGlassTap = index => {
     let newWater;
@@ -54,7 +46,6 @@ export const WaterTracker = ({ water = 0, onWaterChange }) => {
       }),
     ]).start();
 
-    setWaterIntake(newWater);
     if (onWaterChange) {
       onWaterChange(newWater);
     }
@@ -92,7 +83,6 @@ export const WaterTracker = ({ water = 0, onWaterChange }) => {
     if (waterIntake === 8) return 'Goal achieved!';
     return '';
   };
-
   return (
     <View style={styles.card}>
       <View style={styles.header}>
