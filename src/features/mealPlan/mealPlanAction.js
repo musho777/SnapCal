@@ -4,9 +4,22 @@ import ApiClient from '../../api/axiosClient';
 export const getMainPlanRange = createAsyncThunk(
   'get/daily',
   async ({ start_date, end_date }, { rejectWithValue }) => {
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const yesterdayPlus7 = new Date(yesterday);
+    yesterdayPlus7.setDate(yesterday.getDate() + 7);
+    const defaultStart = new Date(yesterday.setHours(0, 0, 0, 0))
+      .toISOString()
+      .split('T')[0];
+    const defaultEnd = new Date(yesterdayPlus7.setHours(23, 59, 59, 999))
+      .toISOString()
+      .split('T')[0];
+    const finalStart = start_date || defaultStart;
+    const finalEnd = end_date || defaultEnd;
     try {
       const data = await ApiClient.get(
-        `/logs/range?start_date=${start_date}&end_date=${end_date}`,
+        `/logs/range?start_date=${finalStart}&end_date=${finalEnd}`,
       );
       return data;
     } catch (error) {

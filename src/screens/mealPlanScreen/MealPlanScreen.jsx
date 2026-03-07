@@ -139,16 +139,7 @@ const MealPlanScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const endDate = new Date(yesterday);
-    endDate.setDate(yesterday.getDate() + 6);
-
-    const start_date = yesterday.toISOString().split('T')[0];
-    const end_date = endDate.toISOString().split('T')[0];
-
-    dispatch(getMainPlanRange({ start_date, end_date }));
+    dispatch(getMainPlanRange({}));
   }, [dispatch]);
 
   if (loading) {

@@ -31,6 +31,7 @@ import Loading from '../../components/loading/Loading';
 import AddToMealModal from '../../components/addToMealModal/AddToMealModal';
 import AlertModal from '../../components/alertModal/AlertModal';
 import { Plus } from 'lucide-react-native';
+import { getMainPlanRange } from '../../features/mealPlan/mealPlanAction';
 
 const imageMap = {
   'chicken.png': require('../../assets/chicken.png'),
@@ -79,6 +80,7 @@ const RecipeScreen = ({ route }) => {
   const handleAddToMeal = async data => {
     try {
       await dispatch(addDishToMeal(data)).unwrap();
+      dispatch(getMainPlanRange({}));
       setShowModal(false);
       setAlertModal({
         visible: true,
