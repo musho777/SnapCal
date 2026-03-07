@@ -48,10 +48,8 @@ export const updateDailyLog = createAsyncThunk(
         log_date: date,
         calories_burned: calories_burned,
       });
-      console.log(data);
       return data;
     } catch (error) {
-      console.log(error, 'error');
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   },

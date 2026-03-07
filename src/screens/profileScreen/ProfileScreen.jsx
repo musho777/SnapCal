@@ -32,9 +32,7 @@ const ProfileScreen = ({ navigation }) => {
     setMyRecipesList(prev => prev.filter(item => item.id !== id));
   };
 
-  const handleAddRecipe = () => {
-    console.log('Add recipe');
-  };
+  const handleAddRecipe = () => {};
 
   const handleNavigateToRecipe = recipe => {
     navigation.navigate('Recipe', { recipeData: recipe });

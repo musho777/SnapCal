@@ -57,7 +57,6 @@ const MealPlanScreen = ({ navigation }) => {
     return newData;
   }, [data]);
 
-  console.log(data);
   const [activeDay, setActiveDay] = useState(
     weeklyData[1]?.date || new Date().getDate(),
   );

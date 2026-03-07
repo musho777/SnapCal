@@ -10,10 +10,7 @@ import { store } from './src/store/store';
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
 
-  const handleAIButtonPress = () => {
-    console.log('AI Assistant button pressed');
-    // Add your AI assistant functionality here
-  };
+  const handleAIButtonPress = () => {};
 
   return (
     <GestureHandlerRootView style={styles.container}>
