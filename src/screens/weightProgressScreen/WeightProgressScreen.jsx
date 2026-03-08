@@ -10,7 +10,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BarChart } from 'react-native-gifted-charts';
 
-// Mock data for demonstration
 const MOCK_WEIGHT_HISTORY = [
   { id: 1, date: '2025-12-01', weight: 85.5, note: '' },
   { id: 2, date: '2025-12-03', weight: 85.2, note: '' },
@@ -66,39 +65,16 @@ const bmiInfo = b => {
 
 const barColor = weight => {
   const b = calcBmi(weight);
-  if (b < 18.5) return '#93C5FD'; // blue — underweight
-  if (b < 25) return '#86EFAC'; // green — normal
-  if (b < 30) return '#FCD34D'; // yellow — overweight
-  return '#FCA5A5'; // red — obese
+  if (b < 18.5) return '#93C5FD';
+  if (b < 25) return '#86EFAC';
+  if (b < 30) return '#FCD34D';
+  return '#FCA5A5';
 };
-
-const movingAvg = (entries, window = 7) =>
-  entries.map((e, i) => {
-    const slice = entries.slice(Math.max(0, i - window + 1), i + 1);
-    const avg = slice.reduce((s, x) => s + x.weight, 0) / slice.length;
-    return parseFloat(avg.toFixed(2));
-  });
 
 const filterEntries = (entries, f) => {
   const days = f === '1W' ? 7 : f === '1M' ? 30 : f === '3M' ? 90 : 9999;
   return entries.slice(-days);
 };
-
-// StatPill component
-function StatPill({ icon, label, value, color, bg }) {
-  return (
-    <View
-      style={[
-        localStyles.statPill,
-        { backgroundColor: bg, borderColor: color + '22' },
-      ]}
-    >
-      <Text style={localStyles.statPillIcon}>{icon}</Text>
-      <Text style={[localStyles.statPillValue, { color }]}>{value}</Text>
-      <Text style={localStyles.statPillLabel}>{label}</Text>
-    </View>
-  );
-}
 
 const WeightProgressScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -114,19 +90,52 @@ const WeightProgressScreen = ({ navigation }) => {
   );
   const current = allEntries[allEntries.length - 1]?.weight ?? 0;
   const startWeight = allEntries[0]?.weight ?? 0;
-  const lost = parseFloat((startWeight - current).toFixed(1));
-  const toGo = parseFloat((current - GOAL_WEIGHT).toFixed(1));
 
-  // Build bar data
-  const barData = filtered.map(e => ({
-    value: e.weight,
-    frontColor: barColor(e.weight),
-    label: '',
-  }));
+  const chartWidth = screenWidth - 100;
+  const barWidth = filtered.length > 30 ? 6 : filtered.length > 14 ? 10 : 14;
+  const totalBarsWidth = barWidth * filtered.length;
+  const availableSpace = chartWidth - totalBarsWidth - 20;
+  const spacing = Math.max(2, availableSpace / (filtered.length - 1));
 
-  // Build trend line data
-  const trendValues = movingAvg(filtered);
-  const lineData = trendValues.map(t => ({ value: t }));
+  // Build bar chart data
+  const barData = filtered.map((e, i) => {
+    const d = new Date(e.date + 'T00:00:00');
+    const isLatest = i === filtered.length - 1;
+
+    // Show label for every ~5th entry or if very few entries
+    const labelStep = Math.max(1, Math.floor(filtered.length / 5));
+    const showLabel = i % labelStep === 0 || isLatest || i === 0;
+
+    const label = showLabel
+      ? filtered.length <= 7
+        ? d.toLocaleDateString('en-US', { weekday: 'short' })
+        : `${d.getMonth() + 1}/${d.getDate()}`
+      : '';
+
+    return {
+      value: e.weight,
+      label: label,
+      frontColor: barColor(e.weight),
+      labelTextStyle: {
+        fontSize: 9,
+        fontWeight: '600',
+        color: '#9CA3AF',
+      },
+      topLabelComponent: () =>
+        isLatest || (filtered.length <= 10 && i % 2 === 0) ? (
+          <Text
+            style={{
+              fontSize: 9,
+              fontWeight: '700',
+              color: '#272727',
+              marginBottom: 4,
+            }}
+          >
+            {e.weight}
+          </Text>
+        ) : null,
+    };
+  });
 
   const minW = Math.floor(
     Math.min(...filtered.map(e => e.weight), GOAL_WEIGHT) - 1,
@@ -183,32 +192,6 @@ const WeightProgressScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Stat pills row */}
-        <View style={localStyles.statPillsRow}>
-          <StatPill
-            icon="⚖️"
-            label="Current"
-            value={`${current} kg`}
-            color="#1A1A1A"
-            bg="#F7F8FA"
-          />
-          <StatPill
-            icon="📉"
-            label="Total Lost"
-            value={`${lost} kg`}
-            color="#22C55E"
-            bg="#F0FFF4"
-          />
-          <StatPill
-            icon="🎯"
-            label="To Goal"
-            value={`${toGo} kg`}
-            color="#FF8C42"
-            bg="#FFF8F0"
-          />
-        </View>
-
-        {/* Before / After cards */}
         <View style={localStyles.beforeAfterContainer}>
           <View style={localStyles.beforeAfterRow}>
             {/* Starting */}
@@ -300,93 +283,39 @@ const WeightProgressScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Chart wrapper */}
           <View style={localStyles.chartWrapper}>
             <BarChart
               data={barData}
-              width={screenWidth - 72}
-              height={240}
-              barWidth={
-                filtered.length > 30 ? 4 : filtered.length > 14 ? 7 : 12
-              }
-              spacing={filtered.length > 30 ? 2 : 4}
-              roundedTop
-              roundedBottom={false}
+              barWidth={barWidth}
+              width={chartWidth}
+              barBorderRadius={4}
               noOfSections={4}
               maxValue={maxW}
               minValue={minW}
-              yAxisTextStyle={localStyles.yAxisText}
-              yAxisLabelWidth={28}
-              xAxisLabelTextStyle={localStyles.xAxisText}
-              hideAxesAndRules={false}
-              yAxisThickness={0}
+              yAxisThickness={1}
+              yAxisColor="#F3F4F6"
               xAxisThickness={0}
+              hideRules={false}
+              rulesColor="#F3F4F6"
               rulesType="solid"
-              rulesColor="rgba(0,0,0,0.05)"
-              showLine
-              lineData={lineData}
-              lineConfig={{
-                color: '#6366F1',
-                thickness: 1.5,
-                curved: true,
-                hideDataPoints: true,
+              hideYAxisText={false}
+              yAxisTextStyle={{
+                fontSize: 9,
+                color: '#9CA3AF',
+                fontWeight: '600',
               }}
-              referenceLine1Config={{
-                value: GOAL_WEIGHT,
-                color: '#FF8C42',
-                thickness: 1.5,
-                dashWidth: 5,
-                dashGap: 4,
-                labelText: `Goal ${GOAL_WEIGHT}kg`,
-                labelTextStyle: localStyles.goalLabelText,
-              }}
-              focusBarOnPress
-              focusedBarConfig={{
-                color: '#1A1A1A',
-              }}
-              showValuesAsDataPointsText
-              dataPointsColor="#1A1A1A"
-              dataPointsRadius={4}
-              textColor="#1A1A1A"
-              textFontSize={11}
-              textShiftY={-10}
-              textShiftX={0}
+              yAxisLabelWidth={35}
+              initialSpacing={10}
+              spacing={spacing}
+              height={180}
+              isAnimated
+              animationDuration={300}
+              showLine={false}
+              referenceLine1Position={GOAL_WEIGHT}
             />
-          </View>
-
-          {/* Legend */}
-          <View style={localStyles.legend}>
-            {[
-              { color: '#86EFAC', label: 'Normal', box: true },
-              { color: '#FCD34D', label: 'Overweight', box: true },
-              { color: '#FCA5A5', label: 'Obese', box: true },
-              { color: '#93C5FD', label: 'Underweight', box: true },
-              { color: '#6366F1', label: 'Trend', box: false },
-              { color: '#FF8C42', label: 'Goal', box: false, dash: true },
-            ].map((l, i) => (
-              <View key={i} style={localStyles.legendItem}>
-                {l.box ? (
-                  <View
-                    style={[
-                      localStyles.legendBox,
-                      { backgroundColor: l.color },
-                    ]}
-                  />
-                ) : (
-                  <View
-                    style={[
-                      localStyles.legendLine,
-                      { backgroundColor: l.color },
-                    ]}
-                  />
-                )}
-                <Text style={localStyles.legendLabel}>{l.label}</Text>
-              </View>
-            ))}
           </View>
         </View>
 
-        {/* Weight log list */}
         <View style={localStyles.logCard}>
           <View style={localStyles.logHeader}>
             <Text style={localStyles.logTitle}>Weight Log</Text>
@@ -440,7 +369,6 @@ const WeightProgressScreen = ({ navigation }) => {
                   </Text>
                 </View>
 
-                {/* Weight + BMI */}
                 <View style={localStyles.logEntryInfo}>
                   <View style={localStyles.logWeightRow}>
                     <Text style={localStyles.logWeight}>{entry.weight}</Text>
@@ -456,7 +384,6 @@ const WeightProgressScreen = ({ navigation }) => {
                   </Text>
                 </View>
 
-                {/* Change badge */}
                 {diff !== null && (
                   <View
                     style={[
@@ -517,9 +444,8 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#F7F8FA',
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 35,
   },
-  // Header
   header: {
     backgroundColor: '#fff',
     paddingHorizontal: 20,
@@ -593,10 +519,9 @@ const localStyles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 2,
   },
-  // Before/After cards
   beforeAfterContainer: {
     marginHorizontal: 16,
-    marginBottom: 16,
+    marginTop: 16,
   },
   beforeAfterRow: {
     flexDirection: 'row',
@@ -689,33 +614,27 @@ const localStyles = StyleSheet.create({
   chartCard: {
     marginHorizontal: 16,
     marginBottom: 16,
-    borderRadius: 24,
+    borderRadius: 20,
     padding: 16,
-    paddingTop: 16,
-    paddingBottom: 20,
-    backgroundColor: '#F0F4FF',
-    borderWidth: 1,
-    borderColor: '#E8E4F3',
-    shadowColor: '#6366F1',
-    shadowOpacity: 0.08,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
+    backgroundColor: '#fff',
+    shadowColor: '#000000',
+    shadowOpacity: 0.05,
   },
   chartHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: 16,
   },
   chartWrapper: {
-    overflow: 'visible',
-    marginBottom: 10,
+    position: 'relative',
+    width: '100%',
+    paddingTop: 20,
   },
   chartTitle: {
-    fontSize: 14,
-    fontWeight: '900',
-    color: '#1A1A1A',
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#272727',
   },
   chartSubtitle: {
     fontSize: 11,
@@ -756,39 +675,7 @@ const localStyles = StyleSheet.create({
     fontSize: 8,
     fontWeight: '600',
   },
-  goalLabelText: {
-    color: '#FF8C42',
-    fontSize: 9,
-    fontWeight: '700',
-  },
-  legend: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    marginTop: 10,
-    paddingLeft: 28,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  legendBox: {
-    width: 10,
-    height: 10,
-    borderRadius: 2,
-  },
-  legendLine: {
-    width: 16,
-    height: 2,
-    borderRadius: 1,
-  },
-  legendLabel: {
-    fontSize: 9,
-    color: '#9CA3AF',
-    fontWeight: '600',
-  },
-  // Weight log
+
   logCard: {
     marginHorizontal: 16,
     backgroundColor: '#fff',
