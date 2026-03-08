@@ -17,6 +17,7 @@ import Loading from '../components/loading/Loading.jsx';
 import { useDispatch } from 'react-redux';
 import { getUserInfo } from '../features/auth/authActions.js';
 import RecipeScreen from '../screens/recipeScreen/RecipeScreen.jsx';
+import WeightProgressScreen from '../screens/weightProgressScreen';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -91,6 +92,7 @@ export const MainNavigation = () => {
       <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
       <RootStack.Screen name="MainApp" component={TabNavigator} />
       <RootStack.Screen name="Recipient" component={RecipeScreen} />
+      <RootStack.Screen name="WeightProgress" component={WeightProgressScreen} />
 
       <RootStack.Screen
         name="CreateMeal"

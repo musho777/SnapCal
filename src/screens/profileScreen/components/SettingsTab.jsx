@@ -128,6 +128,12 @@ const SettingsTab = ({
         <Text style={localStyles.sectionLabel}>PHYSICAL DATA</Text>
         <View style={localStyles.card}>
           <UIOptionRow
+            icon="📊"
+            label="Weight Progress"
+            type="arrow"
+            onPress={() => navigation.navigate('WeightProgress')}
+          />
+          <UIOptionRow
             icon="⚖️"
             label="Weight"
             type="arrow"
