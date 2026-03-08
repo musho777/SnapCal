@@ -107,11 +107,9 @@ const WeightProgressScreen = ({ navigation }) => {
       value: e.weight,
       label: label,
       frontColor: isLatest ? '#272727' : '#E5E7EB',
-      labelTextStyle: {
-        fontSize: 9,
-        fontWeight: '600',
-        color: isLatest ? '#272727' : '#9CA3AF',
-      },
+      labelTextStyle: isLatest
+        ? localStyles.barLabelActive
+        : localStyles.barLabelInactive,
     };
   });
 
@@ -130,6 +128,28 @@ const WeightProgressScreen = ({ navigation }) => {
   const bmiStart = calcBmi(startWeight);
   const bmiCurrent = calcBmi(current);
 
+  const getBmiStyles = bmi => {
+    const info = bmiInfo(bmi);
+    if (info.color === '#3B82F6')
+      return {
+        bg: localStyles.bmiUnderweightBg,
+        text: localStyles.bmiUnderweightText,
+      };
+    if (info.color === '#22C55E')
+      return { bg: localStyles.bmiNormalBg, text: localStyles.bmiNormalText };
+    if (info.color === '#F59E0B')
+      return {
+        bg: localStyles.bmiOverweightBg,
+        text: localStyles.bmiOverweightText,
+      };
+    return { bg: localStyles.bmiObeseBg, text: localStyles.bmiObeseText };
+  };
+
+  const startBmiStyles = getBmiStyles(bmiStart);
+  const currentBmiStyles = getBmiStyles(bmiCurrent);
+
+  const headerStyle = [localStyles.header, { paddingTop: insets.top + 8 }];
+
   return (
     <View style={localStyles.container}>
       <ScrollView
@@ -137,7 +157,7 @@ const WeightProgressScreen = ({ navigation }) => {
         contentContainerStyle={localStyles.scrollContent}
       >
         {/* Header */}
-        <View style={[localStyles.header, { paddingTop: insets.top + 8 }]}>
+        <View style={headerStyle}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={localStyles.backButton}
@@ -153,18 +173,8 @@ const WeightProgressScreen = ({ navigation }) => {
           </View>
 
           {/* BMI badge */}
-          <View
-            style={[
-              localStyles.bmiBadge,
-              { backgroundColor: bmiInfo(bmiCurrent).color + '18' },
-            ]}
-          >
-            <Text
-              style={[
-                localStyles.bmiBadgeText,
-                { color: bmiInfo(bmiCurrent).color },
-              ]}
-            >
+          <View style={[localStyles.bmiBadge, currentBmiStyles.bg]}>
+            <Text style={[localStyles.bmiBadgeText, currentBmiStyles.text]}>
               BMI {bmiCurrent}
             </Text>
           </View>
@@ -179,18 +189,8 @@ const WeightProgressScreen = ({ navigation }) => {
                 {startWeight}
                 <Text style={localStyles.weightUnit}> kg</Text>
               </Text>
-              <View
-                style={[
-                  localStyles.bmiTag,
-                  { backgroundColor: bmiInfo(bmiStart).color + '18' },
-                ]}
-              >
-                <Text
-                  style={[
-                    localStyles.bmiTagText,
-                    { color: bmiInfo(bmiStart).color },
-                  ]}
-                >
+              <View style={[localStyles.bmiTag, startBmiStyles.bg]}>
+                <Text style={[localStyles.bmiTagText, startBmiStyles.text]}>
                   BMI {bmiStart} · {bmiInfo(bmiStart).label}
                 </Text>
               </View>
@@ -207,10 +207,7 @@ const WeightProgressScreen = ({ navigation }) => {
               </Text>
               <View style={localStyles.currentBmiTag}>
                 <Text
-                  style={[
-                    localStyles.currentBmiTagText,
-                    { color: bmiInfo(bmiCurrent).color },
-                  ]}
+                  style={[localStyles.currentBmiTagText, currentBmiStyles.text]}
                 >
                   BMI {bmiCurrent} · {bmiInfo(bmiCurrent).label}
                 </Text>
@@ -277,11 +274,7 @@ const WeightProgressScreen = ({ navigation }) => {
               rulesColor="#F3F4F6"
               rulesType="solid"
               hideYAxisText={false}
-              yAxisTextStyle={{
-                fontSize: 9,
-                color: '#9CA3AF',
-                fontWeight: '600',
-              }}
+              yAxisTextStyle={localStyles.yAxisText}
               yAxisLabelWidth={35}
               initialSpacing={10}
               spacing={spacing}
@@ -313,6 +306,24 @@ const WeightProgressScreen = ({ navigation }) => {
             const info = bmiInfo(b);
             const isLatest = i === 0;
             const d = new Date(entry.date + 'T00:00:00');
+
+            const entryBmiStyles = getBmiStyles(b);
+            const changeBadgeBg =
+              diff === null
+                ? null
+                : diff < 0
+                ? localStyles.changeBadgeLoss
+                : diff > 0
+                ? localStyles.changeBadgeGain
+                : localStyles.changeBadgeNeutral;
+            const changeBadgeTextStyle =
+              diff === null
+                ? null
+                : diff < 0
+                ? localStyles.changeBadgeTextLoss
+                : diff > 0
+                ? localStyles.changeBadgeTextGain
+                : localStyles.changeBadgeTextNeutral;
 
             return (
               <View
@@ -357,36 +368,17 @@ const WeightProgressScreen = ({ navigation }) => {
                       </View>
                     )}
                   </View>
-                  <Text style={[localStyles.logBmi, { color: info.color }]}>
+                  <Text style={[localStyles.logBmi, entryBmiStyles.text]}>
                     BMI {b} · {info.label}
                   </Text>
                 </View>
 
                 {diff !== null && (
-                  <View
-                    style={[
-                      localStyles.changeBadge,
-                      {
-                        backgroundColor:
-                          diff < 0
-                            ? '#F0FFF4'
-                            : diff > 0
-                            ? '#FFF0F0'
-                            : '#F7F8FA',
-                      },
-                    ]}
-                  >
+                  <View style={[localStyles.changeBadge, changeBadgeBg]}>
                     <Text
                       style={[
                         localStyles.changeBadgeText,
-                        {
-                          color:
-                            diff < 0
-                              ? '#22C55E'
-                              : diff > 0
-                              ? '#EF4444'
-                              : '#9CA3AF',
-                        },
+                        changeBadgeTextStyle,
                       ]}
                     >
                       {diff === 0 ? '—' : diff > 0 ? `+${diff}` : `${diff}`} kg
@@ -773,6 +765,63 @@ const localStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     color: '#6B7280',
+  },
+  // Bar label styles
+  barLabelActive: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: '#272727',
+  },
+  barLabelInactive: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: '#9CA3AF',
+  },
+  // BMI category background styles
+  bmiUnderweightBg: {
+    backgroundColor: '#3B82F618',
+  },
+  bmiNormalBg: {
+    backgroundColor: '#22C55E18',
+  },
+  bmiOverweightBg: {
+    backgroundColor: '#F59E0B18',
+  },
+  bmiObeseBg: {
+    backgroundColor: '#EF444418',
+  },
+  // BMI category text styles
+  bmiUnderweightText: {
+    color: '#3B82F6',
+  },
+  bmiNormalText: {
+    color: '#22C55E',
+  },
+  bmiOverweightText: {
+    color: '#F59E0B',
+  },
+  bmiObeseText: {
+    color: '#EF4444',
+  },
+  // Change badge background styles
+  changeBadgeLoss: {
+    backgroundColor: '#F0FFF4',
+  },
+  changeBadgeGain: {
+    backgroundColor: '#FFF0F0',
+  },
+  changeBadgeNeutral: {
+    backgroundColor: '#F7F8FA',
+  },
+  // Change badge text styles
+  changeBadgeTextLoss: {
+    color: '#22C55E',
+  },
+  changeBadgeTextGain: {
+    color: '#EF4444',
+  },
+  changeBadgeTextNeutral: {
+    color: '#9CA3AF',
   },
 });
 
