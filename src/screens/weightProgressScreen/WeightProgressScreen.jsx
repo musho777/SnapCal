@@ -152,34 +152,33 @@ const WeightProgressScreen = ({ navigation }) => {
 
   return (
     <View style={localStyles.container}>
+      {/* Header */}
+      <View style={headerStyle}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={localStyles.backButton}
+        >
+          <Text style={localStyles.backButtonText}>‹</Text>
+        </TouchableOpacity>
+
+        <View style={localStyles.headerTextContainer}>
+          <Text style={localStyles.headerTitle}>⚖️ Weight Progress</Text>
+          <Text style={localStyles.headerSubtitle}>
+            Tracking since {allEntries[0]?.date}
+          </Text>
+        </View>
+
+        {/* BMI badge */}
+        <View style={[localStyles.bmiBadge, currentBmiStyles.bg]}>
+          <Text style={[localStyles.bmiBadgeText, currentBmiStyles.text]}>
+            BMI {bmiCurrent}
+          </Text>
+        </View>
+      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={localStyles.scrollContent}
       >
-        {/* Header */}
-        <View style={headerStyle}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={localStyles.backButton}
-          >
-            <Text style={localStyles.backButtonText}>‹</Text>
-          </TouchableOpacity>
-
-          <View style={localStyles.headerTextContainer}>
-            <Text style={localStyles.headerTitle}>⚖️ Weight Progress</Text>
-            <Text style={localStyles.headerSubtitle}>
-              Tracking since {allEntries[0]?.date}
-            </Text>
-          </View>
-
-          {/* BMI badge */}
-          <View style={[localStyles.bmiBadge, currentBmiStyles.bg]}>
-            <Text style={[localStyles.bmiBadgeText, currentBmiStyles.text]}>
-              BMI {bmiCurrent}
-            </Text>
-          </View>
-        </View>
-
         <View style={localStyles.beforeAfterContainer}>
           <View style={localStyles.beforeAfterRow}>
             {/* Starting */}
