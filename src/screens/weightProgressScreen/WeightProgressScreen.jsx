@@ -53,7 +53,6 @@ const MOCK_WEIGHT_HISTORY = [
 const GOAL_WEIGHT = 70;
 const HEIGHT_CM = 175;
 
-// Constants & helpers
 const calcBmi = w => parseFloat((w / (HEIGHT_CM / 100) ** 2).toFixed(1));
 
 const bmiInfo = b => {
@@ -61,14 +60,6 @@ const bmiInfo = b => {
   if (b < 25) return { label: 'Normal ✓', color: '#22C55E' };
   if (b < 30) return { label: 'Overweight', color: '#F59E0B' };
   return { label: 'Obese', color: '#EF4444' };
-};
-
-const barColor = weight => {
-  const b = calcBmi(weight);
-  if (b < 18.5) return '#93C5FD';
-  if (b < 25) return '#86EFAC';
-  if (b < 30) return '#FCD34D';
-  return '#FCA5A5';
 };
 
 const filterEntries = (entries, f) => {
@@ -115,25 +106,12 @@ const WeightProgressScreen = ({ navigation }) => {
     return {
       value: e.weight,
       label: label,
-      frontColor: barColor(e.weight),
+      frontColor: isLatest ? '#272727' : '#E5E7EB',
       labelTextStyle: {
         fontSize: 9,
         fontWeight: '600',
-        color: '#9CA3AF',
+        color: isLatest ? '#272727' : '#9CA3AF',
       },
-      topLabelComponent: () =>
-        isLatest || (filtered.length <= 10 && i % 2 === 0) ? (
-          <Text
-            style={{
-              fontSize: 9,
-              fontWeight: '700',
-              color: '#272727',
-              marginBottom: 4,
-            }}
-          >
-            {e.weight}
-          </Text>
-        ) : null,
     };
   });
 
