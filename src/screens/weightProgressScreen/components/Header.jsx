@@ -2,12 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const HEIGHT_CM = 175;
-
-const calcBmi = w => parseFloat((w / (HEIGHT_CM / 100) ** 2).toFixed(1));
-
-export const Header = ({ current, date, getBmiStyles }) => {
+export const Header = ({ current, date, getBmiStyles, height }) => {
   const insets = useSafeAreaInsets();
+  const calcBmi = w => parseFloat((w / (height / 100) ** 2).toFixed(1));
+
   const bmiCurrent = calcBmi(current);
   const currentBmiStyles = getBmiStyles(bmiCurrent);
 

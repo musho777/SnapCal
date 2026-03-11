@@ -16,22 +16,7 @@ import {
 } from '../../features/user/userSlice';
 import Loading from '../../components/loading/Loading';
 import { Header } from './components/Header';
-
-const HEIGHT_CM = 175;
-
-const calcBmi = w => parseFloat((w / (HEIGHT_CM / 100) ** 2).toFixed(1));
-
-const bmiInfo = b => {
-  if (b < 18.5) return { label: 'Underweight', color: '#3B82F6' };
-  if (b < 25) return { label: 'Normal ✓', color: '#22C55E' };
-  if (b < 30) return { label: 'Overweight', color: '#F59E0B' };
-  return { label: 'Obese', color: '#EF4444' };
-};
-
-const filterEntries = (entries, f) => {
-  const days = f === '1W' ? 7 : f === '1M' ? 30 : f === '3M' ? 90 : 9999;
-  return entries.slice(-days);
-};
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WeightProgressScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -40,6 +25,21 @@ const WeightProgressScreen = ({ navigation }) => {
   const loading = useSelector(selectLoading);
   const [filter, setFilter] = useState('1M');
   const [showAllLog, setShowAllLog] = useState(false);
+  const [height, setHeight] = useState(0);
+
+  const calcBmi = w => parseFloat((w / (height / 100) ** 2).toFixed(1));
+
+  const bmiInfo = b => {
+    if (b < 18.5) return { label: 'Underweight', color: '#3B82F6' };
+    if (b < 25) return { label: 'Normal ✓', color: '#22C55E' };
+    if (b < 30) return { label: 'Overweight', color: '#F59E0B' };
+    return { label: 'Obese', color: '#EF4444' };
+  };
+
+  const filterEntries = (entries, f) => {
+    const days = f === '1W' ? 7 : f === '1M' ? 30 : f === '3M' ? 90 : 9999;
+    return entries.slice(-days);
+  };
 
   const allEntries = data || [];
 
@@ -55,6 +55,10 @@ const WeightProgressScreen = ({ navigation }) => {
   const totalBarsWidth = barWidth * filtered.length;
   const availableSpace = chartWidth - totalBarsWidth - 20;
   const spacing = Math.max(2, availableSpace / (filtered.length - 1));
+
+  const bmiStart = calcBmi(startWeight);
+  const bmiCurrent = calcBmi(current);
+  const visibleEntries = showAllLog ? allEntries : allEntries.slice(0, 7);
 
   // Build bar chart data
   const barData = filtered.map((e, i) => {
@@ -81,11 +85,6 @@ const WeightProgressScreen = ({ navigation }) => {
     };
   });
 
-  const visibleEntries = showAllLog ? allEntries : allEntries.slice(0, 7);
-
-  const bmiStart = calcBmi(startWeight);
-  const bmiCurrent = calcBmi(current);
-
   const getBmiStyles = bmi => {
     const info = bmiInfo(bmi);
     if (info.color === '#3B82F6')
@@ -106,9 +105,19 @@ const WeightProgressScreen = ({ navigation }) => {
   const startBmiStyles = getBmiStyles(bmiStart);
   const currentBmiStyles = getBmiStyles(bmiCurrent);
 
+  const getUserData = async () => {
+    const response = await AsyncStorage.getItem('user');
+    const userData = JSON.parse(response);
+    if (userData) {
+      setHeight(userData?.profile?.height_cm);
+    }
+  };
+
   useEffect(() => {
+    getUserData();
     dispatch(getUserMeasurement());
   }, []);
+
   if (loading) {
     return <Loading />;
   }
@@ -118,6 +127,7 @@ const WeightProgressScreen = ({ navigation }) => {
         current={current}
         date={allEntries[0]?.measured_at}
         getBmiStyles={getBmiStyles}
+        height={height}
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
