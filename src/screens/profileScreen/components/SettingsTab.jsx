@@ -8,6 +8,10 @@ import AlertModal from '../../../components/alertModal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserMeasurements } from '../../../features/auth/authActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  removeAccessToken,
+  removeRefreshToken,
+} from '../../../api/TokenService';
 
 const SettingsTab = ({
   darkMode,
@@ -34,9 +38,9 @@ const SettingsTab = ({
   const { measurementsLoading } = useSelector(state => state.auth);
 
   const handleLogout = async () => {
-    AsyncStorage.removeItem('accessToken');
-    AsyncStorage.removeItem('refreshToken');
-    AsyncStorage.removeItem('onboardingCompleted', 'false');
+    await removeAccessToken();
+    await removeRefreshToken();
+    AsyncStorage.removeItem('onboardingCompleted');
     navigation.navigate('LoginScreen');
   };
 
