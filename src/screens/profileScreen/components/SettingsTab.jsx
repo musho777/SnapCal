@@ -8,6 +8,7 @@ import HeightModal from '../../../components/heightModal';
 import AlertModal from '../../../components/alertModal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserMeasurements } from '../../../features/auth/authActions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingsTab = ({
   userName,
@@ -36,7 +37,10 @@ const SettingsTab = ({
   const [alertMessage, setAlertMessage] = useState('');
   const { measurementsLoading } = useSelector(state => state.auth);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    AsyncStorage.removeItem('accessToken');
+    AsyncStorage.removeItem('refreshToken');
+    AsyncStorage.removeItem('onboardingCompleted', 'false');
     navigation.navigate('LoginScreen');
   };
 
