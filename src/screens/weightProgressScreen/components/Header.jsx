@@ -4,35 +4,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HEIGHT_CM = 175;
 
-const bmiInfo = b => {
-  if (b < 18.5) return { label: 'Underweight', color: '#3B82F6' };
-  if (b < 25) return { label: 'Normal ✓', color: '#22C55E' };
-  if (b < 30) return { label: 'Overweight', color: '#F59E0B' };
-  return { label: 'Obese', color: '#EF4444' };
-};
-
-const getBmiStyles = bmi => {
-  const info = bmiInfo(bmi);
-  if (info.color === '#3B82F6')
-    return {
-      bg: localStyles.bmiUnderweightBg,
-      text: localStyles.bmiUnderweightText,
-    };
-  if (info.color === '#22C55E')
-    return { bg: localStyles.bmiNormalBg, text: localStyles.bmiNormalText };
-  if (info.color === '#F59E0B')
-    return {
-      bg: localStyles.bmiOverweightBg,
-      text: localStyles.bmiOverweightText,
-    };
-  return { bg: localStyles.bmiObeseBg, text: localStyles.bmiObeseText };
-};
 const calcBmi = w => parseFloat((w / (HEIGHT_CM / 100) ** 2).toFixed(1));
 
-export const Header = ({ current, date }) => {
+export const Header = ({ current, date, getBmiStyles }) => {
   const insets = useSafeAreaInsets();
   const bmiCurrent = calcBmi(current);
   const currentBmiStyles = getBmiStyles(bmiCurrent);
+
+  const formattedDate = date
+    ? new Date(date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : '';
 
   const headerStyle = [localStyles.header, { paddingTop: insets.top + 8 }];
   const navigation = useNavigation();
@@ -47,7 +32,9 @@ export const Header = ({ current, date }) => {
 
       <View style={localStyles.headerTextContainer}>
         <Text style={localStyles.headerTitle}>⚖️ Weight Progress</Text>
-        <Text style={localStyles.headerSubtitle}>Tracking since {date}</Text>
+        <Text style={localStyles.headerSubtitle}>
+          Tracking since {formattedDate}
+        </Text>
       </View>
 
       {/* BMI badge */}

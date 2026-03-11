@@ -17,47 +17,6 @@ import {
 import Loading from '../../components/loading/Loading';
 import { Header } from './components/Header';
 
-const MOCK_WEIGHT_HISTORY = [
-  { id: 1, date: '2025-12-01', weight: 85.5, note: '' },
-  { id: 2, date: '2025-12-03', weight: 85.2, note: '' },
-  { id: 3, date: '2025-12-05', weight: 84.8, note: '' },
-  { id: 4, date: '2025-12-08', weight: 84.5, note: '' },
-  { id: 5, date: '2025-12-10', weight: 84.0, note: '' },
-  { id: 6, date: '2025-12-12', weight: 83.8, note: '' },
-  { id: 7, date: '2025-12-15', weight: 83.5, note: '' },
-  { id: 8, date: '2025-12-17', weight: 83.0, note: '' },
-  { id: 9, date: '2025-12-20', weight: 82.8, note: '' },
-  { id: 10, date: '2025-12-22', weight: 82.5, note: '' },
-  { id: 11, date: '2025-12-25', weight: 82.2, note: '' },
-  { id: 12, date: '2025-12-27', weight: 81.8, note: '' },
-  { id: 13, date: '2025-12-30', weight: 81.5, note: '' },
-  { id: 14, date: '2026-01-02', weight: 81.0, note: '' },
-  { id: 15, date: '2026-01-05', weight: 80.8, note: '' },
-  { id: 16, date: '2026-01-08', weight: 80.5, note: '' },
-  { id: 17, date: '2026-01-10', weight: 80.2, note: '' },
-  { id: 18, date: '2026-01-13', weight: 79.8, note: '' },
-  { id: 19, date: '2026-01-15', weight: 79.5, note: '' },
-  { id: 20, date: '2026-01-18', weight: 79.0, note: '' },
-  { id: 21, date: '2026-01-20', weight: 78.8, note: '' },
-  { id: 22, date: '2026-01-23', weight: 78.5, note: '' },
-  { id: 23, date: '2026-01-25', weight: 78.2, note: '' },
-  { id: 24, date: '2026-01-28', weight: 78.0, note: '' },
-  { id: 25, date: '2026-02-01', weight: 77.5, note: '' },
-  { id: 26, date: '2026-02-03', weight: 77.2, note: '' },
-  { id: 27, date: '2026-02-06', weight: 76.8, note: '' },
-  { id: 28, date: '2026-02-08', weight: 76.5, note: '' },
-  { id: 29, date: '2026-02-11', weight: 76.0, note: '' },
-  { id: 30, date: '2026-02-14', weight: 75.8, note: '' },
-  { id: 31, date: '2026-02-17', weight: 75.5, note: '' },
-  { id: 32, date: '2026-02-20', weight: 75.0, note: '' },
-  { id: 33, date: '2026-02-23', weight: 74.8, note: '' },
-  { id: 34, date: '2026-02-26', weight: 74.5, note: '' },
-  { id: 35, date: '2026-03-01', weight: 74.2, note: '' },
-  { id: 36, date: '2026-03-04', weight: 74.0, note: '' },
-  { id: 37, date: '2026-03-07', weight: 73.5, note: '' },
-];
-
-const GOAL_WEIGHT = 70;
 const HEIGHT_CM = 175;
 
 const calcBmi = w => parseFloat((w / (HEIGHT_CM / 100) ** 2).toFixed(1));
@@ -79,16 +38,17 @@ const WeightProgressScreen = ({ navigation }) => {
   const screenWidth = Dimensions.get('window').width;
   const data = useSelector(selectUserMeasurement);
   const loading = useSelector(selectLoading);
-  const [allEntries] = useState(MOCK_WEIGHT_HISTORY);
   const [filter, setFilter] = useState('1M');
   const [showAllLog, setShowAllLog] = useState(false);
+
+  const allEntries = data || [];
 
   const filtered = useMemo(
     () => filterEntries(allEntries, filter),
     [allEntries, filter],
   );
-  const current = +data[data.length - 1]?.weight_kg ?? 0;
-  const startWeight = +data[0]?.weight_kg ?? 0;
+  const current = parseFloat(allEntries[allEntries.length - 1]?.weight_kg) || 0;
+  const startWeight = parseFloat(allEntries[0]?.weight_kg) || 0;
 
   const chartWidth = screenWidth - 100;
   const barWidth = filtered.length > 30 ? 6 : filtered.length > 14 ? 10 : 14;
@@ -98,7 +58,7 @@ const WeightProgressScreen = ({ navigation }) => {
 
   // Build bar chart data
   const barData = filtered.map((e, i) => {
-    const d = new Date(e.date + 'T00:00:00');
+    const d = new Date(e.measured_at);
     const isLatest = i === filtered.length - 1;
 
     // Show label for every ~5th entry or if very few entries
@@ -112,7 +72,7 @@ const WeightProgressScreen = ({ navigation }) => {
       : '';
 
     return {
-      value: e.weight,
+      value: parseFloat(e.weight_kg),
       label: label,
       frontColor: isLatest ? '#272727' : '#E5E7EB',
       labelTextStyle: isLatest
@@ -121,17 +81,7 @@ const WeightProgressScreen = ({ navigation }) => {
     };
   });
 
-  const minW = Math.floor(
-    Math.min(...filtered.map(e => e.weight), GOAL_WEIGHT) - 1,
-  );
-  const maxW = Math.ceil(
-    Math.max(...filtered.map(e => e.weight), GOAL_WEIGHT) + 1,
-  );
-
-  const reversedEntries = [...allEntries].reverse();
-  const visibleEntries = showAllLog
-    ? reversedEntries
-    : reversedEntries.slice(0, 7);
+  const visibleEntries = showAllLog ? allEntries : allEntries.slice(0, 7);
 
   const bmiStart = calcBmi(startWeight);
   const bmiCurrent = calcBmi(current);
@@ -164,7 +114,11 @@ const WeightProgressScreen = ({ navigation }) => {
   }
   return (
     <View style={localStyles.container}>
-      <Header current={current} date={allEntries[0]?.date} />
+      <Header
+        current={current}
+        date={allEntries[0]?.measured_at}
+        getBmiStyles={getBmiStyles}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={localStyles.scrollContent}
@@ -214,8 +168,8 @@ const WeightProgressScreen = ({ navigation }) => {
                   ? `${Math.abs(
                       parseFloat(
                         (
-                          filtered[0].weight -
-                          filtered[filtered.length - 1].weight
+                          parseFloat(filtered[0].weight_kg) -
+                          parseFloat(filtered[filtered.length - 1].weight_kg)
                         ).toFixed(1),
                       ),
                     )} kg change this period`
@@ -253,8 +207,6 @@ const WeightProgressScreen = ({ navigation }) => {
               width={chartWidth}
               barBorderRadius={4}
               noOfSections={4}
-              maxValue={maxW}
-              minValue={minW}
               yAxisThickness={1}
               yAxisColor="#F3F4F6"
               xAxisThickness={0}
@@ -270,7 +222,6 @@ const WeightProgressScreen = ({ navigation }) => {
               isAnimated
               animationDuration={300}
               showLine={false}
-              referenceLine1Position={GOAL_WEIGHT}
             />
           </View>
         </View>
@@ -284,16 +235,16 @@ const WeightProgressScreen = ({ navigation }) => {
           </View>
 
           {visibleEntries.map((entry, i) => {
-            const idx = allEntries.findIndex(e => e.date === entry.date);
-            const prev = idx > 0 ? allEntries[idx - 1].weight : null;
+            const idx = allEntries.findIndex(e => e.id === entry.id);
+            const prev =
+              idx > 0 ? parseFloat(allEntries[idx - 1].weight_kg) : null;
+            const weight = parseFloat(entry.weight_kg);
             const diff =
-              prev !== null
-                ? parseFloat((entry.weight - prev).toFixed(1))
-                : null;
-            const b = calcBmi(entry.weight);
+              prev !== null ? parseFloat((weight - prev).toFixed(1)) : null;
+            const b = calcBmi(weight);
             const info = bmiInfo(b);
             const isLatest = i === 0;
-            const d = new Date(entry.date + 'T00:00:00');
+            const d = new Date(entry.measured_at);
 
             const entryBmiStyles = getBmiStyles(b);
             const changeBadgeBg =
@@ -306,7 +257,7 @@ const WeightProgressScreen = ({ navigation }) => {
                 : localStyles.changeBadgeNeutral;
             const changeBadgeTextStyle =
               diff === null
-                ? null
+                ? 'null'
                 : diff < 0
                 ? localStyles.changeBadgeTextLoss
                 : diff > 0
@@ -315,7 +266,7 @@ const WeightProgressScreen = ({ navigation }) => {
 
             return (
               <View
-                key={entry.date}
+                key={entry.id}
                 style={[
                   localStyles.logEntry,
                   i < visibleEntries.length - 1 && localStyles.logEntryBorder,
@@ -348,7 +299,7 @@ const WeightProgressScreen = ({ navigation }) => {
 
                 <View style={localStyles.logEntryInfo}>
                   <View style={localStyles.logWeightRow}>
-                    <Text style={localStyles.logWeight}>{entry.weight}</Text>
+                    <Text style={localStyles.logWeight}>{weight}</Text>
                     <Text style={localStyles.logWeightUnit}>kg</Text>
                     {isLatest && (
                       <View style={localStyles.latestBadge}>
@@ -369,7 +320,7 @@ const WeightProgressScreen = ({ navigation }) => {
                         changeBadgeTextStyle,
                       ]}
                     >
-                      {diff === 0 ? '—' : diff > 0 ? `+${diff}` : `${diff}`} kg
+                      {diff === 0 ? '0' : diff > 0 ? `+${diff}` : `${diff}`} kg
                     </Text>
                   </View>
                 )}
