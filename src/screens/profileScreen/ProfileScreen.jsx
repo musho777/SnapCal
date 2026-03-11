@@ -11,9 +11,6 @@ const ProfileScreen = ({ navigation }) => {
   const [savedList, setSavedList] = useState(
     [recipes[0], recipes[1], recipes[2], recipes[3]].filter(Boolean),
   );
-  const [myRecipesList, setMyRecipesList] = useState(
-    [recipes[4], recipes[5]].filter(Boolean),
-  );
 
   const [userName, setUserName] = useState('John Doe');
   const userEmail = 'john.doe@example.com';
@@ -32,11 +29,9 @@ const ProfileScreen = ({ navigation }) => {
     setSavedList(prev => prev.filter(item => item.id !== id));
   };
 
-  const handleDeleteRecipe = id => {
-    setMyRecipesList(prev => prev.filter(item => item.id !== id));
+  const handleAddRecipe = () => {
+    navigation.navigate('CreateMeal');
   };
-
-  const handleAddRecipe = () => {};
 
   const handleNavigateToRecipe = recipe => {
     navigation.navigate('Recipe', { recipeData: recipe });
@@ -65,14 +60,7 @@ const ProfileScreen = ({ navigation }) => {
           />
         );
       case 'My Recipes':
-        return (
-          <MyRecipesTab
-            myRecipesList={myRecipesList}
-            onDelete={handleDeleteRecipe}
-            onAdd={handleAddRecipe}
-            onNavigate={handleNavigateToRecipe}
-          />
-        );
+        return <MyRecipesTab onAdd={handleAddRecipe} />;
       case 'Settings':
         return (
           <SettingsTab
@@ -109,7 +97,6 @@ const ProfileScreen = ({ navigation }) => {
         userName={`${user.profile?.first_name} ${user.profile?.last_name}`}
         userEmail={user.email}
         savedCount={savedList.length}
-        myRecipesCount={myRecipesList.length}
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />

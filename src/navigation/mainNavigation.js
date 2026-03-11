@@ -72,12 +72,6 @@ export const MainNavigation = () => {
     dispatch(getUserInfo());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   AsyncStorage.removeItem('accessToken');
-  //   AsyncStorage.removeItem('refreshToken');
-  //   AsyncStorage.removeItem('onboardingCompleted', 'false');
-  // }, []);
-
   if (!isReady) {
     return <Loading />;
   }
@@ -92,7 +86,10 @@ export const MainNavigation = () => {
       <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
       <RootStack.Screen name="MainApp" component={TabNavigator} />
       <RootStack.Screen name="Recipient" component={RecipeScreen} />
-      <RootStack.Screen name="WeightProgress" component={WeightProgressScreen} />
+      <RootStack.Screen
+        name="WeightProgress"
+        component={WeightProgressScreen}
+      />
 
       <RootStack.Screen
         name="CreateMeal"
