@@ -7,17 +7,42 @@ import { DraggableAIButton } from './src/common-ui/uIButton';
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { useEffect } from 'react';
+import { navigationRef } from './src/api/navigationService';
+import { requestNotificationPermission } from './src/permissions/notificationPermissions';
+import notificationService from './src/services/notificationService/notificationService';
 
 function App() {
-  // const isDarkMode = useColorScheme() === 'dark';
-
   const handleAIButtonPress = () => {};
+
+  useEffect(() => {
+    const initializeNotifications = async () => {
+      const hasPermission = await requestNotificationPermission();
+      if (hasPermission) {
+        await notificationService.initialize(newToken => {
+          console.log(newToken);
+          // Token refresh callback - you can send this to your backend
+        });
+
+        const token = await notificationService.getToken();
+        if (token) {
+          console.log(token);
+        }
+      }
+    };
+
+    initializeNotifications();
+
+    return () => {
+      notificationService.cleanup();
+    };
+  }, []);
 
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
         <BottomSheetModalProvider>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <View style={styles.container}>
               <Provider store={store}>
                 <MainNavigation />
