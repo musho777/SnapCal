@@ -100,7 +100,6 @@ class NotificationService {
           ? this.getChannelIdForType(data.type)
           : NOTIFICATION_CHANNELS.DEFAULT.id;
 
-        // Display local notification
         await notifee.displayNotification({
           title: notification.title,
           body: notification.body,

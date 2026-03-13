@@ -11,7 +11,7 @@ export const NOTIFICATION_CHANNELS = {
     id: 'snapcal_default_channel',
     name: 'Default Notifications',
     description: 'General notifications',
-    importance: 4, // AndroidImportance.HIGH
+    importance: 4,
   },
   MEAL_REMINDERS: {
     id: 'meal_reminders',
@@ -25,7 +25,7 @@ export const NOTIFICATION_CHANNELS = {
     id: 'water_reminders',
     name: 'Water Reminders',
     description: 'Stay hydrated reminders',
-    importance: 3, // AndroidImportance.DEFAULT
+    importance: 3,
     sound: 'default',
     vibration: true,
   },
