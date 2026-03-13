@@ -7,7 +7,6 @@ import {
   removeRefreshToken,
   setAccessToken,
 } from './TokenService';
-import { getSelectedCompany } from '../utils/companyStorage';
 
 import { config } from '../../config';
 
@@ -95,7 +94,7 @@ client.interceptors.response.use(
         } catch (err) {
           await removeAccessToken();
           await removeRefreshToken();
-          navigate('login');
+          navigate('LoginScreen');
           throw new ApiError('Failed to refresh access token', 401);
         }
       } else {
@@ -103,7 +102,7 @@ client.interceptors.response.use(
           logoutInitiated = true;
           await removeAccessToken();
           await removeRefreshToken();
-          navigate('login');
+          navigate('LoginScreen');
         }
         throw new ApiError(message || 'Authentication error', status);
       }
