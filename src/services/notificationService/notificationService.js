@@ -207,6 +207,13 @@ class NotificationService {
 
     return await this.initializeFCM();
   }
+
+  async clearBadge() {
+    try {
+      await notifee.setBadgeCount(0);
+      await notifee.cancelDisplayedNotifications();
+    } catch (error) {}
+  }
 }
 
 export default new NotificationService();

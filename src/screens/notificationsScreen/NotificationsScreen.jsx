@@ -3,6 +3,8 @@ import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import { NotificationHeader, FilterTabs, NotificationCard } from './components';
 import NoResult from '../../components/noResult';
+import { useFocusEffect } from '@react-navigation/native';
+import notificationService from '../../services/notificationService/notificationService';
 
 const INITIAL_NOTIFICATIONS = [
   {
@@ -115,6 +117,13 @@ const NotificationsScreen = ({ navigation }) => {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const unreadCount = items.filter(n => !n.read).length;
+
+  // Clear app icon badge when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      notificationService.clearBadge();
+    }, []),
+  );
 
   const markRead = id => {
     setItems(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
