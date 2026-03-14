@@ -39,3 +39,16 @@ export const deleteNotification = createAsyncThunk(
     }
   },
 );
+
+export const markAllNotificationsRead = createAsyncThunk(
+  'put/markAllNotificationsRead',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.patch('/notifications/read-all');
+      return data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getNotifications, markNotificationRead, deleteNotification } from './notificationsAction';
+import { getNotifications, markNotificationRead, deleteNotification, markAllNotificationsRead } from './notificationsAction';
 
 const initialState = {
   loading: {
@@ -10,6 +10,7 @@ const initialState = {
   },
   error: {},
   deletedNotifications: {},
+  previousUnreadNotifications: [],
 };
 
 const notificationsSlice = createSlice({
@@ -105,6 +106,44 @@ const notificationsSlice = createSlice({
           }
           // Remove from temporary storage
           delete state.deletedNotifications[action.meta.arg];
+        }
+      })
+      .addCase(markAllNotificationsRead.pending, (state) => {
+        // Optimistic update - immediately mark all as read
+        if (state.data.notifications?.notifications) {
+          // Store unread notifications IDs in case we need to revert
+          state.previousUnreadNotifications = state.data.notifications.notifications
+            .filter(n => !n.read)
+            .map(n => n.id);
+
+          // Mark all as read
+          state.data.notifications.notifications.forEach(notification => {
+            notification.read = true;
+          });
+
+          // Set unread count to 0
+          state.data.notifications.unread_count = 0;
+        }
+      })
+      .addCase(markAllNotificationsRead.fulfilled, (state) => {
+        // Success - clear the backup
+        state.previousUnreadNotifications = [];
+      })
+      .addCase(markAllNotificationsRead.rejected, (state) => {
+        // Revert if API call fails
+        if (state.data.notifications?.notifications && state.previousUnreadNotifications.length > 0) {
+          // Restore unread status for previously unread notifications
+          state.data.notifications.notifications.forEach(notification => {
+            if (state.previousUnreadNotifications.includes(notification.id)) {
+              notification.read = false;
+            }
+          });
+
+          // Restore unread count
+          state.data.notifications.unread_count = state.previousUnreadNotifications.length;
+
+          // Clear the backup
+          state.previousUnreadNotifications = [];
         }
       });
   },

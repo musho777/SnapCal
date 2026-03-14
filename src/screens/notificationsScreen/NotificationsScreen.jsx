@@ -9,6 +9,7 @@ import {
   getNotifications,
   markNotificationRead,
   deleteNotification,
+  markAllNotificationsRead,
 } from '../../features/notifications/notificationsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -141,13 +142,7 @@ const NotificationsScreen = () => {
   };
 
   const markAllRead = () => {
-    if (data?.notifications) {
-      data.notifications.forEach(notification => {
-        if (!notification.read) {
-          dispatch(markNotificationRead(notification.id));
-        }
-      });
-    }
+    dispatch(markAllNotificationsRead());
   };
 
   const clearAll = () => {
