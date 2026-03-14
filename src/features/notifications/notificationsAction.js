@@ -34,7 +34,6 @@ export const deleteNotification = createAsyncThunk(
       const data = await ApiClient.del(`/notifications/${id}`);
       return { id, ...data };
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   },
@@ -47,7 +46,6 @@ export const markAllNotificationsRead = createAsyncThunk(
       const data = await ApiClient.patch('/notifications/read-all');
       return data;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   },
