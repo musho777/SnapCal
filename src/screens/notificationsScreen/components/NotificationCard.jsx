@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import { formatTimestamp } from '../../../utils/commonUtils';
 
 const NotificationCard = ({ notification, onPress, onDelete }) => {
   const swipeableRef = useRef(null);
@@ -53,7 +54,9 @@ const NotificationCard = ({ notification, onPress, onDelete }) => {
             >
               {notification.title}
             </Text>
-            <Text style={styles.time}>{notification.time}</Text>
+            <Text style={styles.time}>
+              {formatTimestamp(notification.created_at, 'time')}
+            </Text>
           </View>
           <Text
             style={[

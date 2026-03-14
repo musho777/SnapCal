@@ -153,8 +153,11 @@ const NotificationsScreen = () => {
     All: null,
     Unread: n => !n.read,
     Meals: n => n.notification_type?.name === 'meal_reminder',
-    Tips: n => n.notification_type?.name === 'tip' || n.notification_type?.name === 'ai',
-    Goals: n => n.notification_type?.name === 'goal' || n.notification_type?.name === 'water',
+    Tips: n =>
+      n.notification_type?.name === 'tip' || n.notification_type?.name === 'ai',
+    Goals: n =>
+      n.notification_type?.name === 'goal' ||
+      n.notification_type?.name === 'water',
   }[activeFilter];
 
   const notifications = data?.notifications || [];
@@ -169,6 +172,7 @@ const NotificationsScreen = () => {
 
   const renderItem = ({ item, index }) => {
     const notificationIndex = index - Math.floor(index / 2);
+    console.log(item);
     return (
       <Animated.View
         entering={FadeInDown.delay(notificationIndex * 40).springify()}
