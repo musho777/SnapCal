@@ -8,10 +8,20 @@ export const getNotifications = createAsyncThunk(
     const queries = buildQueryString(params);
     try {
       const data = await ApiClient.get(`/notifications?${queries}`);
-      console.log(data);
       return data;
     } catch (error) {
-      console.log(error);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
+
+export const markNotificationRead = createAsyncThunk(
+  'put/markNotificationRead',
+  async (id, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.patch(`/notifications/${id}/read`);
+      return { id, ...data };
+    } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   },

@@ -4,7 +4,6 @@ import { Swipeable } from 'react-native-gesture-handler';
 
 const NotificationCard = ({ notification, onPress, onDelete }) => {
   const swipeableRef = useRef(null);
-  console.log(notification);
   const dynamicIconStyles = {
     backgroundColor: notification.icon_bg,
     borderColor: `${notification.icon_color}22`,

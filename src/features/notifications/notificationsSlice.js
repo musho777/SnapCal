@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getNotifications } from './notificationsAction';
+import { getNotifications, markNotificationRead } from './notificationsAction';
 
 const initialState = {
   loading: {
@@ -27,6 +27,34 @@ const notificationsSlice = createSlice({
       .addCase(getNotifications.rejected, (state, { payload }) => {
         state.loading.notifications = false;
         state.error = payload;
+      })
+      .addCase(markNotificationRead.pending, (state, action) => {
+        // Optimistic update - immediately mark as read
+        if (state.data.notifications?.notifications) {
+          const notification = state.data.notifications.notifications.find(
+            n => n.id === action.meta.arg
+          );
+          if (notification) {
+            notification.read = true;
+            // Decrease unread count
+            if (state.data.notifications.unread_count > 0) {
+              state.data.notifications.unread_count -= 1;
+            }
+          }
+        }
+      })
+      .addCase(markNotificationRead.rejected, (state, action) => {
+        // Revert if API call fails
+        if (state.data.notifications?.notifications) {
+          const notification = state.data.notifications.notifications.find(
+            n => n.id === action.meta.arg
+          );
+          if (notification) {
+            notification.read = false;
+            // Restore unread count
+            state.data.notifications.unread_count += 1;
+          }
+        }
       });
   },
 });

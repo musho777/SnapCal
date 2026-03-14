@@ -5,7 +5,10 @@ import { NotificationHeader, FilterTabs, NotificationCard } from './components';
 import NoResult from '../../components/noResult';
 import { useFocusEffect } from '@react-navigation/native';
 import notificationService from '../../services/notificationService/notificationService';
-import { getNotifications } from '../../features/notifications/notificationsAction';
+import {
+  getNotifications,
+  markNotificationRead,
+} from '../../features/notifications/notificationsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectData,
@@ -120,42 +123,46 @@ const INITIAL_NOTIFICATIONS = [
 ];
 
 const NotificationsScreen = () => {
-  const [items, setItems] = useState(INITIAL_NOTIFICATIONS);
   const [activeFilter, setActiveFilter] = useState('All');
   const dispatch = useDispatch();
   const data = useSelector(selectData);
+  console.log(data);
   const loading = useSelector(selectLoading);
-  console.log(data, 'data2');
 
-  const unreadCount = items.filter(n => !n.read).length;
-
-  // Clear app icon badge when screen is focused
+  const unreadCount = data.unread_count;
 
   const markRead = id => {
-    setItems(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
+    dispatch(markNotificationRead(id));
   };
 
   const deleteNotification = id => {
-    setItems(prev => prev.filter(n => n.id !== id));
+    // setItems(prev => prev.filter(n => n.id !== id));
   };
 
   const markAllRead = () => {
-    setItems(prev => prev.map(n => ({ ...n, read: true })));
+    if (data?.notifications) {
+      data.notifications.forEach(notification => {
+        if (!notification.read) {
+          dispatch(markNotificationRead(notification.id));
+        }
+      });
+    }
   };
 
   const clearAll = () => {
-    setItems([]);
+    // setItems([]);
   };
 
   const filterFn = {
     All: null,
     Unread: n => !n.read,
-    Meals: n => n.type === 'meal_reminder',
-    Tips: n => n.type === 'tip' || n.type === 'ai',
-    Goals: n => n.type === 'goal' || n.type === 'water',
+    Meals: n => n.notification_type?.name === 'meal_reminder',
+    Tips: n => n.notification_type?.name === 'tip' || n.notification_type?.name === 'ai',
+    Goals: n => n.notification_type?.name === 'goal' || n.notification_type?.name === 'water',
   }[activeFilter];
 
-  const filtered = filterFn ? items.filter(filterFn) : items;
+  const notifications = data?.notifications || [];
+  const filtered = filterFn ? notifications.filter(filterFn) : notifications;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -173,8 +180,8 @@ const NotificationsScreen = () => {
       >
         <NotificationCard
           notification={item}
-          onPress={() => markRead(item.data.id)}
-          onDelete={() => deleteNotification(item.data.id)}
+          onPress={() => markRead(item.id)}
+          onDelete={() => deleteNotification(item.id)}
         />
       </Animated.View>
     );
@@ -195,7 +202,7 @@ const NotificationsScreen = () => {
           unreadCount={unreadCount}
           onMarkAllRead={markAllRead}
           onClearAll={clearAll}
-          showActions={items.length > 0}
+          showActions={notifications.length > 0}
         />
         <NoResult />
       </View>
@@ -208,7 +215,7 @@ const NotificationsScreen = () => {
         unreadCount={unreadCount}
         onMarkAllRead={markAllRead}
         onClearAll={clearAll}
-        showActions={items.length > 0}
+        showActions={notifications.length > 0}
       />
       <FilterTabs
         activeFilter={activeFilter}
