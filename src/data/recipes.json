@@ -1,0 +1,16 @@
+{
+  "recipes": [
+    {
+      "id": 1,
+      "name": "Default Recipe",
+      "description": "Default recipe",
+      "calories": 0,
+      "protein": 0,
+      "carbs": 0,
+      "fat": 0,
+      "ingredients": [],
+      "steps": [],
+      "image": ""
+    }
+  ]
+}
