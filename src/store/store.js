@@ -3,12 +3,14 @@ import authReducer from '../features/auth/authSlice';
 import exploreReducer from '../features/explore/exploreSlice';
 import mealPlanReducer from '../features/mealPlan/mealPlanSlice';
 import userReducer from '../features/user/userSlice';
+import notificationsReducer from '../features/notifications/notificationsSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     dishList: exploreReducer,
     mealPlan: mealPlanReducer,
     user: userReducer,
+    notifications: notificationsReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

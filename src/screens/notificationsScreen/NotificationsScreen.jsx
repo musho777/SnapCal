@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import { NotificationHeader, FilterTabs, NotificationCard } from './components';
 import NoResult from '../../components/noResult';
 import { useFocusEffect } from '@react-navigation/native';
 import notificationService from '../../services/notificationService/notificationService';
+import { getNotifications } from '../../features/notifications/notificationsAction';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectData,
+  selectLoading,
+} from '../../features/notifications/notificationsSlice';
+import Loading from '../../components/loading/Loading';
 
 const INITIAL_NOTIFICATIONS = [
   {
@@ -112,18 +119,17 @@ const INITIAL_NOTIFICATIONS = [
   },
 ];
 
-const NotificationsScreen = ({ navigation }) => {
+const NotificationsScreen = () => {
   const [items, setItems] = useState(INITIAL_NOTIFICATIONS);
   const [activeFilter, setActiveFilter] = useState('All');
+  const dispatch = useDispatch();
+  const data = useSelector(selectData);
+  const loading = useSelector(selectLoading);
+  console.log(data, 'data2');
 
   const unreadCount = items.filter(n => !n.read).length;
 
   // Clear app icon badge when screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      notificationService.clearBadge();
-    }, []),
-  );
 
   const markRead = id => {
     setItems(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
@@ -151,22 +157,33 @@ const NotificationsScreen = ({ navigation }) => {
 
   const filtered = filterFn ? items.filter(filterFn) : items;
 
-  const grouped = filtered.reduce((acc, n) => {
-    if (!acc[n.date]) acc[n.date] = [];
-    acc[n.date].push(n);
-    return acc;
-  }, {});
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getNotifications({}));
+      notificationService.clearBadge();
+    }, []),
+  );
 
-  if (items.length === 0) {
+  const renderItem = ({ item, index }) => {
+    const notificationIndex = index - Math.floor(index / 2);
+    return (
+      <Animated.View
+        entering={FadeInDown.delay(notificationIndex * 40).springify()}
+        layout={Layout.springify()}
+      >
+        <NotificationCard
+          notification={item}
+          onPress={() => markRead(item.data.id)}
+          onDelete={() => deleteNotification(item.data.id)}
+        />
+      </Animated.View>
+    );
+  };
+
+  if (loading) {
     return (
       <View style={localStyles.page}>
-        <NotificationHeader
-          unreadCount={unreadCount}
-          onMarkAllRead={markAllRead}
-          onClearAll={clearAll}
-          showActions={items.length > 0}
-        />
-        <NoResult text="No notifications yet. " />
+        <Loading />
       </View>
     );
   }
@@ -179,11 +196,6 @@ const NotificationsScreen = ({ navigation }) => {
           onMarkAllRead={markAllRead}
           onClearAll={clearAll}
           showActions={items.length > 0}
-        />
-        <FilterTabs
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
-          unreadCount={unreadCount}
         />
         <NoResult />
       </View>
@@ -203,30 +215,14 @@ const NotificationsScreen = ({ navigation }) => {
         onFilterChange={setActiveFilter}
         unreadCount={unreadCount}
       />
-      <ScrollView
+      <FlatList
+        data={data?.notifications}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
         style={localStyles.scrollView}
         contentContainerStyle={localStyles.scrollContent}
         showsVerticalScrollIndicator={false}
-      >
-        {Object.entries(grouped).map(([date, notifications]) => (
-          <View key={date} style={localStyles.dateGroup}>
-            <Text style={localStyles.dateHeader}>{date}</Text>
-            {notifications.map((notification, index) => (
-              <Animated.View
-                key={notification.id}
-                entering={FadeInDown.delay(index * 40).springify()}
-                layout={Layout.springify()}
-              >
-                <NotificationCard
-                  notification={notification}
-                  onPress={() => markRead(notification.id)}
-                  onDelete={() => deleteNotification(notification.id)}
-                />
-              </Animated.View>
-            ))}
-          </View>
-        ))}
-      </ScrollView>
+      />
     </View>
   );
 };
@@ -244,9 +240,6 @@ const localStyles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 80,
   },
-  dateGroup: {
-    marginBottom: 20,
-  },
   dateHeader: {
     fontSize: 12,
     fontWeight: '700',
@@ -254,6 +247,7 @@ const localStyles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 10,
+    marginTop: 20,
     paddingLeft: 4,
   },
 });
