@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getNotifications, markNotificationRead } from './notificationsAction';
+import { getNotifications, markNotificationRead, deleteNotification } from './notificationsAction';
 
 const initialState = {
   loading: {
@@ -9,6 +9,7 @@ const initialState = {
     notifications: {},
   },
   error: {},
+  deletedNotifications: {},
 };
 
 const notificationsSlice = createSlice({
@@ -54,6 +55,56 @@ const notificationsSlice = createSlice({
             // Restore unread count
             state.data.notifications.unread_count += 1;
           }
+        }
+      })
+      .addCase(deleteNotification.pending, (state, action) => {
+        // Optimistic delete - immediately remove from list
+        if (state.data.notifications?.notifications) {
+          const index = state.data.notifications.notifications.findIndex(
+            n => n.id === action.meta.arg
+          );
+          if (index !== -1) {
+            // Store the deleted notification temporarily in case we need to restore it
+            const deletedNotification = state.data.notifications.notifications[index];
+            state.deletedNotifications[action.meta.arg] = {
+              notification: deletedNotification,
+              index: index
+            };
+            // Remove from array
+            state.data.notifications.notifications.splice(index, 1);
+            // Decrease total count
+            if (state.data.notifications.total > 0) {
+              state.data.notifications.total -= 1;
+            }
+            // Decrease unread count if it was unread
+            if (!deletedNotification.read && state.data.notifications.unread_count > 0) {
+              state.data.notifications.unread_count -= 1;
+            }
+          }
+        }
+      })
+      .addCase(deleteNotification.fulfilled, (state, action) => {
+        // Delete successful - remove from temporary storage
+        delete state.deletedNotifications[action.meta.arg];
+      })
+      .addCase(deleteNotification.rejected, (state, action) => {
+        // Revert if API call fails - restore the notification
+        const deletedData = state.deletedNotifications[action.meta.arg];
+        if (deletedData && state.data.notifications?.notifications) {
+          // Restore notification at its original position
+          state.data.notifications.notifications.splice(
+            deletedData.index,
+            0,
+            deletedData.notification
+          );
+          // Restore total count
+          state.data.notifications.total += 1;
+          // Restore unread count if it was unread
+          if (!deletedData.notification.read) {
+            state.data.notifications.unread_count += 1;
+          }
+          // Remove from temporary storage
+          delete state.deletedNotifications[action.meta.arg];
         }
       });
   },

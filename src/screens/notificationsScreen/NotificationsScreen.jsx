@@ -8,6 +8,7 @@ import notificationService from '../../services/notificationService/notification
 import {
   getNotifications,
   markNotificationRead,
+  deleteNotification,
 } from '../../features/notifications/notificationsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -135,8 +136,8 @@ const NotificationsScreen = () => {
     dispatch(markNotificationRead(id));
   };
 
-  const deleteNotification = id => {
-    // setItems(prev => prev.filter(n => n.id !== id));
+  const handleDeleteNotification = id => {
+    dispatch(deleteNotification(id));
   };
 
   const markAllRead = () => {
@@ -181,7 +182,7 @@ const NotificationsScreen = () => {
         <NotificationCard
           notification={item}
           onPress={() => markRead(item.id)}
-          onDelete={() => deleteNotification(item.id)}
+          onDelete={() => handleDeleteNotification(item.id)}
         />
       </Animated.View>
     );
