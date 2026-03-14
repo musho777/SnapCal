@@ -1,37 +1,16 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { FoodCard } from '../../../components/cards/FoodCard';
-import { calculateHealthScore } from '../../../utils/healthScore';
-import { getRecipeImage } from '../../../utils/imageMapper';
-import { getBgColor } from '../../../utils/themesUtils';
 
-const SavedTab = ({ savedList, onUnsave, onNavigate }) => {
-  const transformRecipe = recipe => {
-    if (!recipe) return null;
-    const healthData = calculateHealthScore(recipe.macros || []);
-    return {
-      id: recipe.id.toString(),
-      name: recipe.name,
-      kcal: recipe.totalCalories,
-      category: recipe.mealType,
-      health: healthData.score,
-      tag: recipe.category?.toUpperCase() || 'MEAL',
-      bgColor: getBgColor(recipe.mealType),
-      image: getRecipeImage(recipe.image),
-    };
-  };
-
+const SavedTab = ({ onUnsave, onNavigate }) => {
   const handleToggleSave = id => {
     onUnsave(parseInt(id, 10));
   };
 
   const renderRecipeCard = ({ item }) => {
-    const transformedItem = transformRecipe(item);
-    if (!transformedItem) return null;
-
     return (
       <FoodCard
-        item={transformedItem}
+        item={item}
         isSaved={true}
         onToggleSave={handleToggleSave}
         onRecipePress={() => onNavigate(item)}
@@ -51,7 +30,7 @@ const SavedTab = ({ savedList, onUnsave, onNavigate }) => {
 
   return (
     <FlatList
-      data={savedList}
+      data={[]}
       renderItem={renderRecipeCard}
       keyExtractor={item => item?.id.toString()}
       numColumns={2}
