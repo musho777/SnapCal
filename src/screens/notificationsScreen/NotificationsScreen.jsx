@@ -129,7 +129,6 @@ const NotificationsScreen = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const dispatch = useDispatch();
   const data = useSelector(selectData);
-  console.log(data);
   const loading = useSelector(selectLoading);
 
   const unreadCount = data.unread_count;
@@ -173,7 +172,6 @@ const NotificationsScreen = () => {
 
   const renderItem = ({ item, index }) => {
     const notificationIndex = index - Math.floor(index / 2);
-    console.log(item);
     return (
       <Animated.View
         entering={FadeInDown.delay(notificationIndex * 40).springify()}

@@ -51,9 +51,7 @@ class NotificationService {
         description: NOTIFICATION_CHANNELS.GOALS.description,
         importance: AndroidImportance.HIGH,
       });
-    } catch (error) {
-      // Silently handle errors
-    }
+    } catch (error) {}
   }
 
   async initializeFCM() {
@@ -93,16 +91,16 @@ class NotificationService {
 
   setupForegroundHandler() {
     this.unsubscribeForeground = messaging().onMessage(async remoteMessage => {
-      const { notification, data } = remoteMessage;
+      try {
+        const { notification, data } = remoteMessage;
 
-      if (notification) {
         const channelId = data?.type
           ? this.getChannelIdForType(data.type)
           : NOTIFICATION_CHANNELS.DEFAULT.id;
 
         await notifee.displayNotification({
-          title: notification.title,
-          body: notification.body,
+          title: notification?.title,
+          body: notification?.body,
           data: data || {},
           android: {
             channelId,
@@ -114,7 +112,7 @@ class NotificationService {
             sound: 'default',
           },
         });
-      }
+      } catch (error) {}
     });
 
     return this.unsubscribeForeground;
@@ -186,9 +184,7 @@ class NotificationService {
       this.setupNotificationOpenHandler();
 
       this.initialized = true;
-    } catch (error) {
-      // Silently handle errors
-    }
+    } catch (error) {}
   }
 
   cleanup() {
