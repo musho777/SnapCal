@@ -251,7 +251,7 @@ const localStyles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 10,
     paddingTop: 12,
-    paddingBottom: 80,
+    paddingBottom: 90,
   },
   dateHeader: {
     fontSize: 12,
