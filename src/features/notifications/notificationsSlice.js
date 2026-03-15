@@ -4,6 +4,8 @@ import { getNotifications, markNotificationRead, deleteNotification, markAllNoti
 const initialState = {
   loading: {
     notifications: true,
+    loadingMore: false,
+    refreshing: false,
   },
   data: {
     notifications: {},
@@ -12,6 +14,8 @@ const initialState = {
   deletedNotifications: {},
   previousUnreadNotifications: [],
   previousAllNotifications: [],
+  hasMore: true,
+  currentOffset: 0,
 };
 
 const notificationsSlice = createSlice({
@@ -20,15 +24,49 @@ const notificationsSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(getNotifications.pending, state => {
-        state.loading.notifications = true;
+      .addCase(getNotifications.pending, (state, action) => {
+        const isRefreshing = action.meta.arg?.refresh;
+        const isLoadingMore = action.meta.arg?.offset > 0;
+
+        if (isRefreshing) {
+          state.loading.refreshing = true;
+        } else if (isLoadingMore) {
+          state.loading.loadingMore = true;
+        } else {
+          state.loading.notifications = true;
+        }
       })
-      .addCase(getNotifications.fulfilled, (state, { payload }) => {
+      .addCase(getNotifications.fulfilled, (state, { payload, meta }) => {
+        const isRefreshing = meta.arg?.refresh;
+        const isLoadingMore = meta.arg?.offset > 0;
+
         state.loading.notifications = false;
-        state.data.notifications = payload;
+        state.loading.loadingMore = false;
+        state.loading.refreshing = false;
+
+        if (isRefreshing || !isLoadingMore) {
+          // Initial load or refresh - replace data
+          state.data.notifications = payload;
+          state.currentOffset = payload.limit || 0;
+        } else {
+          // Load more - append data
+          const existingNotifications = state.data.notifications?.notifications || [];
+          state.data.notifications = {
+            ...payload,
+            notifications: [...existingNotifications, ...payload.notifications],
+          };
+          state.currentOffset = meta.arg.offset + (payload.limit || 0);
+        }
+
+        // Check if there's more data to load
+        const totalLoaded = state.data.notifications?.notifications?.length || 0;
+        const total = payload.total || 0;
+        state.hasMore = totalLoaded < total;
       })
       .addCase(getNotifications.rejected, (state, { payload }) => {
         state.loading.notifications = false;
+        state.loading.loadingMore = false;
+        state.loading.refreshing = false;
         state.error = payload;
       })
       .addCase(markNotificationRead.pending, (state, action) => {
@@ -186,6 +224,12 @@ export const { resetOtp, resetLogin, setResetError } =
 
 export const selectLoading = state =>
   state?.notifications?.loading.notifications;
+export const selectLoadingMore = state =>
+  state?.notifications?.loading.loadingMore;
+export const selectRefreshing = state =>
+  state?.notifications?.loading.refreshing;
+export const selectHasMore = state => state?.notifications?.hasMore;
+export const selectCurrentOffset = state => state?.notifications?.currentOffset;
 export const selectData = state => state?.notifications?.data?.notifications;
 
 export default notificationsSlice.reducer;

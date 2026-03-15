@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useCallback, useRef } from 'react';
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import { NotificationHeader, FilterTabs, NotificationCard } from './components';
 import NoResult from '../../components/noResult';
@@ -16,6 +22,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   selectData,
   selectLoading,
+  selectLoadingMore,
+  selectRefreshing,
+  selectHasMore,
+  selectCurrentOffset,
 } from '../../features/notifications/notificationsSlice';
 import Loading from '../../components/loading/Loading';
 
@@ -124,14 +134,21 @@ const INITIAL_NOTIFICATIONS = [
     iconColor: '#EF4444',
   },
 ];
+const LIMIT = 10; // Page size
 
 const NotificationsScreen = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const dispatch = useDispatch();
   const data = useSelector(selectData);
   const loading = useSelector(selectLoading);
+  const loadingMore = useSelector(selectLoadingMore);
+  const refreshing = useSelector(selectRefreshing);
+  const hasMore = useSelector(selectHasMore);
+  const currentOffset = useSelector(selectCurrentOffset);
 
-  const unreadCount = data.unread_count;
+  const isLoadingRef = useRef(false);
+
+  const unreadCount = data?.unread_count || 0;
 
   const markRead = id => {
     dispatch(markNotificationRead(id));
@@ -163,12 +180,30 @@ const NotificationsScreen = () => {
   const notifications = data?.notifications || [];
   const filtered = filterFn ? notifications.filter(filterFn) : notifications;
 
+  // Initial load on screen focus
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(getNotifications({}));
+      dispatch(getNotifications({ limit: LIMIT, offset: 0 }));
       notificationService.clearBadge();
     }, []),
   );
+
+  const handleRefresh = useCallback(() => {
+    dispatch(getNotifications({ limit: LIMIT, offset: 0, refresh: true }));
+  }, [dispatch]);
+
+  const handleLoadMore = useCallback(() => {
+    if (isLoadingRef.current || loadingMore || !hasMore || loading) {
+      return;
+    }
+
+    isLoadingRef.current = true;
+    dispatch(getNotifications({ limit: LIMIT, offset: currentOffset })).finally(
+      () => {
+        isLoadingRef.current = false;
+      },
+    );
+  }, [dispatch, currentOffset, hasMore, loadingMore, loading]);
 
   const renderItem = ({ item, index }) => {
     const notificationIndex = index - Math.floor(index / 2);
@@ -183,6 +218,15 @@ const NotificationsScreen = () => {
           onDelete={() => handleDeleteNotification(item.id)}
         />
       </Animated.View>
+    );
+  };
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <View style={localStyles.footerLoader}>
+        <ActivityIndicator size="small" color="#00C853" />
+      </View>
     );
   };
 
@@ -227,12 +271,23 @@ const NotificationsScreen = () => {
         unreadCount={unreadCount}
       />
       <FlatList
-        data={data?.notifications}
+        data={filtered}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         style={localStyles.scrollView}
         contentContainerStyle={localStyles.scrollContent}
         showsVerticalScrollIndicator={false}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor="#00C853"
+            colors={['#00C853']}
+          />
+        }
       />
     </View>
   );
@@ -260,6 +315,11 @@ const localStyles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 20,
     paddingLeft: 4,
+  },
+  footerLoader: {
+    paddingVertical: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
