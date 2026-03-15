@@ -16,6 +16,8 @@ import {
   saveWaterIntake,
   checkAndResetWaterData,
 } from '../../utils/waterStorage';
+import { useFocusEffect } from '@react-navigation/native';
+import { getNotifications } from '../../features/notifications/notificationsAction';
 
 const MainScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -54,6 +56,12 @@ const MainScreen = ({ navigation }) => {
     };
     loadWater();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getNotifications({}));
+    }, []),
+  );
 
   return (
     <ScrollView
