@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { navigationRef } from './src/api/navigationService';
 import { requestNotificationPermission } from './src/permissions/notificationPermissions';
 import notificationService from './src/services/notificationService/notificationService';
+import { sendFCMToken } from './src/features/auth/authActions';
 
 function App() {
   const handleAIButtonPress = () => {};
@@ -20,19 +21,11 @@ function App() {
       const hasPermission = await requestNotificationPermission();
       if (hasPermission) {
         await notificationService.initialize(newToken => {
-          console.log(newToken);
-          // Token refresh callback - you can send this to your backend
+          store.dispatch(sendFCMToken({ fcmToken: newToken }));
         });
-
-        const token = await notificationService.getToken();
-        if (token) {
-          console.log(token);
-        }
       }
     };
-
     initializeNotifications();
-
     return () => {
       notificationService.cleanup();
     };

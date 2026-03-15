@@ -6,7 +6,10 @@ import WeightModal from '../../../components/weightModal';
 import HeightModal from '../../../components/heightModal';
 import AlertModal from '../../../components/alertModal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserMeasurements } from '../../../features/auth/authActions';
+import {
+  updateUserMeasurements,
+  deleteFCMToken,
+} from '../../../features/auth/authActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   removeAccessToken,
@@ -38,9 +41,12 @@ const SettingsTab = ({
   const { measurementsLoading } = useSelector(state => state.auth);
 
   const handleLogout = async () => {
+    dispatch(deleteFCMToken());
+
     await removeAccessToken();
     await removeRefreshToken();
-    AsyncStorage.removeItem('onboardingCompleted');
+    await AsyncStorage.removeItem('onboardingCompleted');
+
     navigation.navigate('LoginScreen');
   };
 

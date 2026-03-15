@@ -7,9 +7,10 @@ import AuthOutlet from '../AuthOutlet';
 import { UIButton } from '../../../common-ui/uIButton';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { userLogin } from '../../../features/auth/authActions';
+import { userLogin, sendFCMToken } from '../../../features/auth/authActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { validateEmail } from '../../../utils/commonUtils';
+import notificationService from '../../../services/notificationService/notificationService';
 
 const LoginScreen = () => {
   const [focusedInput, setFocusedInput] = useState(null);
@@ -83,6 +84,12 @@ const LoginScreen = () => {
     try {
       await dispatch(userLogin({ email: email.trim(), password })).unwrap();
       await AsyncStorage.setItem('onboardingCompleted', 'true');
+
+      const fcmToken = await notificationService.getToken();
+      if (fcmToken) {
+        dispatch(sendFCMToken({ fcmToken }));
+      }
+
       navigation.replace('MainApp');
     } catch (err) {
       setError('Login failed. Please check your credentials and try again.');

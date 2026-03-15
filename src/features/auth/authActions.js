@@ -9,6 +9,9 @@ import {
 } from '../../api/TokenService';
 import ApiClient from '../../api/axiosClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+
+const FCM_TOKEN_STORAGE_KEY = 'last_sent_fcm_token';
 
 export const loadTokens = createAsyncThunk('auth/loadTokens', async () => {
   const accessToken = await getAccessToken();
@@ -75,6 +78,58 @@ export const updateUserMeasurements = createAsyncThunk(
       });
       return data;
     } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
+
+export const sendFCMToken = createAsyncThunk(
+  'auth/sendFCMToken',
+  async ({ fcmToken }, { rejectWithValue }) => {
+    try {
+      const accessToken = await getAccessToken();
+      if (!accessToken) {
+        return { skipped: true, reason: 'not_authenticated', token: fcmToken };
+      }
+
+      const lastSentToken = await AsyncStorage.getItem(FCM_TOKEN_STORAGE_KEY);
+
+      if (lastSentToken === fcmToken) {
+        return { skipped: true, reason: 'token_unchanged', token: fcmToken };
+      }
+
+      const deviceType = Platform.OS === 'ios' ? 'ios' : 'android';
+
+      const data = await ApiClient.post('/settings/fcm-token', {
+        fcm_token: fcmToken,
+        device_type: deviceType,
+      });
+
+      await AsyncStorage.setItem(FCM_TOKEN_STORAGE_KEY, fcmToken);
+
+      return { ...data, token: fcmToken };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
+
+export const deleteFCMToken = createAsyncThunk(
+  'auth/deleteFCMToken',
+  async (_, { rejectWithValue }) => {
+    try {
+      const lastSentToken = await AsyncStorage.getItem(FCM_TOKEN_STORAGE_KEY);
+
+      if (!lastSentToken) {
+        return { skipped: true };
+      }
+      await ApiClient.del('/settings/fcm-token');
+
+      await AsyncStorage.removeItem(FCM_TOKEN_STORAGE_KEY);
+
+      return { success: true };
+    } catch (error) {
+      await AsyncStorage.removeItem(FCM_TOKEN_STORAGE_KEY);
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   },
