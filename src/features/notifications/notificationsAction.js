@@ -50,3 +50,15 @@ export const markAllNotificationsRead = createAsyncThunk(
     }
   },
 );
+
+export const clearAllNotifications = createAsyncThunk(
+  'delete/clearAllNotifications',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.del('/notifications');
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);

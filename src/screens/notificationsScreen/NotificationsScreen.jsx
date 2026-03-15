@@ -10,6 +10,7 @@ import {
   markNotificationRead,
   deleteNotification,
   markAllNotificationsRead,
+  clearAllNotifications,
 } from '../../features/notifications/notificationsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -146,7 +147,7 @@ const NotificationsScreen = () => {
   };
 
   const clearAll = () => {
-    // setItems([]);
+    dispatch(clearAllNotifications());
   };
 
   const filterFn = {
@@ -203,6 +204,11 @@ const NotificationsScreen = () => {
           onMarkAllRead={markAllRead}
           onClearAll={clearAll}
           showActions={notifications.length > 0}
+        />
+        <FilterTabs
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
+          unreadCount={unreadCount}
         />
         <NoResult />
       </View>

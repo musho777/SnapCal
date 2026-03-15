@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getNotifications, markNotificationRead, deleteNotification, markAllNotificationsRead } from './notificationsAction';
+import { getNotifications, markNotificationRead, deleteNotification, markAllNotificationsRead, clearAllNotifications } from './notificationsAction';
 
 const initialState = {
   loading: {
@@ -11,6 +11,7 @@ const initialState = {
   error: {},
   deletedNotifications: {},
   previousUnreadNotifications: [],
+  previousAllNotifications: [],
 };
 
 const notificationsSlice = createSlice({
@@ -144,6 +145,38 @@ const notificationsSlice = createSlice({
 
           // Clear the backup
           state.previousUnreadNotifications = [];
+        }
+      })
+      .addCase(clearAllNotifications.pending, (state) => {
+        // Optimistic update - immediately clear all notifications
+        if (state.data.notifications?.notifications) {
+          // Store all notifications in case we need to revert
+          state.previousAllNotifications = [...state.data.notifications.notifications];
+
+          // Clear all notifications
+          state.data.notifications.notifications = [];
+
+          // Set counts to 0
+          state.data.notifications.total = 0;
+          state.data.notifications.unread_count = 0;
+        }
+      })
+      .addCase(clearAllNotifications.fulfilled, (state) => {
+        // Success - clear the backup
+        state.previousAllNotifications = [];
+      })
+      .addCase(clearAllNotifications.rejected, (state) => {
+        // Revert if API call fails
+        if (state.previousAllNotifications.length > 0) {
+          // Restore all notifications
+          state.data.notifications.notifications = state.previousAllNotifications;
+
+          // Restore counts
+          state.data.notifications.total = state.previousAllNotifications.length;
+          state.data.notifications.unread_count = state.previousAllNotifications.filter(n => !n.read).length;
+
+          // Clear the backup
+          state.previousAllNotifications = [];
         }
       });
   },
