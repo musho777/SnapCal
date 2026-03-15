@@ -125,7 +125,7 @@ const WeightProgressScreen = ({ navigation }) => {
     <View style={localStyles.container}>
       <Header
         current={current}
-        date={allEntries[0]?.measured_at}
+        date={allEntries[allEntries?.length - 1]?.measured_at}
         getBmiStyles={getBmiStyles}
         height={height}
       />

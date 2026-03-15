@@ -30,9 +30,11 @@ export const Header = ({ current, date, getBmiStyles, height }) => {
 
       <View style={localStyles.headerTextContainer}>
         <Text style={localStyles.headerTitle}>⚖️ Weight Progress</Text>
-        <Text style={localStyles.headerSubtitle}>
-          Tracking since {formattedDate}
-        </Text>
+        {formattedDate && (
+          <Text style={localStyles.headerSubtitle}>
+            Tracking since {formattedDate}
+          </Text>
+        )}
       </View>
 
       {/* BMI badge */}
