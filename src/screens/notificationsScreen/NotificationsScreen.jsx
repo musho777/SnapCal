@@ -26,6 +26,8 @@ import {
   selectRefreshing,
   selectHasMore,
   selectCurrentOffset,
+  clearNotificationsData,
+  setCurrentFilter,
 } from '../../features/notifications/notificationsSlice';
 import Loading from '../../components/loading/Loading';
 
@@ -137,7 +139,7 @@ const INITIAL_NOTIFICATIONS = [
 const LIMIT = 10; // Page size
 
 const NotificationsScreen = () => {
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState({ label: 'All', value: '' });
   const dispatch = useDispatch();
   const data = useSelector(selectData);
   const loading = useSelector(selectLoading);
@@ -149,6 +151,7 @@ const NotificationsScreen = () => {
   const isLoadingRef = useRef(false);
 
   const unreadCount = data?.unread_count || 0;
+  const notifications = data?.notifications || [];
 
   const markRead = id => {
     dispatch(markNotificationRead(id));
@@ -166,31 +169,36 @@ const NotificationsScreen = () => {
     dispatch(clearAllNotifications());
   };
 
-  const filterFn = {
-    All: null,
-    Unread: n => !n.read,
-    Meals: n => n.notification_type?.name === 'meal_reminder',
-    Tips: n =>
-      n.notification_type?.name === 'tip' || n.notification_type?.name === 'ai',
-    Goals: n =>
-      n.notification_type?.name === 'goal' ||
-      n.notification_type?.name === 'water',
-  }[activeFilter];
+  const handleFilterChange = useCallback(
+    filter => {
+      setActiveFilter(filter);
+      dispatch(clearNotificationsData());
+      dispatch(setCurrentFilter(filter));
+      dispatch(getNotifications({ limit: LIMIT, offset: 0, filter }));
+    },
+    [dispatch],
+  );
 
-  const notifications = data?.notifications || [];
-  const filtered = filterFn ? notifications.filter(filterFn) : notifications;
-
-  // Initial load on screen focus
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(getNotifications({ limit: LIMIT, offset: 0 }));
+      dispatch(setCurrentFilter(activeFilter));
+      dispatch(
+        getNotifications({ limit: LIMIT, offset: 0, filter: activeFilter }),
+      );
       notificationService.clearBadge();
     }, []),
   );
 
   const handleRefresh = useCallback(() => {
-    dispatch(getNotifications({ limit: LIMIT, offset: 0, refresh: true }));
-  }, [dispatch]);
+    dispatch(
+      getNotifications({
+        limit: LIMIT,
+        offset: 0,
+        refresh: true,
+        filter: activeFilter,
+      }),
+    );
+  }, [dispatch, activeFilter]);
 
   const handleLoadMore = useCallback(() => {
     if (isLoadingRef.current || loadingMore || !hasMore || loading) {
@@ -198,12 +206,16 @@ const NotificationsScreen = () => {
     }
 
     isLoadingRef.current = true;
-    dispatch(getNotifications({ limit: LIMIT, offset: currentOffset })).finally(
-      () => {
-        isLoadingRef.current = false;
-      },
-    );
-  }, [dispatch, currentOffset, hasMore, loadingMore, loading]);
+    dispatch(
+      getNotifications({
+        limit: LIMIT,
+        offset: currentOffset,
+        filter: activeFilter,
+      }),
+    ).finally(() => {
+      isLoadingRef.current = false;
+    });
+  }, [dispatch, currentOffset, hasMore, loadingMore, loading, activeFilter]);
 
   const renderItem = ({ item, index }) => {
     const notificationIndex = index - Math.floor(index / 2);
@@ -238,18 +250,18 @@ const NotificationsScreen = () => {
     );
   }
 
-  if (filtered.length === 0) {
+  if (notifications.length === 0) {
     return (
       <View style={localStyles.page}>
         <NotificationHeader
           unreadCount={unreadCount}
           onMarkAllRead={markAllRead}
           onClearAll={clearAll}
-          showActions={notifications.length > 0}
+          showActions={false}
         />
         <FilterTabs
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
+          activeFilter={activeFilter.label}
+          onFilterChange={handleFilterChange}
           unreadCount={unreadCount}
         />
         <NoResult />
@@ -266,12 +278,12 @@ const NotificationsScreen = () => {
         showActions={notifications.length > 0}
       />
       <FilterTabs
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
+        activeFilter={activeFilter.label}
+        onFilterChange={handleFilterChange}
         unreadCount={unreadCount}
       />
       <FlatList
-        data={filtered}
+        data={notifications}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         style={localStyles.scrollView}

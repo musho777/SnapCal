@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getNotifications, markNotificationRead, deleteNotification, markAllNotificationsRead, clearAllNotifications } from './notificationsAction';
+import {
+  getNotifications,
+  markNotificationRead,
+  deleteNotification,
+  markAllNotificationsRead,
+  clearAllNotifications,
+} from './notificationsAction';
 
 const initialState = {
   loading: {
@@ -16,12 +22,23 @@ const initialState = {
   previousAllNotifications: [],
   hasMore: true,
   currentOffset: 0,
+  currentFilter: null, // Track active filter to prevent race conditions
 };
 
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
-  reducers: {},
+  reducers: {
+    clearNotificationsData: state => {
+      // Clear data immediately when filter changes
+      state.data.notifications = {};
+      state.currentOffset = 0;
+      state.hasMore = true;
+    },
+    setCurrentFilter: (state, action) => {
+      state.currentFilter = action.payload;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(getNotifications.pending, (state, action) => {
@@ -39,29 +56,42 @@ const notificationsSlice = createSlice({
       .addCase(getNotifications.fulfilled, (state, { payload, meta }) => {
         const isRefreshing = meta.arg?.refresh;
         const isLoadingMore = meta.arg?.offset > 0;
+        const requestFilter = meta.arg?.filter;
+
+        // Check if this response matches the current filter (prevent race conditions)
+        const filterMatches =
+          JSON.stringify(requestFilter) === JSON.stringify(state.currentFilter);
 
         state.loading.notifications = false;
         state.loading.loadingMore = false;
         state.loading.refreshing = false;
 
-        if (isRefreshing || !isLoadingMore) {
-          // Initial load or refresh - replace data
-          state.data.notifications = payload;
-          state.currentOffset = payload.limit || 0;
-        } else {
-          // Load more - append data
-          const existingNotifications = state.data.notifications?.notifications || [];
-          state.data.notifications = {
-            ...payload,
-            notifications: [...existingNotifications, ...payload.notifications],
-          };
-          state.currentOffset = meta.arg.offset + (payload.limit || 0);
-        }
+        // Only update data if the filter matches (prevents old responses from overwriting new data)
+        if (filterMatches) {
+          if (isRefreshing || !isLoadingMore) {
+            // Initial load or refresh - replace data
+            state.data.notifications = payload;
+            state.currentOffset = payload.limit || 0;
+          } else {
+            // Load more - append data
+            const existingNotifications =
+              state.data.notifications?.notifications || [];
+            state.data.notifications = {
+              ...payload,
+              notifications: [
+                ...existingNotifications,
+                ...payload.notifications,
+              ],
+            };
+            state.currentOffset = meta.arg.offset + (payload.limit || 0);
+          }
 
-        // Check if there's more data to load
-        const totalLoaded = state.data.notifications?.notifications?.length || 0;
-        const total = payload.total || 0;
-        state.hasMore = totalLoaded < total;
+          // Check if there's more data to load
+          const totalLoaded =
+            state.data.notifications?.notifications?.length || 0;
+          const total = payload.total || 0;
+          state.hasMore = totalLoaded < total;
+        }
       })
       .addCase(getNotifications.rejected, (state, { payload }) => {
         state.loading.notifications = false;
@@ -73,7 +103,7 @@ const notificationsSlice = createSlice({
         // Optimistic update - immediately mark as read
         if (state.data.notifications?.notifications) {
           const notification = state.data.notifications.notifications.find(
-            n => n.id === action.meta.arg
+            n => n.id === action.meta.arg,
           );
           if (notification) {
             notification.read = true;
@@ -88,7 +118,7 @@ const notificationsSlice = createSlice({
         // Revert if API call fails
         if (state.data.notifications?.notifications) {
           const notification = state.data.notifications.notifications.find(
-            n => n.id === action.meta.arg
+            n => n.id === action.meta.arg,
           );
           if (notification) {
             notification.read = false;
@@ -101,14 +131,15 @@ const notificationsSlice = createSlice({
         // Optimistic delete - immediately remove from list
         if (state.data.notifications?.notifications) {
           const index = state.data.notifications.notifications.findIndex(
-            n => n.id === action.meta.arg
+            n => n.id === action.meta.arg,
           );
           if (index !== -1) {
             // Store the deleted notification temporarily in case we need to restore it
-            const deletedNotification = state.data.notifications.notifications[index];
+            const deletedNotification =
+              state.data.notifications.notifications[index];
             state.deletedNotifications[action.meta.arg] = {
               notification: deletedNotification,
-              index: index
+              index: index,
             };
             // Remove from array
             state.data.notifications.notifications.splice(index, 1);
@@ -117,7 +148,10 @@ const notificationsSlice = createSlice({
               state.data.notifications.total -= 1;
             }
             // Decrease unread count if it was unread
-            if (!deletedNotification.read && state.data.notifications.unread_count > 0) {
+            if (
+              !deletedNotification.read &&
+              state.data.notifications.unread_count > 0
+            ) {
               state.data.notifications.unread_count -= 1;
             }
           }
@@ -135,7 +169,7 @@ const notificationsSlice = createSlice({
           state.data.notifications.notifications.splice(
             deletedData.index,
             0,
-            deletedData.notification
+            deletedData.notification,
           );
           // Restore total count
           state.data.notifications.total += 1;
@@ -147,13 +181,14 @@ const notificationsSlice = createSlice({
           delete state.deletedNotifications[action.meta.arg];
         }
       })
-      .addCase(markAllNotificationsRead.pending, (state) => {
+      .addCase(markAllNotificationsRead.pending, state => {
         // Optimistic update - immediately mark all as read
         if (state.data.notifications?.notifications) {
           // Store unread notifications IDs in case we need to revert
-          state.previousUnreadNotifications = state.data.notifications.notifications
-            .filter(n => !n.read)
-            .map(n => n.id);
+          state.previousUnreadNotifications =
+            state.data.notifications.notifications
+              .filter(n => !n.read)
+              .map(n => n.id);
 
           // Mark all as read
           state.data.notifications.notifications.forEach(notification => {
@@ -164,13 +199,16 @@ const notificationsSlice = createSlice({
           state.data.notifications.unread_count = 0;
         }
       })
-      .addCase(markAllNotificationsRead.fulfilled, (state) => {
+      .addCase(markAllNotificationsRead.fulfilled, state => {
         // Success - clear the backup
         state.previousUnreadNotifications = [];
       })
-      .addCase(markAllNotificationsRead.rejected, (state) => {
+      .addCase(markAllNotificationsRead.rejected, state => {
         // Revert if API call fails
-        if (state.data.notifications?.notifications && state.previousUnreadNotifications.length > 0) {
+        if (
+          state.data.notifications?.notifications &&
+          state.previousUnreadNotifications.length > 0
+        ) {
           // Restore unread status for previously unread notifications
           state.data.notifications.notifications.forEach(notification => {
             if (state.previousUnreadNotifications.includes(notification.id)) {
@@ -179,17 +217,20 @@ const notificationsSlice = createSlice({
           });
 
           // Restore unread count
-          state.data.notifications.unread_count = state.previousUnreadNotifications.length;
+          state.data.notifications.unread_count =
+            state.previousUnreadNotifications.length;
 
           // Clear the backup
           state.previousUnreadNotifications = [];
         }
       })
-      .addCase(clearAllNotifications.pending, (state) => {
+      .addCase(clearAllNotifications.pending, state => {
         // Optimistic update - immediately clear all notifications
         if (state.data.notifications?.notifications) {
           // Store all notifications in case we need to revert
-          state.previousAllNotifications = [...state.data.notifications.notifications];
+          state.previousAllNotifications = [
+            ...state.data.notifications.notifications,
+          ];
 
           // Clear all notifications
           state.data.notifications.notifications = [];
@@ -199,19 +240,22 @@ const notificationsSlice = createSlice({
           state.data.notifications.unread_count = 0;
         }
       })
-      .addCase(clearAllNotifications.fulfilled, (state) => {
+      .addCase(clearAllNotifications.fulfilled, state => {
         // Success - clear the backup
         state.previousAllNotifications = [];
       })
-      .addCase(clearAllNotifications.rejected, (state) => {
+      .addCase(clearAllNotifications.rejected, state => {
         // Revert if API call fails
         if (state.previousAllNotifications.length > 0) {
           // Restore all notifications
-          state.data.notifications.notifications = state.previousAllNotifications;
+          state.data.notifications.notifications =
+            state.previousAllNotifications;
 
           // Restore counts
-          state.data.notifications.total = state.previousAllNotifications.length;
-          state.data.notifications.unread_count = state.previousAllNotifications.filter(n => !n.read).length;
+          state.data.notifications.total =
+            state.previousAllNotifications.length;
+          state.data.notifications.unread_count =
+            state.previousAllNotifications.filter(n => !n.read).length;
 
           // Clear the backup
           state.previousAllNotifications = [];
@@ -219,7 +263,7 @@ const notificationsSlice = createSlice({
       });
   },
 });
-export const { resetOtp, resetLogin, setResetError } =
+export const { clearNotificationsData, setCurrentFilter } =
   notificationsSlice.actions;
 
 export const selectLoading = state =>

@@ -2,10 +2,30 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { buildQueryString } from '../../utils/commonUtils';
 import ApiClient from '../../api/axiosClient';
 
+const buildFilterParams = filter => {
+  const params = {};
+
+  if (filter?.value) {
+    params.type = filter.value;
+  }
+
+  if (filter?.label === 'Unread') {
+    params.unread = true;
+  }
+
+  return params;
+};
+
 export const getNotifications = createAsyncThunk(
   'get/notifications',
   async (params, { rejectWithValue }) => {
-    const queries = buildQueryString(params);
+    const { filter, ...otherParams } = params || {};
+
+    const filterParams = filter ? buildFilterParams(filter) : {};
+    const allParams = { ...otherParams, ...filterParams };
+    console.log(allParams);
+
+    const queries = buildQueryString(allParams);
     try {
       const data = await ApiClient.get(`/notifications?${queries}`);
       return data;
