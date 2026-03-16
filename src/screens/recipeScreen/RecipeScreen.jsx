@@ -15,7 +15,6 @@ import { RecipeInfo } from './components/RecipeInfo';
 import { Ingredients } from './components/Ingredients';
 import { CookingSteps } from './components/CookingSteps';
 import { calculateHealthScore } from '../../utils/healthScore';
-import recipesData from '../../data/recipes.json';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -46,19 +45,12 @@ const imageMap = {
   'protein.png': require('../../assets/protein.png'),
 };
 
-const getImageSource = imagePath => {
-  const filename = imagePath.split('/').pop();
-  return imageMap[filename] || imageMap['snack.png'];
-};
-
 const RecipeScreen = ({ route }) => {
   const dispatch = useDispatch();
   const singleData = useSelector(selectSingleData);
   const loading = useSelector(selectSingleLoading);
   const addToMealLoading = useSelector(selectAddToMealLoading);
   const recipeId = route?.params?.recipeId;
-  const recipe =
-    recipesData.recipes.find(r => r.id === recipeId) || recipesData.recipes[0];
 
   const [showModal, setShowModal] = useState(false);
   const [alertModal, setAlertModal] = useState({
