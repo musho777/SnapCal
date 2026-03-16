@@ -5,6 +5,7 @@ import {
   deleteNotification,
   markAllNotificationsRead,
   clearAllNotifications,
+  getPreferences,
 } from './notificationsAction';
 
 const initialState = {
@@ -12,9 +13,11 @@ const initialState = {
     notifications: true,
     loadingMore: false,
     refreshing: false,
+    preferences: false,
   },
   data: {
     notifications: {},
+    preferences: [],
   },
   error: {},
   deletedNotifications: {},
@@ -260,6 +263,17 @@ const notificationsSlice = createSlice({
           // Clear the backup
           state.previousAllNotifications = [];
         }
+      })
+      .addCase(getPreferences.pending, state => {
+        state.loading.preferences = true;
+      })
+      .addCase(getPreferences.fulfilled, (state, { payload }) => {
+        state.loading.preferences = true;
+        console.log(payload, 'action');
+        state.data.notifications.preferences = payload;
+      })
+      .addCase(getPreferences.rejected, state => {
+        state.loading.preferences = true;
       });
   },
 });
@@ -275,5 +289,11 @@ export const selectRefreshing = state =>
 export const selectHasMore = state => state?.notifications?.hasMore;
 export const selectCurrentOffset = state => state?.notifications?.currentOffset;
 export const selectData = state => state?.notifications?.data?.notifications;
+
+export const selectPreference = state =>
+  state?.notifications?.data?.preferences;
+
+export const selectLoadingPreference = state =>
+  state?.notifications?.loading?.preferences;
 
 export default notificationsSlice.reducer;

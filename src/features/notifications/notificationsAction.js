@@ -23,7 +23,6 @@ export const getNotifications = createAsyncThunk(
 
     const filterParams = filter ? buildFilterParams(filter) : {};
     const allParams = { ...otherParams, ...filterParams };
-    console.log(allParams);
 
     const queries = buildQueryString(allParams);
     try {
@@ -76,6 +75,18 @@ export const clearAllNotifications = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await ApiClient.del('/notifications');
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
+
+export const getPreferences = createAsyncThunk(
+  'get/preferences',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.get(`/notifications/preferences`);
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

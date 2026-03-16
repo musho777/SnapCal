@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
 import { useNavigation } from '@react-navigation/native';
@@ -15,16 +15,14 @@ import {
   removeAccessToken,
   removeRefreshToken,
 } from '../../../api/TokenService';
+import { getPreferences } from '../../../features/notifications/notificationsAction';
+import { selectPreference } from '../../../features/notifications/notificationsSlice';
 
 const SettingsTab = ({
   darkMode,
   setDarkMode,
-  notifMeals,
-  setNotifMeals,
   notifWater,
   setNotifWater,
-  notifTips,
-  setNotifTips,
   language,
   setLanguage,
   weight,
@@ -34,12 +32,14 @@ const SettingsTab = ({
 }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [notifMeals, setNotifMeals] = useState(true);
   const [weightModalVisible, setWeightModalVisible] = useState(false);
   const [heightModalVisible, setHeightModalVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const notificationPreference = useSelector(selectPreference);
   const { measurementsLoading } = useSelector(state => state.auth);
-
+  console.log(notificationPreference, 'notificationPreference');
   const handleLogout = async () => {
     dispatch(deleteFCMToken());
 
@@ -78,6 +78,10 @@ const SettingsTab = ({
     }
   };
 
+  useEffect(() => {
+    dispatch(getPreferences());
+  }, []);
+
   return (
     <ScrollView
       style={localStyles.container}
@@ -101,13 +105,6 @@ const SettingsTab = ({
             type="toggle"
             value={notifWater}
             onValueChange={setNotifWater}
-          />
-          <UIOptionRow
-            icon="💡"
-            label="Nutrition Tips"
-            type="toggle"
-            value={notifTips}
-            onValueChange={setNotifTips}
           />
         </View>
       </View>
