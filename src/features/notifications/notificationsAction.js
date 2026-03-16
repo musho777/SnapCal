@@ -93,3 +93,18 @@ export const getPreferences = createAsyncThunk(
     }
   },
 );
+
+export const updatePreference = createAsyncThunk(
+  'patch/updatePreference',
+  async ({ id, is_enabled }, { rejectWithValue }) => {
+    try {
+      const data = await ApiClient.patch(`/notifications/preferences`, {
+        notification_type_id: id,
+        is_enabled,
+      });
+      return { id, is_enabled, ...data };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);

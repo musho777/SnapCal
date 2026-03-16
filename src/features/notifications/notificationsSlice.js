@@ -6,6 +6,7 @@ import {
   markAllNotificationsRead,
   clearAllNotifications,
   getPreferences,
+  updatePreference,
 } from './notificationsAction';
 
 const initialState = {
@@ -23,9 +24,10 @@ const initialState = {
   deletedNotifications: {},
   previousUnreadNotifications: [],
   previousAllNotifications: [],
+  previousPreferenceStates: {},
   hasMore: true,
   currentOffset: 0,
-  currentFilter: null, // Track active filter to prevent race conditions
+  currentFilter: null,
 };
 
 const notificationsSlice = createSlice({
@@ -268,12 +270,51 @@ const notificationsSlice = createSlice({
         state.loading.preferences = true;
       })
       .addCase(getPreferences.fulfilled, (state, { payload }) => {
-        state.loading.preferences = true;
-        console.log(payload, 'action');
-        state.data.notifications.preferences = payload;
+        state.loading.preferences = false;
+        state.data.preferences = payload;
       })
       .addCase(getPreferences.rejected, state => {
-        state.loading.preferences = true;
+        state.loading.preferences = false;
+      })
+      .addCase(updatePreference.pending, (state, action) => {
+        // Optimistic update - immediately update the preference
+        const { id, is_enabled } = action.meta.arg;
+        const preferences = state.data.preferences;
+
+        if (preferences && Array.isArray(preferences)) {
+          const preference = preferences.find(p => p.id === id);
+          if (preference) {
+            // Store the previous state in case we need to revert
+            state.previousPreferenceStates[id] = preference.is_enabled;
+            // Update immediately
+            preference.is_enabled = is_enabled;
+          }
+        }
+      })
+      .addCase(updatePreference.fulfilled, (state, action) => {
+        // Success - clear the backup for this preference
+        const { id } = action.meta.arg;
+        delete state.previousPreferenceStates[id];
+      })
+      .addCase(updatePreference.rejected, (state, action) => {
+        // Revert if API call fails
+        const { id } = action.meta.arg;
+        const preferences = state.data.preferences;
+        const previousState = state.previousPreferenceStates[id];
+
+        if (
+          preferences &&
+          Array.isArray(preferences) &&
+          previousState !== undefined
+        ) {
+          const preference = preferences.find(p => p.id === id);
+          if (preference) {
+            // Restore the previous state
+            preference.is_enabled = previousState;
+          }
+          // Clear the backup
+          delete state.previousPreferenceStates[id];
+        }
       });
   },
 });
@@ -291,7 +332,7 @@ export const selectCurrentOffset = state => state?.notifications?.currentOffset;
 export const selectData = state => state?.notifications?.data?.notifications;
 
 export const selectPreference = state =>
-  state?.notifications?.data?.preferences;
+  state?.notifications?.data?.preferences || [];
 
 export const selectLoadingPreference = state =>
   state?.notifications?.loading?.preferences;

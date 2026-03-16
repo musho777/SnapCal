@@ -16,7 +16,6 @@ const ProfileScreen = ({ navigation }) => {
   const userEmail = 'john.doe@example.com';
 
   const [darkMode, setDarkMode] = useState(false);
-  const [notifWater, setNotifWater] = useState(false);
   const [weightUnit, setWeightUnit] = useState('kg');
   const [heightUnit, setHeightUnit] = useState('cm');
   const [language, setLanguage] = useState('English');
@@ -67,8 +66,6 @@ const ProfileScreen = ({ navigation }) => {
             onNameChange={setUserName}
             darkMode={darkMode}
             setDarkMode={setDarkMode}
-            notifWater={notifWater}
-            setNotifWater={setNotifWater}
             weightUnit={weightUnit}
             setWeightUnit={setWeightUnit}
             heightUnit={heightUnit}

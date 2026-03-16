@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { UIToggleSwitch } from '../common-ui/UIToggleSwitch';
 
 export const UIOptionRow = ({
@@ -11,10 +17,14 @@ export const UIOptionRow = ({
   options = [],
   isDanger = false,
   onPress,
+  loading = false,
 }) => {
   const renderRightContent = () => {
     switch (type) {
       case 'toggle':
+        if (loading) {
+          return <ActivityIndicator size="small" color="#272727" />;
+        }
         return <UIToggleSwitch value={value} onToggle={onValueChange} />;
 
       case 'select':

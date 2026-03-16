@@ -15,14 +15,21 @@ import {
   removeAccessToken,
   removeRefreshToken,
 } from '../../../api/TokenService';
-import { getPreferences } from '../../../features/notifications/notificationsAction';
-import { selectPreference } from '../../../features/notifications/notificationsSlice';
+import {
+  getPreferences,
+  updatePreference,
+} from '../../../features/notifications/notificationsAction';
+import {
+  selectPreference,
+  selectLoadingPreference,
+} from '../../../features/notifications/notificationsSlice';
+
+const MEAL_REMINDER_ID = 'cfd76970-eacb-4e2d-ae75-90dcf882b9de';
+const WATER_REMINDER_ID = '8b9eb6ce-d839-4f24-a217-5104f361a8cd';
 
 const SettingsTab = ({
   darkMode,
   setDarkMode,
-  notifWater,
-  setNotifWater,
   language,
   setLanguage,
   weight,
@@ -32,14 +39,19 @@ const SettingsTab = ({
 }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [notifMeals, setNotifMeals] = useState(true);
+  const [notifMeals, setNotifMeals] = useState();
+  const [notifWater, setNotifWater] = useState();
+  const [notifMealsLoading, setNotifMealsLoading] = useState(false);
+  const [notifWaterLoading, setNotifWaterLoading] = useState(false);
   const [weightModalVisible, setWeightModalVisible] = useState(false);
   const [heightModalVisible, setHeightModalVisible] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [alertType, setAlertType] = useState('error');
+  const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const notificationPreference = useSelector(selectPreference);
+  const preferencesLoading = useSelector(selectLoadingPreference);
   const { measurementsLoading } = useSelector(state => state.auth);
-  console.log(notificationPreference, 'notificationPreference');
   const handleLogout = async () => {
     dispatch(deleteFCMToken());
 
@@ -59,6 +71,8 @@ const SettingsTab = ({
       await dispatch(updateUserMeasurements({ weight_kg: newWeight })).unwrap();
       setWeight(newWeight);
     } catch (error) {
+      setAlertType('error');
+      setAlertTitle('Error');
       setAlertMessage(error || 'Failed to update weight');
       setAlertVisible(true);
     }
@@ -73,6 +87,8 @@ const SettingsTab = ({
       await dispatch(updateUserMeasurements({ height_cm: newHeight })).unwrap();
       setHeight(newHeight);
     } catch (error) {
+      setAlertType('error');
+      setAlertTitle('Error');
       setAlertMessage(error || 'Failed to update height');
       setAlertVisible(true);
     }
@@ -81,6 +97,52 @@ const SettingsTab = ({
   useEffect(() => {
     dispatch(getPreferences());
   }, []);
+
+  useEffect(() => {
+    if (notificationPreference && Array.isArray(notificationPreference)) {
+      const mealPref = notificationPreference.find(
+        p => p.id === MEAL_REMINDER_ID,
+      );
+      const waterPref = notificationPreference.find(
+        p => p.id === WATER_REMINDER_ID,
+      );
+
+      if (mealPref) {
+        setNotifMeals(mealPref.is_enabled);
+      }
+      if (waterPref) {
+        setNotifWater(waterPref.is_enabled);
+      }
+    }
+  }, [notificationPreference]);
+
+  const handleTogglePreference = async (id, newValue, setLoadingState) => {
+    setLoadingState(true);
+    try {
+      await dispatch(updatePreference({ id, is_enabled: newValue })).unwrap();
+      setAlertType('success');
+      setAlertTitle('Success');
+      setAlertMessage('Notification preference updated successfully');
+      setAlertVisible(true);
+    } catch (error) {
+      setAlertType('error');
+      setAlertTitle('Error');
+      setAlertMessage(error || 'Failed to update notification preference');
+      setAlertVisible(true);
+    } finally {
+      setLoadingState(false);
+    }
+  };
+
+  const handleMealToggle = newValue => {
+    setNotifMeals(newValue);
+    handleTogglePreference(MEAL_REMINDER_ID, newValue, setNotifMealsLoading);
+  };
+
+  const handleWaterToggle = newValue => {
+    setNotifWater(newValue);
+    handleTogglePreference(WATER_REMINDER_ID, newValue, setNotifWaterLoading);
+  };
 
   return (
     <ScrollView
@@ -97,19 +159,20 @@ const SettingsTab = ({
             label="Meal Reminders"
             type="toggle"
             value={notifMeals}
-            onValueChange={setNotifMeals}
+            onValueChange={handleMealToggle}
+            loading={preferencesLoading || notifMealsLoading}
           />
           <UIOptionRow
             icon="💧"
             label="Water Reminders"
             type="toggle"
             value={notifWater}
-            onValueChange={setNotifWater}
+            onValueChange={handleWaterToggle}
+            loading={preferencesLoading || notifWaterLoading}
           />
         </View>
       </View>
 
-      {/* Physical Data Section */}
       <View style={localStyles.section}>
         <Text style={localStyles.sectionLabel}>PHYSICAL DATA</Text>
         <View style={localStyles.card}>
@@ -136,7 +199,6 @@ const SettingsTab = ({
         </View>
       </View>
 
-      {/* Appearance Section */}
       <View style={localStyles.section}>
         <Text style={localStyles.sectionLabel}>APPEARANCE</Text>
         <View style={localStyles.card}>
@@ -158,7 +220,6 @@ const SettingsTab = ({
         </View>
       </View>
 
-      {/* Log Out */}
       <View style={localStyles.section}>
         <View style={localStyles.card}>
           <UIOptionRow
@@ -190,8 +251,8 @@ const SettingsTab = ({
 
       <AlertModal
         visible={alertVisible}
-        type="error"
-        title="Error"
+        type={alertType}
+        title={alertTitle}
         message={alertMessage}
         onClose={() => setAlertVisible(false)}
       />
