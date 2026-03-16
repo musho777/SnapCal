@@ -106,7 +106,16 @@ const RecipeScreen = ({ route }) => {
     <View style={localStyles.container}>
       <Header />
       <View style={localStyles.imageContainer}>
-        <Image style={localStyles.img} source={getImageSource(recipe.image)} />
+        <Image
+          style={localStyles.img}
+          source={
+            singleData.image_url
+              ? {
+                  uri: `https://snapcal-back-production.up.railway.app${singleData.image_url}`,
+                }
+              : require('../../assets/greekYogurt.png')
+          }
+        />
       </View>
       <ScrollView
         style={localStyles.scrollView}

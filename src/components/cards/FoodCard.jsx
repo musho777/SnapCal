@@ -39,9 +39,9 @@ export const FoodCard = ({
         </TouchableOpacity>
         <Image
           source={
-            item.image
+            item.image_url
               ? {
-                  uri: `https://snapcal-back-production.up.railway.app/${item.image}`,
+                  uri: `https://snapcal-back-production.up.railway.app${item.image_url}`,
                 }
               : require('../../assets/greekYogurt.png')
           }
