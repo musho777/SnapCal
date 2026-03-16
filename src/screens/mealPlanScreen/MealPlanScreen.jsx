@@ -93,7 +93,7 @@ const MealPlanScreen = ({ navigation }) => {
       accent: '#6366F1',
     },
     {
-      id: 'snacks',
+      id: 'snack',
       label: 'Snacks',
       emoji: '🍿',
       time: 'Anytime',
@@ -170,7 +170,7 @@ const MealPlanScreen = ({ navigation }) => {
           totalProtein={activeDayData?.protein_consumed_g || 0}
           totalFat={activeDayData?.fats_consumed_g || 0}
         />
-
+        {console.log(activeDayData)}
         {mealSections.map(section => {
           const foods =
             activeDayData?.meals.find(e => e.meal_type === section.id) || {};

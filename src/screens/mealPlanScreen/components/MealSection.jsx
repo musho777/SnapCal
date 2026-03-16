@@ -16,7 +16,6 @@ const MealSection = ({
   onToggle,
   onDeleteFood,
   onFoodPress,
-  onAddFood,
   activeDate,
 }) => {
   const rotationAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
