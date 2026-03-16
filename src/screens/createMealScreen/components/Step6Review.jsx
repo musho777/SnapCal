@@ -67,9 +67,13 @@ export const Step6Review = ({ data, onEdit }) => {
 
         <View style={localStyles.macroCardsRow}>
           {macroConfig.map((macro, index) => {
-            const macroData = data.macros[index];
             return (
-              <CaloriesCard key={macro.type} themes="dark" data={macroData} />
+              <CaloriesCard
+                key={macro.type}
+                type={macro.type}
+                themes="dark"
+                data={10}
+              />
             );
           })}
         </View>

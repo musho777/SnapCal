@@ -55,14 +55,17 @@ export const Step2Nutrition = ({ data, setData }) => {
           </View>
         </View>
       </View>
-
       <View style={localStyles.card}>
         <Text style={localStyles.label}>Macronutrients</Text>
         <View style={localStyles.macroCardsRow}>
           {macroConfig.map((macro, index) => {
-            const macroData = data.macros[index];
             return (
-              <CaloriesCard key={macro.type} themes="dark" data={macroData} />
+              <CaloriesCard
+                key={macro.type}
+                themes="dark"
+                type={macro.type}
+                data={10}
+              />
             );
           })}
         </View>
@@ -77,7 +80,7 @@ export const Step2Nutrition = ({ data, setData }) => {
                   <Text
                     style={[localStyles.sliderValue, { color: macro.color }]}
                   >
-                    {macroData.weight}g
+                    {macroData?.weight}g
                   </Text>
                 </View>
                 <Slider
@@ -85,7 +88,7 @@ export const Step2Nutrition = ({ data, setData }) => {
                   minimumValue={0}
                   maximumValue={300}
                   step={1}
-                  value={macroData.weight}
+                  value={macroData?.weight}
                   onValueChange={value => updateMacro(index, value)}
                   minimumTrackTintColor={macro.color}
                   maximumTrackTintColor="#E5E5E5"
