@@ -32,19 +32,6 @@ import AlertModal from '../../components/alertModal/AlertModal';
 import { Plus } from 'lucide-react-native';
 import { getMainPlanRange } from '../../features/mealPlan/mealPlanAction';
 
-const imageMap = {
-  'chicken.png': require('../../assets/chicken.png'),
-  'snack.png': require('../../assets/snack.png'),
-  'grilledSalmon.png': require('../../assets/grilledSalmon.png'),
-  'pancakes.png': require('../../assets/pancakes.png'),
-  'greekYogurt.png': require('../../assets/greekYogurt.png'),
-  'steak.png': require('../../assets/steak.png'),
-  'apple.png': require('../../assets/apple.png'),
-  'drink.png': require('../../assets/drink.png'),
-  'carb.png': require('../../assets/carb.png'),
-  'protein.png': require('../../assets/protein.png'),
-};
-
 const RecipeScreen = ({ route }) => {
   const dispatch = useDispatch();
   const singleData = useSelector(selectSingleData);
