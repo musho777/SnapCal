@@ -9,8 +9,8 @@ import {
 import { styles } from '../../../themes';
 
 export const Category = ({ navigation, data }) => {
-  const handleCategoryPress = category => {
-    navigation.navigate('Category', { category });
+  const handleCategoryPress = (category, name) => {
+    navigation.navigate('Category', { category, name });
   };
 
   const handleViewMorePress = () => {
@@ -39,7 +39,7 @@ export const Category = ({ navigation, data }) => {
                   localStyles.box,
                   pressed && localStyles.boxPressed,
                 ]}
-                onPress={() => handleCategoryPress(elm.title)}
+                onPress={() => handleCategoryPress(elm.id, elm.name)}
               >
                 {({ pressed }) => (
                   <>

@@ -6,13 +6,30 @@ import UIInput from '../../common-ui/uIInput';
 import NoResult from '../../components/noResult';
 
 import { FoodCard } from '../../components/cards/FoodCard';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDataByCategory } from '../../features/singleCategory/singleCategoryAction';
+import {
+  selectDataByCategoryData,
+  selectDataByCategoryLoading,
+} from '../../features/singleCategory/singleCategorySlice';
+import Loading from '../../components/loading/Loading';
 
 const CategoryScreen = ({ navigation, route }) => {
-  const { category } = route.params;
+  const { category, name } = route.params;
+  const dispatch = useDispatch();
+  const data = useSelector(selectDataByCategoryData);
+  const loading = useSelector(selectDataByCategoryLoading);
 
   const handleShowRecipients = recipeId => {
     navigation.navigate('Recipient', { recipeId });
   };
+
+  useEffect(() => {
+    dispatch(getDataByCategory({ category_ids: [category] }));
+  }, [category]);
+
+  console.log(data, 'aa');
 
   const renderFoodCard = ({ item }) => (
     <FoodCard
@@ -31,12 +48,16 @@ const CategoryScreen = ({ navigation, route }) => {
     </View>
   );
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <View style={styles.page}>
-      <ScreenHeader title={category} />
+      <ScreenHeader title={name} />
       <View style={localStyles.scrollContent}>
         <FlatList
-          data={[]}
+          data={data?.dishes}
           renderItem={renderFoodCard}
           keyExtractor={item => item.id}
           numColumns={2}
@@ -46,7 +67,7 @@ const CategoryScreen = ({ navigation, route }) => {
           contentContainerStyle={localStyles.listContent}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <NoResult text={`No recipes found for ${category}`} />
+            <NoResult text={`No recipes found for ${name}`} />
           }
         />
       </View>
