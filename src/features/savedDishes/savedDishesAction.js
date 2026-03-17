@@ -27,3 +27,18 @@ export const unSaveDish = createAsyncThunk(
     }
   },
 );
+
+export const getSavedDishes = createAsyncThunk(
+  'get/getSavedDishes',
+  async (params = {}, { rejectWithValue }) => {
+    try {
+      const { offset = 0, limit = 10 } = params;
+      const data = await ApiClient.get('/dishes/saved/list', {
+        params: { offset, limit },
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
