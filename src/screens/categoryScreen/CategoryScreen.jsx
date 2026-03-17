@@ -69,16 +69,17 @@ const CategoryScreen = ({ navigation, route }) => {
     fetchData(0, debouncedSearchQuery);
   }, [category, debouncedSearchQuery, dispatch]);
 
-  const renderFoodCard = ({ item }) => (
-    <FoodCard
-      item={item}
-      isSaved={false}
-      onToggleSave={() => {}}
-      onRecipePress={() => {
-        handleShowRecipients(item.id);
-      }}
-    />
-  );
+  const renderFoodCard = ({ item }) => {
+    return (
+      <FoodCard
+        item={item}
+        isSaved={item.is_saved || false}
+        onRecipePress={() => {
+          handleShowRecipients(item.id);
+        }}
+      />
+    );
+  };
 
   const renderFooter = () => {
     if (!loadingMore) return null;

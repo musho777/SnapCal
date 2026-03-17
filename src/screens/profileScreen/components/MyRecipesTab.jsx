@@ -20,7 +20,6 @@ const MyRecipesTab = ({ onAdd }) => {
   const data = useSelector(selectMyDishes);
   const navigation = useNavigation();
 
-  const handleToggleSave = () => {};
   const handleNavigation = item => {
     navigation.navigate('Recipient', {
       recipeId: item.id,
@@ -53,8 +52,7 @@ const MyRecipesTab = ({ onAdd }) => {
     return (
       <FoodCard
         item={item}
-        isSaved={false}
-        onToggleSave={handleToggleSave}
+        isSaved={item.is_saved || false}
         onRecipePress={() => handleNavigation(item)}
       />
     );

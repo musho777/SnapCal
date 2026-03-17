@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getDeash, getSingleDeash, addDishToMeal } from './exploreAction';
+import { addSavedDishHandlers } from '../savedDishes/savedDishesHelpers';
 
 const initialState = {
   login: {
@@ -53,6 +54,9 @@ const exploreSlice = createSlice({
         state.login.addToMeal = false;
         state.error = payload;
       });
+
+    // Add save/unsave handlers using reusable helper
+    addSavedDishHandlers(builder, state => state.data.explore.dishes);
   },
 });
 export const { resetOtp, resetLogin, setResetError } = exploreSlice.actions;

@@ -8,16 +8,12 @@ import {
 } from 'react-native';
 import { FoodCard } from '../../../components/cards/FoodCard';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getSavedDishes,
-  unSaveDish,
-} from '../../../features/savedDishes/savedDishesAction';
+import { getSavedDishes } from '../../../features/savedDishes/savedDishesAction';
 import {
   selectSavedDishes,
   selectSavedDishesLoading,
   selectSavedDishesLoadingMore,
   selectSavedDishesHasMore,
-  removeSavedDishOptimistic,
 } from '../../../features/savedDishes/savedDishesSlice';
 import Loading from '../../../components/loading/Loading';
 import { useNavigation } from '@react-navigation/native';
@@ -29,13 +25,6 @@ const SavedTab = () => {
   const hasMore = useSelector(selectSavedDishesHasMore);
   const data = useSelector(selectSavedDishes);
   const navigation = useNavigation();
-
-  const handleToggleSave = id => {
-    // Optimistically remove from UI
-    dispatch(removeSavedDishOptimistic({ id }));
-    // Make API call
-    dispatch(unSaveDish({ id }));
-  };
 
   const handleNavigation = item => {
     navigation.navigate('Recipient', {
@@ -70,7 +59,6 @@ const SavedTab = () => {
       <FoodCard
         item={item}
         isSaved={true}
-        onToggleSave={handleToggleSave}
         onRecipePress={() => handleNavigation(item)}
       />
     );

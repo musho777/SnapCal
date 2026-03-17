@@ -25,7 +25,6 @@ const ExploreScreen = ({ navigation }) => {
 
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [savedItems, setSavedItems] = useState({});
 
   // Debounce the search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -41,22 +40,19 @@ const ExploreScreen = ({ navigation }) => {
     dispatch(getDeash(params));
   }, [dispatch, debouncedSearchQuery, activeTab]);
 
-  const toggleSave = id => {
-    setSavedItems(prev => ({ ...prev, [id]: !prev[id] }));
+  const renderFoodCard = ({ item }) => {
+    return (
+      <FoodCard
+        item={item}
+        isSaved={item.is_saved || false}
+        onRecipePress={() => {
+          navigation.navigate('Recipient', {
+            recipeId: item.id,
+          });
+        }}
+      />
+    );
   };
-
-  const renderFoodCard = ({ item }) => (
-    <FoodCard
-      item={item}
-      isSaved={savedItems[item.id]}
-      onToggleSave={toggleSave}
-      onRecipePress={() => {
-        navigation.navigate('Recipient', {
-          recipeId: item.id,
-        });
-      }}
-    />
-  );
   const renderListHeader = () => (
     <View>
       <ScrollView

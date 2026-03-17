@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getMyDishes, getUserMeasurement } from './userAction';
+import { addSavedDishHandlers } from '../savedDishes/savedDishesHelpers';
 
 const initialState = {
   loading: {
@@ -84,6 +85,8 @@ const userSlice = createSlice({
         state.loading.myDishes = false;
         state.loading.myDishesLoadingMore = false;
       });
+
+    addSavedDishHandlers(builder, state => state.data.myDishes.dishes);
   },
 });
 export const {

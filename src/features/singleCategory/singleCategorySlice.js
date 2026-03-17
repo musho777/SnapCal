@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getDataByCategory, getAllCategories } from './singleCategoryAction';
+import { addSavedDishHandlers } from '../savedDishes/savedDishesHelpers';
 
 const initialState = {
   loading: {
@@ -119,7 +120,8 @@ const singleCategory = createSlice({
           state.data.allCategories.categories = payload.categories;
         }
 
-        state.data.allCategories.total = payload.total || payload.categories.length;
+        state.data.allCategories.total =
+          payload.total || payload.categories.length;
         state.data.allCategories.limit = meta.arg.limit || 20;
         state.data.allCategories.offset = meta.arg.offset || 0;
 
@@ -133,9 +135,12 @@ const singleCategory = createSlice({
         state.loading.allCategoriesLoadingMore = false;
         state.error = payload;
       });
+
+    addSavedDishHandlers(builder, state => state.data.category.dishes);
   },
 });
-export const { resetCategoryData, resetAllCategoriesData } = singleCategory.actions;
+export const { resetCategoryData, resetAllCategoriesData } =
+  singleCategory.actions;
 
 export const selectDataByCategoryLoading = state =>
   state?.singleCategory?.loading.category;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { UIButton } from '../../common-ui/uIButton';
 import { styles } from '../../themes';
@@ -17,16 +17,16 @@ export const FoodCard = ({
   flex = true,
 }) => {
   const score = calculateHealthScore(item).score;
-  const [localSave, setLocalSave] = useState(isSaved);
   const dispatch = useDispatch();
+
   const getHealthBarColor = () => {
     if (score >= 8) return '#22C55E';
     if (score >= 6) return '#F59E0B';
     return '#EF4444';
   };
+
   const onToggleSave = () => {
-    setLocalSave(!localSave);
-    if (localSave) {
+    if (isSaved) {
       dispatch(unSaveDish({ id: item.id }));
     } else {
       dispatch(saveDish({ id: item.id }));
@@ -50,7 +50,7 @@ export const FoodCard = ({
           style={localStyles.heartButton}
           onPress={() => onToggleSave(item.id)}
         >
-          <Text style={localStyles.heartIcon}>{localSave ? '❤️' : '🤍'}</Text>
+          <Text style={localStyles.heartIcon}>{isSaved ? '❤️' : '🤍'}</Text>
         </TouchableOpacity>
         <Image
           source={

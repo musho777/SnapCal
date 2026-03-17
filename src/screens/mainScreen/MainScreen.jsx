@@ -103,8 +103,7 @@ const MainScreen = ({ navigation }) => {
                 <FoodCard
                   item={elm}
                   flex={false}
-                  isSaved={false}
-                  onToggleSave={() => {}}
+                  isSaved={elm.is_saved || false}
                   onRecipePress={() => handleShowRecipients(elm.id)}
                 />
               </View>
