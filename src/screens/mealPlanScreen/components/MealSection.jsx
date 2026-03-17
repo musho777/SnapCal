@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Animated,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { DownAndUpIcon } from '../../../assets/Icons';
 
@@ -109,7 +110,17 @@ const MealSection = ({
                       isNotBurnedInPast && styles.foodThumbnailNotBurned,
                     ]}
                   >
-                    <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text>
+                    <Image
+                      style={styles.img}
+                      source={
+                        food.dish.image_url
+                          ? {
+                              uri: `https://snapcal-back-production.up.railway.app${food.dish.image_url}`,
+                            }
+                          : require('../../../assets/greekYogurt.png')
+                      }
+                    />
+                    {/* <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text> */}
                   </View>
                   <View style={styles.foodInfo}>
                     <View style={styles.foodNameContainer}>
@@ -329,6 +340,11 @@ const styles = StyleSheet.create({
     fontSize: 9,
     fontWeight: '700',
     color: '#fff',
+  },
+  img: {
+    width: 30,
+    height: 30,
+    objectFit: 'contain',
   },
   foodMeta: {
     flexDirection: 'row',

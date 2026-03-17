@@ -187,6 +187,7 @@ const localStyles = StyleSheet.create({
   img: {
     width: 300,
     height: 300,
+    objectFit: 'contain',
   },
   scrollView: {
     flex: 1,
