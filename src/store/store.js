@@ -6,6 +6,7 @@ import userReducer from '../features/user/userSlice';
 import notificationsReducer from '../features/notifications/notificationsSlice';
 import homeReducer from '../features/home/homeSlice';
 import singleCategoryReducer from '../features/singleCategory/singleCategorySlice';
+import savedDishesReducer from '../features/savedDishes/savedDishesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     notifications: notificationsReducer,
     home: homeReducer,
     singleCategory: singleCategoryReducer,
+    savedDishes: savedDishesReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

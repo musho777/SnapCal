@@ -1,23 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { UIButton } from '../../common-ui/uIButton';
 import { styles } from '../../themes';
 import { getBgColor } from '../../utils/themesUtils';
 import { calculateHealthScore } from '../../utils/healthScore';
+import { useDispatch } from 'react-redux';
+import {
+  saveDish,
+  unSaveDish,
+} from '../../features/savedDishes/savedDishesAction';
 
 export const FoodCard = ({
   item,
   isSaved = false,
-  onToggleSave,
   onRecipePress,
   flex = true,
 }) => {
   const score = calculateHealthScore(item).score;
+  const [localSave, setLocalSave] = useState(isSaved);
+  const dispatch = useDispatch();
   const getHealthBarColor = () => {
     if (score >= 8) return '#22C55E';
     if (score >= 6) return '#F59E0B';
     return '#EF4444';
   };
+  const onToggleSave = () => {
+    setLocalSave(!localSave);
+    if (localSave) {
+      dispatch(unSaveDish({ id: item.id }));
+    } else {
+      dispatch(saveDish({ id: item.id }));
+    }
+  };
+
   return (
     <View style={[localStyles.foodCard, flex && styles.flex]}>
       <View
@@ -35,7 +50,7 @@ export const FoodCard = ({
           style={localStyles.heartButton}
           onPress={() => onToggleSave(item.id)}
         >
-          <Text style={localStyles.heartIcon}>{isSaved ? '❤️' : '🤍'}</Text>
+          <Text style={localStyles.heartIcon}>{localSave ? '❤️' : '🤍'}</Text>
         </TouchableOpacity>
         <Image
           source={
