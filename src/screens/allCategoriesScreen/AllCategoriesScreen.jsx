@@ -1,78 +1,130 @@
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useCallback } from 'react';
+import {
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { ScreenHeader } from '../../components/headers/ScreenHeader';
 import { Card } from './components/Card';
 import { styles } from '../../themes';
+import { getAllCategories } from '../../features/singleCategory/singleCategoryAction';
+import {
+  selectAllCategoriesData,
+  selectAllCategoriesLoading,
+  selectAllCategoriesLoadingMore,
+  selectAllCategoriesHasMore,
+  resetAllCategoriesData,
+} from '../../features/singleCategory/singleCategorySlice';
 
 const { width: screenWidth } = Dimensions.get('window');
+const LIMIT = 20;
 
 const AllCategoriesScreen = ({ navigation }) => {
-  const categoriesData = [
-    {
-      title: 'Vegan',
-      image: require('../../assets/apple.png'),
-    },
-    {
-      title: 'Carb',
-      image: require('../../assets/carb.png'),
-    },
-    {
-      title: 'Protein',
-      image: require('../../assets/protein.png'),
-    },
-    {
-      title: 'Snack',
-      image: require('../../assets/snack.png'),
-    },
-    {
-      title: 'Drink',
-      image: require('../../assets/drink.png'),
-    },
-    {
-      title: 'Vegan',
-      image: require('../../assets/apple.png'),
-    },
-    {
-      title: 'Vegan',
-      image: require('../../assets/apple.png'),
-    },
-  ];
+  const dispatch = useDispatch();
 
-  const handleCategoryPress = categoryTitle => {
-    navigation.navigate('Category', { category: categoryTitle });
+  const allCategoriesData = useSelector(selectAllCategoriesData);
+  const loading = useSelector(selectAllCategoriesLoading);
+  const loadingMore = useSelector(selectAllCategoriesLoadingMore);
+  const hasMore = useSelector(selectAllCategoriesHasMore);
+
+  const categories = allCategoriesData?.categories || [];
+  const currentOffset = allCategoriesData?.offset || 0;
+
+  useEffect(() => {
+    dispatch(getAllCategories({ limit: LIMIT, offset: 0 }));
+    return () => {
+      dispatch(resetAllCategoriesData());
+    };
+  }, [dispatch]);
+
+  const handleCategoryPress = (categoryId, categoryName) => {
+    navigation.navigate('Category', {
+      category: categoryId,
+      name: categoryName,
+    });
+  };
+
+  const handleLoadMore = useCallback(() => {
+    if (!loadingMore && hasMore && categories.length > 0) {
+      const nextOffset = currentOffset + LIMIT;
+      dispatch(getAllCategories({ limit: LIMIT, offset: nextOffset }));
+    }
+  }, [dispatch, loadingMore, hasMore, categories.length, currentOffset]);
+
+  const renderItem = ({ item }) => (
+    <Card
+      width={(screenWidth - 30) / 2}
+      data={item}
+      onPress={() => handleCategoryPress(item.id, item.name)}
+    />
+  );
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <View style={localStyled.footer}>
+        <ActivityIndicator size="small" color="#FF6B35" />
+      </View>
+    );
+  };
+
+  const renderEmpty = () => {
+    if (loading) {
+      return (
+        <View style={localStyled.emptyContainer}>
+          <ActivityIndicator size="large" color="#FF6B35" />
+        </View>
+      );
+    }
+    return (
+      <View style={localStyled.emptyContainer}>
+        <Text style={styles.body}>No categories available</Text>
+      </View>
+    );
   };
 
   return (
     <View style={styles.page}>
       <ScreenHeader title="All Categories" />
-      <ScrollView
+      <FlatList
+        data={categories}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => `category-${item.id}-${index}`}
+        numColumns={2}
+        columnWrapperStyle={localStyled.columnWrapper}
+        contentContainerStyle={localStyled.listContent}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={localStyled.scrollContent}
-      >
-        <View style={localStyled.gridContainer}>
-          {categoriesData.map((category, index) => (
-            <Card
-              key={index}
-              width={(screenWidth - 30) / 2}
-              data={category}
-              onPress={() => handleCategoryPress(category.title)}
-            />
-          ))}
-        </View>
-      </ScrollView>
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmpty}
+      />
     </View>
   );
 };
 
 const localStyled = StyleSheet.create({
-  scrollContent: {
+  listContent: {
     flexGrow: 1,
     paddingBottom: 20,
   },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  columnWrapper: {
     justifyContent: 'space-between',
-    gap: 10,
+    marginBottom: 10,
+  },
+  footer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 50,
   },
 });
 

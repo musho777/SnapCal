@@ -14,3 +14,17 @@ export const getDataByCategory = createAsyncThunk(
     }
   },
 );
+
+export const getAllCategories = createAsyncThunk(
+  'get/allCategories',
+  async (params, { rejectWithValue }) => {
+    const queries = buildQueryString(params);
+    try {
+      const data = await ApiClient.get(`/dishes/categories?${queries}`);
+      console.log(data);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
