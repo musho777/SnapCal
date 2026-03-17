@@ -18,10 +18,14 @@ import {
 } from '../../utils/waterStorage';
 import { useFocusEffect } from '@react-navigation/native';
 import { getNotifications } from '../../features/notifications/notificationsAction';
+import { getCategoryForHome } from '../../features/home/homeAction';
+import { selectCategoryData } from '../../features/home/homeSlice';
 
 const MainScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const data = useSelector(selectData);
+  const categories = useSelector(selectCategoryData);
+
   const loading = useSelector(selectLoading);
   const [waterIntake, setWaterIntake] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -49,6 +53,7 @@ const MainScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+    dispatch(getCategoryForHome({ limit: 10, offset: 0 }));
     dispatch(getDeash({}));
     const loadWater = async () => {
       const savedWater = await loadWaterIntake();
@@ -74,7 +79,7 @@ const MainScreen = ({ navigation }) => {
       <Header />
       <ProAccessBanner />
       <WaterTracker waterIntake={waterIntake} onWaterChange={onWaterChange} />
-      <Category navigation={navigation} />
+      <Category data={categories} navigation={navigation} />
 
       {loading ? (
         <View style={localStyled.loadingWrapper}>

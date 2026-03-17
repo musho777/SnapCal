@@ -4,6 +4,8 @@ import exploreReducer from '../features/explore/exploreSlice';
 import mealPlanReducer from '../features/mealPlan/mealPlanSlice';
 import userReducer from '../features/user/userSlice';
 import notificationsReducer from '../features/notifications/notificationsSlice';
+import homeReducer from '../features/home/homeSlice';
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -11,6 +13,7 @@ export const store = configureStore({
     mealPlan: mealPlanReducer,
     user: userReducer,
     notifications: notificationsReducer,
+    home: homeReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

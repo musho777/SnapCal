@@ -8,38 +8,7 @@ import {
 } from 'react-native';
 import { styles } from '../../../themes';
 
-export const Category = ({ navigation }) => {
-  const data = [
-    {
-      title: 'Vegan',
-      image: require('../../../assets/apple.png'),
-    },
-    {
-      title: 'Carb',
-      image: require('../../../assets/carb.png'),
-    },
-    {
-      title: 'Protein',
-      image: require('../../../assets/protein.png'),
-    },
-    {
-      title: 'Snack',
-      image: require('../../../assets/snack.png'),
-    },
-    {
-      title: 'Drink',
-      image: require('../../../assets/drink.png'),
-    },
-    {
-      title: 'Vegan',
-      image: require('../../../assets/apple.png'),
-    },
-    {
-      title: 'Vegan',
-      image: require('../../../assets/apple.png'),
-    },
-  ];
-
+export const Category = ({ navigation, data }) => {
   const handleCategoryPress = category => {
     navigation.navigate('Category', { category });
   };
@@ -80,9 +49,18 @@ export const Category = ({ navigation }) => {
                         pressed && localStyles.imgWrapperPressed,
                       ]}
                     >
-                      <Image style={localStyles.img} source={elm.image} />
+                      <Image
+                        style={localStyles.img}
+                        source={
+                          elm.icon_url
+                            ? {
+                                uri: `https://snapcal-back-production.up.railway.app${elm.icon_url}`,
+                              }
+                            : require('../../../assets/greekYogurt.png')
+                        }
+                      />
                     </View>
-                    <Text style={styles.captionPrimary}>{elm.title}</Text>
+                    <Text style={styles.captionPrimary}>{elm.name}</Text>
                   </>
                 )}
               </Pressable>
