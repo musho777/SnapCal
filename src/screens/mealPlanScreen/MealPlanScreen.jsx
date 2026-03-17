@@ -170,7 +170,6 @@ const MealPlanScreen = ({ navigation }) => {
           totalProtein={activeDayData?.protein_consumed_g || 0}
           totalFat={activeDayData?.fats_consumed_g || 0}
         />
-        {console.log(activeDayData)}
         {mealSections.map(section => {
           const foods =
             activeDayData?.meals.find(e => e.meal_type === section.id) || {};

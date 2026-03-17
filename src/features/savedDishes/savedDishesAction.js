@@ -18,7 +18,6 @@ export const unSaveDish = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const data = await ApiClient.del(`/dishes/${id}/save`);
-      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

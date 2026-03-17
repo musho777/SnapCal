@@ -5,24 +5,28 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { GoBackIcon, SaveIcon } from '../../../assets/Icons';
+import { GoBackIcon } from '../../../assets/Icons';
 import { styles } from '../../../themes';
 import { useNavigation } from '@react-navigation/native';
 
-export const Header = () => {
+export const Header = ({ isSaved = false, onToggleSave }) => {
   const navigation = useNavigation();
   const handelGoBack = () => {
     navigation.goBack();
   };
+
   return (
     <View style={localStyles.container}>
       <TouchableOpacity onPress={handelGoBack} style={localStyles.iconWrapper}>
         <GoBackIcon />
       </TouchableOpacity>
       <Text style={styles.h4}>Food Details</Text>
-      <View style={localStyles.iconWrapper}>
-        <SaveIcon />
-      </View>
+      <TouchableOpacity
+        style={localStyles.iconWrapper}
+        onPress={onToggleSave}
+      >
+        <Text style={localStyles.heartIcon}>{isSaved ? '❤️' : '🤍'}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -52,5 +56,8 @@ const localStyles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 3,
     borderRadius: 30,
+  },
+  heartIcon: {
+    fontSize: 20,
   },
 });

@@ -20,7 +20,6 @@ const homeSlice = createSlice({
         state.loading.category = true;
       })
       .addCase(getCategoryForHome.fulfilled, (state, { payload }) => {
-        console.log(payload);
         state.loading.category = false;
         state.data.category = payload.categories;
       })

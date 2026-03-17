@@ -21,7 +21,6 @@ export const getAllCategories = createAsyncThunk(
     const queries = buildQueryString(params);
     try {
       const data = await ApiClient.get(`/dishes/categories?${queries}`);
-      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

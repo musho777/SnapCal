@@ -31,6 +31,10 @@ import AddToMealModal from '../../components/addToMealModal/AddToMealModal';
 import AlertModal from '../../components/alertModal/AlertModal';
 import { Plus } from 'lucide-react-native';
 import { getMainPlanRange } from '../../features/mealPlan/mealPlanAction';
+import {
+  saveDish,
+  unSaveDish,
+} from '../../features/savedDishes/savedDishesAction';
 
 const RecipeScreen = ({ route }) => {
   const dispatch = useDispatch();
@@ -38,6 +42,7 @@ const RecipeScreen = ({ route }) => {
   const loading = useSelector(selectSingleLoading);
   const addToMealLoading = useSelector(selectAddToMealLoading);
   const recipeId = route?.params?.recipeId;
+  const [save, setSaved] = useState();
 
   const [showModal, setShowModal] = useState(false);
   const [alertModal, setAlertModal] = useState({
@@ -52,9 +57,22 @@ const RecipeScreen = ({ route }) => {
     fats_g: singleData.fats_g,
   });
 
+  const onToggleSave = () => {
+    setSaved(!save);
+    if (singleData.is_saved) {
+      dispatch(unSaveDish({ id: singleData.id }));
+    } else {
+      dispatch(saveDish({ id: singleData.id }));
+    }
+  };
+
   useEffect(() => {
     dispatch(getSingleDeash({ id: recipeId }));
   }, [dispatch, recipeId]);
+
+  useEffect(() => {
+    setSaved(singleData.is_saved);
+  }, [singleData.is_saved]);
 
   const handleAddToMeal = async data => {
     try {
@@ -83,7 +101,7 @@ const RecipeScreen = ({ route }) => {
 
   return (
     <View style={localStyles.container}>
-      <Header />
+      <Header isSaved={save} onToggleSave={onToggleSave} />
       <View style={localStyles.imageContainer}>
         <Image
           style={localStyles.img}
