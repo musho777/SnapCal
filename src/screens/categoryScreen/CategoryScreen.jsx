@@ -80,17 +80,6 @@ const CategoryScreen = ({ navigation, route }) => {
     />
   );
 
-  const renderListHeader = () => (
-    <View style={localStyles.inputWrapper}>
-      <UIInput
-        placeholder="Search"
-        showSearchIcon={true}
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-    </View>
-  );
-
   const renderFooter = () => {
     if (!loadingMore) return null;
     return (
@@ -99,41 +88,47 @@ const CategoryScreen = ({ navigation, route }) => {
       </View>
     );
   };
-
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
     <View style={styles.page}>
       <ScreenHeader title={name} />
-      <View style={localStyles.scrollContent}>
-        <FlatList
-          data={data?.dishes}
-          renderItem={renderFoodCard}
-          keyExtractor={item => item.id}
-          numColumns={2}
-          ListHeaderComponent={renderListHeader}
-          ListFooterComponent={renderFooter}
-          style={styles.flex}
-          columnWrapperStyle={localStyles.columnWrapper}
-          contentContainerStyle={localStyles.listContent}
-          showsVerticalScrollIndicator={false}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListEmptyComponent={
-            !loading ? (
-              <NoResult
-                text={
-                  searchQuery
-                    ? `No recipes found for "${searchQuery}"`
-                    : `No recipes found for ${name}`
-                }
-              />
-            ) : null
-          }
+      <View style={localStyles.inputWrapper}>
+        <UIInput
+          placeholder="Search"
+          showSearchIcon={true}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
         />
       </View>
+      {loading ? (
+        <Loading />
+      ) : (
+        <View style={localStyles.scrollContent}>
+          <FlatList
+            data={data?.dishes}
+            renderItem={renderFoodCard}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            ListFooterComponent={renderFooter}
+            style={styles.flex}
+            columnWrapperStyle={localStyles.columnWrapper}
+            contentContainerStyle={localStyles.listContent}
+            showsVerticalScrollIndicator={false}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListEmptyComponent={
+              !loading ? (
+                <NoResult
+                  text={
+                    searchQuery
+                      ? `No recipes found for "${searchQuery}"`
+                      : `No recipes found for ${name}`
+                  }
+                />
+              ) : null
+            }
+          />
+        </View>
+      )}
     </View>
   );
 };
