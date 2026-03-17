@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react';
 import {
-  Dimensions,
   FlatList,
   StyleSheet,
   View,
@@ -19,8 +18,8 @@ import {
   selectAllCategoriesHasMore,
   resetAllCategoriesData,
 } from '../../features/singleCategory/singleCategorySlice';
+import Loading from '../../components/loading/Loading';
 
-const { width: screenWidth } = Dimensions.get('window');
 const LIMIT = 20;
 
 const AllCategoriesScreen = ({ navigation }) => {
@@ -56,18 +55,14 @@ const AllCategoriesScreen = ({ navigation }) => {
   }, [dispatch, loadingMore, hasMore, categories.length, currentOffset]);
 
   const renderItem = ({ item }) => (
-    <Card
-      width={(screenWidth - 30) / 2}
-      data={item}
-      onPress={() => handleCategoryPress(item.id, item.name)}
-    />
+    <Card data={item} onPress={() => handleCategoryPress(item.id, item.name)} />
   );
 
   const renderFooter = () => {
     if (!loadingMore) return null;
     return (
       <View style={localStyled.footer}>
-        <ActivityIndicator size="small" color="#FF6B35" />
+        <ActivityIndicator size="small" color="#00C853" />
       </View>
     );
   };
@@ -76,7 +71,7 @@ const AllCategoriesScreen = ({ navigation }) => {
     if (loading) {
       return (
         <View style={localStyled.emptyContainer}>
-          <ActivityIndicator size="large" color="#FF6B35" />
+          <Loading />
         </View>
       );
     }
@@ -94,8 +89,6 @@ const AllCategoriesScreen = ({ navigation }) => {
         data={categories}
         renderItem={renderItem}
         keyExtractor={(item, index) => `category-${item.id}-${index}`}
-        numColumns={2}
-        columnWrapperStyle={localStyled.columnWrapper}
         contentContainerStyle={localStyled.listContent}
         showsVerticalScrollIndicator={false}
         onEndReached={handleLoadMore}
@@ -111,10 +104,6 @@ const localStyled = StyleSheet.create({
   listContent: {
     flexGrow: 1,
     paddingBottom: 20,
-  },
-  columnWrapper: {
-    justifyContent: 'space-between',
-    marginBottom: 10,
   },
   footer: {
     paddingVertical: 20,

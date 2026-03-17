@@ -1,8 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../../themes';
 
-export const Card = ({ data, onPress, width = 200 }) => {
-  // Determine image source - support both API data (icon_url) and local data (image)
+export const Card = ({ data, onPress }) => {
   const getImageSource = () => {
     if (data.icon_url) {
       // Use API URL for real data
@@ -23,12 +22,14 @@ export const Card = ({ data, onPress, width = 200 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[localStyled.container, { width: width }]}
+      style={localStyled.container}
       activeOpacity={0.7}
     >
-      <Image style={localStyled.image} source={getImageSource()} />
-      <View style={localStyled.titleContainer}>
-        <Text numberOfLines={1} style={styles.h4}>
+      <View style={localStyled.imageWrapper}>
+        <Image style={localStyled.image} source={getImageSource()} />
+      </View>
+      <View style={localStyled.textContainer}>
+        <Text numberOfLines={2} style={styles.h4}>
           {categoryName}
         </Text>
       </View>
@@ -38,26 +39,39 @@ export const Card = ({ data, onPress, width = 200 }) => {
 
 const localStyled = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     backgroundColor: '#fff',
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 3,
+      height: 1,
     },
     shadowOpacity: 0.17,
-    shadowRadius: 3.05,
-    elevation: 1,
-    borderRadius: 30,
+    shadowRadius: 1.05,
+    elevation: 2,
+    borderRadius: 10,
     overflow: 'hidden',
+    alignItems: 'center',
+    marginBottom: 7,
+    marginHorizontal: 5,
+    padding: 5,
+  },
+  imageWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F8F9FA',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 10,
   },
   image: {
-    width: 90,
-    height: 80,
+    width: 25,
+    height: 25,
+    resizeMode: 'contain',
   },
-  titleContainer: {
-    padding: 15,
-    alignItems: 'center',
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });
