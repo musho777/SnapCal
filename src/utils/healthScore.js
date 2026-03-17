@@ -4,14 +4,9 @@
  * @returns {Object} - Health score (0-10) and breakdown
  */
 export const calculateHealthScore = nutritionData => {
-  // Extract macro weights
-  const carbs =
-    nutritionData.find(item => item.type === 'Carbs')?.weight || 0;
-  const protein =
-    nutritionData.find(item => item.type === 'Protein')?.weight || 0;
-  const fat = nutritionData.find(item => item.type === 'Fat')?.weight || 0;
-
-  // Calculate calories (Carbs: 4 cal/g, Protein: 4 cal/g, Fat: 9 cal/g)
+  const carbs = +nutritionData.carbs_g || 0;
+  const protein = +nutritionData.protein_g || 0;
+  const fat = +nutritionData.fat_g || 0;
   const carbCalories = carbs * 4;
   const proteinCalories = protein * 4;
   const fatCalories = fat * 9;
@@ -21,20 +16,16 @@ export const calculateHealthScore = nutritionData => {
     return { score: 0, breakdown: {}, totalCalories: 0 };
   }
 
-  // Calculate percentages
   const carbPercent = (carbCalories / totalCalories) * 100;
   const proteinPercent = (proteinCalories / totalCalories) * 100;
   const fatPercent = (fatCalories / totalCalories) * 100;
 
-  // Ideal ranges for a balanced meal
-  // Carbs: 45-65%, Protein: 10-35%, Fat: 20-35%
   const idealRanges = {
     carbs: { min: 45, max: 65, optimal: 55 },
     protein: { min: 10, max: 35, optimal: 25 },
     fat: { min: 20, max: 35, optimal: 25 },
   };
 
-  // Calculate individual scores (0-10 for each macro)
   const carbScore = calculateMacroScore(
     carbPercent,
     idealRanges.carbs.min,
@@ -54,21 +45,96 @@ export const calculateHealthScore = nutritionData => {
     idealRanges.fat.optimal,
   );
 
-  // Calculate overall health score (weighted average)
-  // Higher weight on protein for health benefits
-  const overallScore =
-    (carbScore * 0.3 + proteinScore * 0.4 + fatScore * 0.3).toFixed(1);
+  const overallScore = (
+    carbScore * 0.3 +
+    proteinScore * 0.4 +
+    fatScore * 0.3
+  ).toFixed(1);
 
   return {
     score: parseFloat(overallScore),
     breakdown: {
-      carbs: { score: carbScore, percent: carbPercent.toFixed(1), weight: carbs },
-      protein: { score: proteinScore, percent: proteinPercent.toFixed(1), weight: protein },
+      carbs: {
+        score: carbScore,
+        percent: carbPercent.toFixed(1),
+        weight: carbs,
+      },
+      protein: {
+        score: proteinScore,
+        percent: proteinPercent.toFixed(1),
+        weight: protein,
+      },
       fat: { score: fatScore, percent: fatPercent.toFixed(1), weight: fat },
     },
     totalCalories: Math.round(totalCalories),
   };
 };
+// export const calculateHealthScore = nutritionData => {
+//   // Extract macro weights
+//   const carbs =
+//     nutritionData.find(item => item.type === 'Carbs')?.weight || 0;
+//   const protein =
+//     nutritionData.find(item => item.type === 'Protein')?.weight || 0;
+//   const fat = nutritionData.find(item => item.type === 'Fat')?.weight || 0;
+
+//   // Calculate calories (Carbs: 4 cal/g, Protein: 4 cal/g, Fat: 9 cal/g)
+//   const carbCalories = carbs * 4;
+//   const proteinCalories = protein * 4;
+//   const fatCalories = fat * 9;
+//   const totalCalories = carbCalories + proteinCalories + fatCalories;
+
+//   if (totalCalories === 0) {
+//     return { score: 0, breakdown: {}, totalCalories: 0 };
+//   }
+
+//   // Calculate percentages
+//   const carbPercent = (carbCalories / totalCalories) * 100;
+//   const proteinPercent = (proteinCalories / totalCalories) * 100;
+//   const fatPercent = (fatCalories / totalCalories) * 100;
+
+//   // Ideal ranges for a balanced meal
+//   // Carbs: 45-65%, Protein: 10-35%, Fat: 20-35%
+//   const idealRanges = {
+//     carbs: { min: 45, max: 65, optimal: 55 },
+//     protein: { min: 10, max: 35, optimal: 25 },
+//     fat: { min: 20, max: 35, optimal: 25 },
+//   };
+
+//   // Calculate individual scores (0-10 for each macro)
+//   const carbScore = calculateMacroScore(
+//     carbPercent,
+//     idealRanges.carbs.min,
+//     idealRanges.carbs.max,
+//     idealRanges.carbs.optimal,
+//   );
+//   const proteinScore = calculateMacroScore(
+//     proteinPercent,
+//     idealRanges.protein.min,
+//     idealRanges.protein.max,
+//     idealRanges.protein.optimal,
+//   );
+//   const fatScore = calculateMacroScore(
+//     fatPercent,
+//     idealRanges.fat.min,
+//     idealRanges.fat.max,
+//     idealRanges.fat.optimal,
+//   );
+
+//   // Calculate overall health score (weighted average)
+//   // Higher weight on protein for health benefits
+//   const overallScore =
+//     (carbScore * 0.3 + proteinScore * 0.4 + fatScore * 0.3).toFixed(1);
+
+//   return {
+//     score: parseFloat(overallScore),
+//     breakdown: {
+//       carbs: { score: carbScore, percent: carbPercent.toFixed(1), weight: carbs },
+//       protein: { score: proteinScore, percent: proteinPercent.toFixed(1), weight: protein },
+//       fat: { score: fatScore, percent: fatPercent.toFixed(1), weight: fat },
+//     },
+//     totalCalories: Math.round(totalCalories),
+//   };
+// };
 
 /**
  * Calculate score for individual macro based on percentage

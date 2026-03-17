@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 
-const WeeklyChart = ({ weeklyData, activeDay, goalKcal }) => {
+const WeeklyChart = ({ weeklyData, activeDay }) => {
   const screenWidth = Dimensions.get('window').width;
   const chartWidth = screenWidth - 100; // Account for card padding (16*2) + container padding (20*2)
 

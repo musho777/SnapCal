@@ -1,89 +1,142 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, RefreshControl } from 'react-native';
 import { styles } from '../../themes';
 
 import { Header } from './components/Header';
 import { ProAccessBanner } from './components/ProAccessBanner';
 import { Category } from './components/Category';
-import { RecipeCard } from '../../components/cards/RecipeCard';
-import recipesData from '../../data/recipes.json';
-
-const imageMap = {
-  'chicken.png': require('../../assets/chicken.png'),
-  'snack.png': require('../../assets/snack.png'),
-  'grilledSalmon.png': require('../../assets/grilledSalmon.png'),
-  'pancakes.png': require('../../assets/pancakes.png'),
-  'greekYogurt.png': require('../../assets/greekYogurt.png'),
-  'steak.png': require('../../assets/steak.png'),
-  'apple.png': require('../../assets/apple.png'),
-  'drink.png': require('../../assets/drink.png'),
-  'carb.png': require('../../assets/carb.png'),
-  'protein.png': require('../../assets/protein.png'),
-};
-
-const getImageSource = imagePath => {
-  const filename = imagePath.split('/').pop();
-  return imageMap[filename] || imageMap['snack.png'];
-};
+import { WaterTracker } from './components/WaterTracker';
+import { FoodCard } from '../../components/cards/FoodCard';
+import { useEffect, useState, useCallback } from 'react';
+import { getDeash } from '../../features/explore/exploreAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectData, selectLoading } from '../../features/explore/exploreSlice';
+import Loading from '../../components/loading/Loading';
+import {
+  loadWaterIntake,
+  saveWaterIntake,
+  checkAndResetWaterData,
+} from '../../utils/waterStorage';
+import { useFocusEffect } from '@react-navigation/native';
+import { getNotifications } from '../../features/notifications/notificationsAction';
+import { getCategoryForHome } from '../../features/home/homeAction';
+import { selectCategoryData } from '../../features/home/homeSlice';
 
 const MainScreen = ({ navigation }) => {
-  const data = recipesData.recipes.map(recipe => ({
-    id: recipe.id,
-    title: recipe.name,
-    kcal: recipe.totalCalories.toString(),
-    image: getImageSource(recipe.image),
-  }));
+  const dispatch = useDispatch();
+  const data = useSelector(selectData);
+  const categories = useSelector(selectCategoryData);
+
+  const loading = useSelector(selectLoading);
+  const [waterIntake, setWaterIntake] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
   const handleShowRecipients = recipeId => {
     navigation.navigate('Recipient', { recipeId });
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    const wasReset = await checkAndResetWaterData();
+    if (wasReset) {
+      setWaterIntake(0);
+    } else {
+      const savedWater = await loadWaterIntake();
+      setWaterIntake(savedWater);
+    }
+    dispatch(getDeash({}));
+    setRefreshing(false);
+  }, [dispatch]);
+
+  const onWaterChange = e => {
+    setWaterIntake(e);
+    saveWaterIntake(e);
+  };
+
+  useEffect(() => {
+    dispatch(getCategoryForHome({ limit: 10, offset: 0 }));
+    dispatch(getDeash({}));
+    const loadWater = async () => {
+      const savedWater = await loadWaterIntake();
+      setWaterIntake(savedWater);
+    };
+    loadWater();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getNotifications({}));
+    }, []),
+  );
+
   return (
-    <View style={styles.page}>
+    <ScrollView
+      contentContainerStyle={localStyled.contentContainerStyle}
+      style={[styles.page, localStyled.page]}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Header />
       <ProAccessBanner />
-      <Category navigation={navigation} />
+      <WaterTracker waterIntake={waterIntake} onWaterChange={onWaterChange} />
+      <Category data={categories} navigation={navigation} />
 
-      <ScrollView
-        style={localStyled.paddingLeft}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      >
-        {data.map((elm, i) => {
-          console.log(i === data.length - 1);
-          return (
-            <View
-              style={[
-                localStyled.recipeCardWrapper,
-                i === data.length - 1 && localStyled.marginLeft,
-              ]}
-              key={i}
-            >
-              <RecipeCard
-                onPress={() => handleShowRecipients(elm.id)}
-                data={elm}
+      {loading ? (
+        <View style={localStyled.loadingWrapper}>
+          <Loading size={100} />
+        </View>
+      ) : (
+        <ScrollView
+          style={localStyled.paddingLeft}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          {data?.dishes?.map((elm, i) => {
+            return (
+              <View
+                style={[
+                  localStyled.recipeCardWrapper,
+                  i === data.dishes.length - 1 && localStyled.marginLeft,
+                ]}
                 key={i}
-              />
-            </View>
-          );
-        })}
-      </ScrollView>
-    </View>
+              >
+                <FoodCard
+                  item={elm}
+                  flex={false}
+                  isSaved={false}
+                  onToggleSave={() => {}}
+                  onRecipePress={() => handleShowRecipients(elm.id)}
+                />
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
+    </ScrollView>
   );
 };
 
 const localStyled = StyleSheet.create({
-  buttonContainer: {
-    paddingHorizontal: 20,
-    marginVertical: 15,
-  },
   recipeCardWrapper: {
     marginRight: 15,
     paddingBottom: 10,
+    width: 175,
+  },
+  contentContainerStyle: {
+    paddingBottom: 140,
+    gap: 20,
   },
   paddingLeft: {
     paddingLeft: 5,
   },
   marginLeft: {
     marginLeft: 0,
+  },
+  loadingWrapper: {
+    width: '100%',
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

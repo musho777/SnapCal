@@ -73,18 +73,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
 
   const handleCenterButtonPress = () => {
-    const trackRoute = state.routes.find(route => route.name === 'Track');
-    if (trackRoute) {
-      const event = navigation.emit({
-        type: 'tabPress',
-        target: trackRoute.key,
-        canPreventDefault: true,
-      });
-
-      if (!event.defaultPrevented) {
-        navigation.navigate(trackRoute.name);
-      }
-    }
+    navigation.getParent()?.navigate('CreateMeal');
   };
 
   return (

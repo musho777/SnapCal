@@ -10,13 +10,13 @@ export const RecipeInfo = ({ description, prepTime, cookTime, servings }) => {
         <View style={localStyles.infoCard}>
           <Text style={localStyles.infoIcon}>⏱️</Text>
           <Text style={localStyles.infoLabel}>Prep Time</Text>
-          <Text style={localStyles.infoValue}>{prepTime}</Text>
+          <Text style={localStyles.infoValue}>{prepTime} Min</Text>
         </View>
 
         <View style={localStyles.infoCard}>
           <Text style={localStyles.infoIcon}>🍳</Text>
           <Text style={localStyles.infoLabel}>Cook Time</Text>
-          <Text style={localStyles.infoValue}>{cookTime}</Text>
+          <Text style={localStyles.infoValue}>{cookTime} Min</Text>
         </View>
 
         <View style={localStyles.infoCard}>

@@ -18,6 +18,7 @@ export const RecipeCard = ({ data, onPress, width = 200 }) => {
       <View>
         <Image style={localStyled.image} source={data.image} />
         <UIButton
+          variant="card"
           backgroundColor={'#272727'}
           color={'white'}
           onPress={onPress}

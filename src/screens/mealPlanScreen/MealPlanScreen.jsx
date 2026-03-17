@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import {
   Header,
@@ -7,115 +7,65 @@ import {
   MealSection,
   WeeklyChart,
 } from './components';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectMainPlan,
+  toggleBurnedDishOptimistic,
+  revertBurnedDishOptimistic,
+  selectLoading,
+} from '../../features/mealPlan/mealPlanSlice';
+import {
+  getMainPlanRange,
+  deleteMealDish,
+  burnCalory,
+} from '../../features/mealPlan/mealPlanAction';
+import Loading from '../../components/loading/Loading';
 
 const MealPlanScreen = ({ navigation }) => {
-  const [activeDay, setActiveDay] = useState('mon');
+  const data = useSelector(selectMainPlan);
+  const loading = useSelector(selectLoading);
+  const dispatch = useDispatch();
+
+  const weeklyData = useMemo(() => {
+    const newData = [];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(yesterday);
+      currentDate.setDate(yesterday.getDate() + i);
+
+      const dayName = dayNames[currentDate.getDay()];
+      const date = currentDate.getDate();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const dateString = `${year}-${month}-${day}`;
+      const dayData = data.find(d => d.log_date === dateString);
+
+      newData.push({
+        day: dayName,
+        date: date,
+        id: date,
+        calories: dayData?.calories_consumed || undefined,
+        fullDate: dateString,
+      });
+    }
+
+    return newData;
+  }, [data]);
+
+  const [activeDay, setActiveDay] = useState(
+    weeklyData[1]?.date || new Date().getDate(),
+  );
   const [expandedSections, setExpandedSections] = useState({
     breakfast: true,
     lunch: false,
     dinner: false,
     snacks: false,
   });
-
-  const [plan, setPlan] = useState({
-    mon: {
-      breakfast: [
-        {
-          id: 1,
-          emoji: '🥞',
-          name: 'Protein Pancakes',
-          portion: '3 pieces',
-          kcal: 320,
-          protein: 24,
-        },
-        {
-          id: 2,
-          emoji: '🍌',
-          name: 'Banana',
-          portion: '1 medium',
-          kcal: 105,
-          protein: 1,
-        },
-      ],
-      lunch: [
-        {
-          id: 3,
-          emoji: '🥗',
-          name: 'Caesar Salad',
-          portion: '1 bowl',
-          kcal: 380,
-          protein: 32,
-        },
-        {
-          id: 4,
-          emoji: '🍗',
-          name: 'Grilled Chicken',
-          portion: '150g',
-          kcal: 248,
-          protein: 46,
-        },
-      ],
-      dinner: [
-        {
-          id: 5,
-          emoji: '🍝',
-          name: 'Pasta Carbonara',
-          portion: '1 plate',
-          kcal: 520,
-          protein: 28,
-        },
-      ],
-      snacks: [
-        {
-          id: 6,
-          emoji: '🥜',
-          name: 'Almonds',
-          portion: '30g',
-          kcal: 172,
-          protein: 6,
-        },
-      ],
-    },
-    tue: {
-      breakfast: [
-        {
-          id: 7,
-          emoji: '🥚',
-          name: 'Scrambled Eggs',
-          portion: '3 eggs',
-          kcal: 270,
-          protein: 18,
-        },
-      ],
-      lunch: [],
-      dinner: [
-        {
-          id: 8,
-          emoji: '🍕',
-          name: 'Margherita Pizza',
-          portion: '2 slices',
-          kcal: 580,
-          protein: 22,
-        },
-      ],
-      snacks: [],
-    },
-    wed: { breakfast: [], lunch: [], dinner: [], snacks: [] },
-    thu: { breakfast: [], lunch: [], dinner: [], snacks: [] },
-    fri: { breakfast: [], lunch: [], dinner: [], snacks: [] },
-    sat: { breakfast: [], lunch: [], dinner: [], snacks: [] },
-    sun: { breakfast: [], lunch: [], dinner: [], snacks: [] },
-  });
-
-  const weeklyData = [
-    { day: 'Mon', date: 17, calories: 1745, id: 'mon' },
-    { day: 'Tue', date: 18, calories: 850, id: 'tue' },
-    { day: 'Wed', date: 19, calories: 0, id: 'wed' },
-    { day: 'Thu', date: 20, calories: 0, id: 'thu' },
-    { day: 'Fri', date: 21, calories: 0, id: 'fri' },
-    { day: 'Sat', date: 22, calories: 0, id: 'sat' },
-    { day: 'Sun', date: 23, calories: 0, id: 'sun' },
-  ];
 
   const mealSections = [
     {
@@ -143,7 +93,7 @@ const MealPlanScreen = ({ navigation }) => {
       accent: '#6366F1',
     },
     {
-      id: 'snacks',
+      id: 'snack',
       label: 'Snacks',
       emoji: '🍿',
       time: 'Anytime',
@@ -152,35 +102,31 @@ const MealPlanScreen = ({ navigation }) => {
     },
   ];
 
-  const activeDayPlan = plan[activeDay] || {
-    breakfast: [],
-    lunch: [],
-    dinner: [],
-    snacks: [],
-  };
-  const allFoods = Object.values(activeDayPlan).flat();
-  const totalKcal = allFoods.reduce((sum, food) => sum + food.kcal, 0);
-  const totalProtein = allFoods.reduce((sum, food) => sum + food.protein, 0);
-  const totalCarbs = Math.round((totalKcal * 0.5) / 4);
-  const totalFat = Math.round((totalKcal * 0.3) / 9);
-
-  const goalKcal = 2000;
-
   const toggleSection = sectionId => {
     const newExpanded = !expandedSections[sectionId];
     setExpandedSections({ ...expandedSections, [sectionId]: newExpanded });
   };
 
-  const deleteFood = (sectionId, foodId) => {
-    setPlan({
-      ...plan,
-      [activeDay]: {
-        ...plan[activeDay],
-        [sectionId]: plan[activeDay][sectionId].filter(
-          food => food.id !== foodId,
-        ),
-      },
-    });
+  const deleteFood = mealDishId => {
+    dispatch(deleteMealDish(mealDishId));
+  };
+
+  const handleFoodPress = async food => {
+    const selectedDay = weeklyData.find(day => day.date === activeDay);
+    if (!selectedDay) return;
+
+    const params = {
+      date: selectedDay.fullDate,
+      dishId: food.dish_id,
+      mealId: food.meal_id,
+    };
+
+    dispatch(toggleBurnedDishOptimistic(params));
+    try {
+      await dispatch(burnCalory(params)).unwrap();
+    } catch (error) {
+      dispatch(revertBurnedDishOptimistic(params));
+    }
   };
 
   const handleAddFood = mealType => {
@@ -189,6 +135,19 @@ const MealPlanScreen = ({ navigation }) => {
       params: { mealType },
     });
   };
+
+  useEffect(() => {
+    dispatch(getMainPlanRange({}));
+  }, [dispatch]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  const selectedDay = weeklyData.find(day => day.date === activeDay);
+  const activeDayData = data.find(
+    dayData => dayData.log_date === selectedDay?.fullDate,
+  );
 
   return (
     <View style={styles.container}>
@@ -205,35 +164,34 @@ const MealPlanScreen = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
       >
         <SummaryCard
-          totalKcal={totalKcal}
-          goalKcal={goalKcal}
-          totalCarbs={totalCarbs}
-          totalProtein={totalProtein}
-          totalFat={totalFat}
+          totalKcal={activeDayData?.calories_burned || null}
+          goalKcal={activeDayData?.target_calories || null}
+          totalCarbs={activeDayData?.carbs_consumed_g || 0}
+          totalProtein={activeDayData?.protein_consumed_g || 0}
+          totalFat={activeDayData?.fats_consumed_g || 0}
         />
-
+        {console.log(activeDayData)}
         {mealSections.map(section => {
-          const foods = activeDayPlan[section.id] || [];
+          const foods =
+            activeDayData?.meals.find(e => e.meal_type === section.id) || {};
           const isExpanded = expandedSections[section.id];
-
           return (
             <MealSection
               key={section.id}
               section={section}
-              foods={foods}
+              foods={foods || null}
+              burnedDishes={activeDayData?.burned_dishes || []}
               isExpanded={isExpanded}
               onToggle={() => toggleSection(section.id)}
-              onDeleteFood={foodId => deleteFood(section.id, foodId)}
+              onDeleteFood={mealDishId => deleteFood(mealDishId)}
+              onFoodPress={food => handleFoodPress(food)}
               onAddFood={() => handleAddFood(section.id)}
+              activeDate={selectedDay?.fullDate}
             />
           );
         })}
 
-        <WeeklyChart
-          weeklyData={weeklyData}
-          activeDay={activeDay}
-          goalKcal={goalKcal}
-        />
+        <WeeklyChart weeklyData={weeklyData} activeDay={activeDay} />
       </ScrollView>
     </View>
   );

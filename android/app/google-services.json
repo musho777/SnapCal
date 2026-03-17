@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "514060767712",
+    "project_id": "snap-cal-5fd97",
+    "storage_bucket": "snap-cal-5fd97.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514060767712:android:e8a9e9b539b874471a9b85",
+        "android_client_info": {
+          "package_name": "com.snapcal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcoFRL_PXkm7qSfVXPFRvhxRj1GuHLClU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514060767712:android:88d5a25354f595171a9b85",
+        "android_client_info": {
+          "package_name": "ter.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcoFRL_PXkm7qSfVXPFRvhxRj1GuHLClU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

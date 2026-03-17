@@ -1,40 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { FoodCard } from '../../../components/cards/FoodCard';
-import { calculateHealthScore } from '../../../utils/healthScore';
-import { getRecipeImage } from '../../../utils/imageMapper';
-import { getBgColor } from '../../../utils/themesUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMyDishes } from '../../../features/user/userAction';
+import {
+  selectMyDishes,
+  selectMyDishesLoading,
+} from '../../../features/user/userSlice';
+import Loading from '../../../components/loading/Loading';
+import { useNavigation } from '@react-navigation/native';
 
-const MyRecipesTab = ({ myRecipesList, onDelete, onAdd, onNavigate }) => {
-  const transformRecipe = recipe => {
-    if (!recipe) return null;
-    const healthData = calculateHealthScore(recipe.macros || []);
-    return {
-      id: recipe.id.toString(),
-      name: recipe.name,
-      kcal: recipe.totalCalories,
-      category: recipe.mealType,
-      health: healthData.score,
-      tag: recipe.category?.toUpperCase() || 'MEAL',
-      bgColor: getBgColor(recipe.mealType),
-      image: getRecipeImage(recipe.image),
-    };
+const MyRecipesTab = ({ onAdd }) => {
+  const dispatch = useDispatch();
+  const loading = useSelector(selectMyDishesLoading);
+  const data = useSelector(selectMyDishes);
+  const navigation = useNavigation();
+
+  const handleToggleSave = () => {};
+  const handleNavigation = item => {
+    navigation.navigate('Recipient', {
+      recipeId: item.id,
+    });
   };
 
-  const handleToggleSave = id => {
-    onDelete(parseInt(id, 10));
-  };
+  useEffect(() => {
+    dispatch(getMyDishes({}));
+  }, [dispatch]);
 
   const renderRecipeCard = ({ item }) => {
-    const transformedItem = transformRecipe(item);
-    if (!transformedItem) return null;
-
     return (
       <FoodCard
-        item={transformedItem}
+        item={item}
         isSaved={false}
         onToggleSave={handleToggleSave}
-        onRecipePress={() => onNavigate(item)}
+        onRecipePress={() => handleNavigation(item)}
       />
     );
   };
@@ -49,9 +48,13 @@ const MyRecipesTab = ({ myRecipesList, onDelete, onAdd, onNavigate }) => {
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <FlatList
-      data={myRecipesList}
+      data={data.dishes}
       renderItem={renderRecipeCard}
       keyExtractor={item => item.id.toString()}
       numColumns={2}

@@ -5,18 +5,20 @@ import {
   TouchableOpacity,
   Animated,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { DownAndUpIcon } from '../../../assets/Icons';
 
 const MealSection = ({
   section,
   foods,
+  burnedDishes,
   isExpanded,
   onToggle,
   onDeleteFood,
-  onAddFood,
+  onFoodPress,
+  activeDate,
 }) => {
-  const sectionKcal = foods.reduce((sum, food) => sum + food.kcal, 0);
   const rotationAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
 
   useEffect(() => {
@@ -32,78 +34,177 @@ const MealSection = ({
     outputRange: ['0deg', '180deg'],
   });
 
+  // Check if activeDate is in the past
+  const isDatePast = () => {
+    if (!activeDate) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const active = new Date(activeDate);
+    active.setHours(0, 0, 0, 0);
+    return active < today;
+  };
+
+  const isPastDate = isDatePast();
+
   return (
     <View style={styles.mealSection}>
-      {/* Section Header */}
       <TouchableOpacity
         style={styles.sectionHeader}
         onPress={onToggle}
         activeOpacity={0.7}
       >
-        <View
-          style={[styles.sectionIcon, { backgroundColor: section.color }]}
-        >
+        <View style={[styles.sectionIcon, { backgroundColor: section.color }]}>
           <Text style={styles.sectionEmoji}>{section.emoji}</Text>
         </View>
         <View style={styles.sectionInfo}>
           <Text style={styles.sectionLabel}>{section.label}</Text>
           <Text style={styles.sectionTime}>{section.time}</Text>
         </View>
-        <View style={styles.sectionStats}>
-          <Text style={styles.sectionKcal}>{sectionKcal} Kcal</Text>
-          <Text style={styles.sectionCount}>{foods.length} items</Text>
-        </View>
+        {foods?.total_calories > 0 && (
+          <View style={styles.sectionStats}>
+            <Text style={styles.sectionKcal}>{foods?.total_calories} Kcal</Text>
+            <Text style={styles.sectionCount}>
+              {foods?.meal_dishes?.length} items
+            </Text>
+          </View>
+        )}
         <Animated.View
           style={[styles.sectionChevron, { transform: [{ rotate: rotation }] }]}
         >
           <DownAndUpIcon />
         </Animated.View>
       </TouchableOpacity>
-
-      {/* Food Items */}
       {isExpanded && (
         <View style={styles.sectionContent}>
-          {foods.length === 0 ? (
+          {Object.keys(foods).length === 0 ||
+          foods?.meal_dishes?.length === 0 ? (
             <View style={styles.emptyState}>
               <Text style={styles.emptyEmoji}>🍽</Text>
               <Text style={styles.emptyText}>No meals added yet</Text>
             </View>
           ) : (
-            foods.map(food => (
-              <View key={food.id} style={styles.foodItem}>
-                <View style={styles.foodThumbnail}>
-                  <Text style={styles.foodEmoji}>{food.emoji}</Text>
-                </View>
-                <View style={styles.foodInfo}>
-                  <Text style={styles.foodName}>{food.name}</Text>
-                  <View style={styles.foodMeta}>
-                    <Text style={styles.foodPortion}>{food.portion}</Text>
-                    <Text style={styles.foodDot}>•</Text>
-                    <Text style={styles.foodKcal}>{food.kcal} Kcal</Text>
-                  </View>
-                </View>
-                <View style={styles.proteinBadge}>
-                  <Text style={styles.proteinBadgeText}>{food.protein}g</Text>
-                </View>
+            foods?.meal_dishes?.map(food => {
+              const isBurned = burnedDishes?.some(
+                burned =>
+                  burned.dish_id === food.dish_id &&
+                  burned.meal_id === food.meal_id,
+              );
+              const isNotBurnedInPast = !isBurned && isPastDate;
+
+              return (
                 <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => onDeleteFood(food.id)}
+                  key={food.id}
+                  style={[
+                    styles.foodItem,
+                    isBurned && styles.foodItemBurned,
+                    isNotBurnedInPast && styles.foodItemNotBurned,
+                  ]}
+                  onPress={() => onFoodPress?.(food)}
+                  activeOpacity={0.7}
+                  disabled={isPastDate}
                 >
-                  <Text style={styles.deleteIcon}>×</Text>
+                  <View
+                    style={[
+                      styles.foodThumbnail,
+                      isBurned && styles.foodThumbnailBurned,
+                      isNotBurnedInPast && styles.foodThumbnailNotBurned,
+                    ]}
+                  >
+                    <Image
+                      style={styles.img}
+                      source={
+                        food.dish.image_url
+                          ? {
+                              uri: `https://snapcal-back-production.up.railway.app${food.dish.image_url}`,
+                            }
+                          : require('../../../assets/greekYogurt.png')
+                      }
+                    />
+                    {/* <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text> */}
+                  </View>
+                  <View style={styles.foodInfo}>
+                    <View style={styles.foodNameContainer}>
+                      <Text
+                        style={[
+                          styles.foodName,
+                          isBurned && styles.foodMetaBurned,
+                          isNotBurnedInPast && styles.foodMetaNotBurned,
+                        ]}
+                      >
+                        {food.dish.name}
+                      </Text>
+                    </View>
+                    <View style={styles.foodMeta}>
+                      <Text
+                        style={[
+                          styles.foodPortion,
+                          isBurned && styles.foodMetaBurned,
+                          isNotBurnedInPast && styles.foodMetaNotBurned,
+                        ]}
+                      >
+                        {food.protein_at_time_g}g protein
+                      </Text>
+                      <Text
+                        style={[
+                          styles.foodDot,
+                          isBurned && styles.foodMetaBurned,
+                          isNotBurnedInPast && styles.foodMetaNotBurned,
+                        ]}
+                      >
+                        •
+                      </Text>
+                      <Text
+                        style={[
+                          styles.foodKcal,
+                          isBurned && styles.foodKcalBurned,
+                          isNotBurnedInPast && styles.foodKcalNotBurned,
+                        ]}
+                      >
+                        {food.calories_at_time} Kcal
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={[
+                      styles.proteinBadge,
+                      isBurned && styles.proteinBadgeBurned,
+                      isNotBurnedInPast && styles.proteinBadgeNotBurned,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.proteinBadgeText,
+                        isBurned && styles.proteinBadgeTextBurned,
+                        isNotBurnedInPast && styles.proteinBadgeTextNotBurned,
+                      ]}
+                    >
+                      {food.servings} share
+                    </Text>
+                  </View>
+                  {!isPastDate && (
+                    <TouchableOpacity
+                      style={styles.deleteButton}
+                      onPress={e => {
+                        e.stopPropagation();
+                        onDeleteFood(food.id);
+                      }}
+                    >
+                      <Text style={styles.deleteIcon}>×</Text>
+                    </TouchableOpacity>
+                  )}
                 </TouchableOpacity>
-              </View>
-            ))
+              );
+            })
           )}
 
-          {/* Add Food Button */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.addFoodButton, { borderColor: section.accent }]}
             onPress={onAddFood}
           >
             <Text style={[styles.addFoodText, { color: section.accent }]}>
               + Add Food
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       )}
     </View>
@@ -188,6 +289,16 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  foodItemBurned: {
+    backgroundColor: '#F0FDF4',
+    borderColor: '#86EFAC',
+    borderWidth: 1.5,
+  },
+  foodItemNotBurned: {
+    backgroundColor: '#FEF2F2',
+    borderColor: '#FCA5A5',
+    borderWidth: 1.5,
+  },
   foodThumbnail: {
     width: 38,
     height: 38,
@@ -196,6 +307,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  foodThumbnailBurned: {
+    backgroundColor: '#DCFCE7',
+  },
+  foodThumbnailNotBurned: {
+    backgroundColor: '#FEE2E2',
+  },
   foodEmoji: {
     fontSize: 20,
   },
@@ -203,10 +320,31 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
   },
+  foodNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   foodName: {
     fontSize: 13,
     fontWeight: '600',
     color: '#272727',
+  },
+  burnedBadge: {
+    backgroundColor: '#22C55E',
+    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  burnedBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  img: {
+    width: 30,
+    height: 30,
+    objectFit: 'contain',
   },
   foodMeta: {
     flexDirection: 'row',
@@ -227,6 +365,20 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     fontWeight: '600',
   },
+  foodMetaBurned: {
+    color: '#16A34A',
+  },
+  foodKcalBurned: {
+    color: '#16A34A',
+    fontWeight: '700',
+  },
+  foodMetaNotBurned: {
+    color: '#DC2626',
+  },
+  foodKcalNotBurned: {
+    color: '#DC2626',
+    fontWeight: '700',
+  },
   proteinBadge: {
     backgroundColor: '#F0F4FF',
     borderRadius: 6,
@@ -238,6 +390,18 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '700',
     color: '#6366F1',
+  },
+  proteinBadgeBurned: {
+    backgroundColor: '#DCFCE7',
+  },
+  proteinBadgeTextBurned: {
+    color: '#16A34A',
+  },
+  proteinBadgeNotBurned: {
+    backgroundColor: '#FEE2E2',
+  },
+  proteinBadgeTextNotBurned: {
+    color: '#DC2626',
   },
   deleteButton: {
     width: 26,

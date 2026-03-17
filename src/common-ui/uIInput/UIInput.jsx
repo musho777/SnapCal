@@ -1,4 +1,4 @@
-import { TextInput, View, StyleSheet } from 'react-native';
+import { TextInput, View, Text, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { SearchIcon } from '../../assets/Icons';
 
@@ -9,36 +9,72 @@ const UIInput = ({
   multiline = false,
   numberOfLines = 1,
   showSearchIcon = false,
+  icon = null,
+  label = null,
+  variant = 'default',
   style,
+  containerStyle,
+  inputStyle,
+  error = false,
+  errorText = '',
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
+  const variantStyles =
+    variant === 'meal'
+      ? {
+          container: localStyles.mealContainer,
+          containerFocused: localStyles.mealContainerFocused,
+          input: localStyles.mealInput,
+        }
+      : {
+          container: localStyles.container,
+          containerFocused: localStyles.containerFocused,
+          input: localStyles.input,
+        };
+
   return (
-    <View
-      style={[localStyles.container, isFocused && localStyles.containerFocused]}
-    >
-      {showSearchIcon && (
-        <View style={localStyles.iconContainer}>
-          <SearchIcon />
-        </View>
-      )}
-      <TextInput
+    <View style={style}>
+      {label && <Text style={localStyles.label}>{label}</Text>}
+      <View
         style={[
-          localStyles.input,
-          showSearchIcon && localStyles.inputWithIcon,
-          style,
+          variantStyles.container,
+          isFocused && variantStyles.containerFocused,
+          multiline && variant === 'meal' && localStyles.mealMultiline,
+          containerStyle,
+          error && localStyles.containerError,
         ]}
-        placeholder={placeholder}
-        placeholderTextColor="#999"
-        value={value}
-        onChangeText={onChangeText}
-        multiline={multiline}
-        numberOfLines={numberOfLines}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        {...props}
-      />
+      >
+        {showSearchIcon && (
+          <View style={localStyles.iconContainer}>
+            <SearchIcon />
+          </View>
+        )}
+        {icon && !showSearchIcon && (
+          <Text style={localStyles.iconText}>{icon}</Text>
+        )}
+        <TextInput
+          style={[
+            variantStyles.input,
+            (showSearchIcon || icon) && localStyles.inputWithIcon,
+            inputStyle,
+          ]}
+          placeholder={placeholder}
+          placeholderTextColor="#999"
+          value={value}
+          onChangeText={onChangeText}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
+          textAlignVertical={multiline ? 'top' : 'center'}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          {...props}
+        />
+      </View>
+      {error && errorText ? (
+        <Text style={localStyles.errorText}>{errorText}</Text>
+      ) : null}
     </View>
   );
 };
@@ -46,11 +82,17 @@ const UIInput = ({
 export default UIInput;
 
 const localStyles = StyleSheet.create({
+  label: {
+    fontSize: 11,
+    color: '#999',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
+    borderRadius: 15,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
@@ -69,9 +111,34 @@ const localStyles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
   },
+  containerError: {
+    borderColor: '#FF6B6B',
+    borderWidth: 1.5,
+    backgroundColor: '#FFF5F5',
+  },
+  mealContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 16,
+    padding: 15,
+    borderWidth: 1.5,
+    borderColor: '#E8E8E8',
+  },
+  mealContainerFocused: {
+    borderColor: '#272727',
+  },
+  mealMultiline: {
+    minHeight: 110,
+    alignItems: 'flex-start',
+  },
   iconContainer: {
     marginRight: 5,
     opacity: 0.6,
+  },
+  iconText: {
+    fontSize: 16,
+    marginRight: 8,
   },
   input: {
     flex: 1,
@@ -80,7 +147,21 @@ const localStyles = StyleSheet.create({
     padding: 0,
     margin: 0,
   },
+  mealInput: {
+    flex: 1,
+    fontSize: 14,
+    color: '#272727',
+    padding: 0,
+    margin: 0,
+  },
   inputWithIcon: {
     paddingLeft: 0,
+  },
+  errorText: {
+    color: '#FF6B6B',
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
+    fontWeight: '500',
   },
 });

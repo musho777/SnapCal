@@ -8,38 +8,7 @@ import {
 } from 'react-native';
 import { styles } from '../../../themes';
 
-export const Category = ({ navigation }) => {
-  const data = [
-    {
-      title: 'Vegan',
-      image: require('../../../assets/apple.png'),
-    },
-    {
-      title: 'Carb',
-      image: require('../../../assets/carb.png'),
-    },
-    {
-      title: 'Protein',
-      image: require('../../../assets/protein.png'),
-    },
-    {
-      title: 'Snack',
-      image: require('../../../assets/snack.png'),
-    },
-    {
-      title: 'Drink',
-      image: require('../../../assets/drink.png'),
-    },
-    {
-      title: 'Vegan',
-      image: require('../../../assets/apple.png'),
-    },
-    {
-      title: 'Vegan',
-      image: require('../../../assets/apple.png'),
-    },
-  ];
-
+export const Category = ({ navigation, data }) => {
   const handleCategoryPress = category => {
     navigation.navigate('Category', { category });
   };
@@ -80,9 +49,18 @@ export const Category = ({ navigation }) => {
                         pressed && localStyles.imgWrapperPressed,
                       ]}
                     >
-                      <Image style={localStyles.img} source={elm.image} />
+                      <Image
+                        style={localStyles.img}
+                        source={
+                          elm.icon_url
+                            ? {
+                                uri: `https://snapcal-back-production.up.railway.app${elm.icon_url}`,
+                              }
+                            : require('../../../assets/greekYogurt.png')
+                        }
+                      />
                     </View>
-                    <Text style={styles.captionPrimary}>{elm.title}</Text>
+                    <Text style={styles.captionPrimary}>{elm.name}</Text>
                   </>
                 )}
               </Pressable>
@@ -114,8 +92,8 @@ const localStyles = StyleSheet.create({
     transform: [{ scale: 0.95 }],
   },
   imgWrapper: {
-    width: 65,
-    height: 65,
+    width: 55,
+    height: 55,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -133,8 +111,8 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   img: {
-    width: 45,
-    height: 35,
+    width: 40,
+    height: 40,
   },
   paddingLeft: {
     paddingLeft: 5,

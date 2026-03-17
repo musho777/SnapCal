@@ -32,5 +32,5 @@ export const getBgColor = mealType => {
     dinner: '#FFE8E8',
     snack: '#F5E8D3',
   };
-  return colorMap[mealType] || '#F7F8FA';
+  return colorMap[mealType] || '#E8F5E9';
 };

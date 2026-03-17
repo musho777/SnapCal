@@ -1,25 +1,36 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { UIButton } from '../../common-ui/uIButton';
+import { styles } from '../../themes';
+import { getBgColor } from '../../utils/themesUtils';
+import { calculateHealthScore } from '../../utils/healthScore';
 
 export const FoodCard = ({
   item,
   isSaved = false,
   onToggleSave,
   onRecipePress,
+  flex = true,
 }) => {
-  const getHealthBarColor = score => {
+  const score = calculateHealthScore(item).score;
+  const getHealthBarColor = () => {
     if (score >= 8) return '#22C55E';
     if (score >= 6) return '#F59E0B';
     return '#EF4444';
   };
-
   return (
-    <View style={localStyles.foodCard}>
-      <View style={[localStyles.imageArea, { backgroundColor: item.bgColor }]}>
-        <View style={localStyles.tagBadge}>
-          <Text style={localStyles.tagText}>{item.tag}</Text>
-        </View>
+    <View style={[localStyles.foodCard, flex && styles.flex]}>
+      <View
+        style={[
+          localStyles.imageArea,
+          { backgroundColor: getBgColor(item.dish_type) },
+        ]}
+      >
+        {item.categories?.length > 0 && (
+          <View style={localStyles.tagBadge}>
+            <Text style={localStyles.tagText}>{item.categories[0]?.name}</Text>
+          </View>
+        )}
         <TouchableOpacity
           style={localStyles.heartButton}
           onPress={() => onToggleSave(item.id)}
@@ -27,7 +38,13 @@ export const FoodCard = ({
           <Text style={localStyles.heartIcon}>{isSaved ? '❤️' : '🤍'}</Text>
         </TouchableOpacity>
         <Image
-          source={item.image}
+          source={
+            item.image_url
+              ? {
+                  uri: `https://snapcal-back-production.up.railway.app${item.image_url}`,
+                }
+              : require('../../assets/greekYogurt.png')
+          }
           style={localStyles.foodImage}
           resizeMode="contain"
         />
@@ -38,19 +55,20 @@ export const FoodCard = ({
             {item.name}
           </Text>
         </View>
-        <Text style={localStyles.calorieText}>🔥 {item.kcal} kcal</Text>
+        <Text style={localStyles.calorieText}>🔥 {item.calories} kcal</Text>
         <View style={localStyles.healthBarContainer}>
           <View
             style={[
               localStyles.healthBar,
               {
-                width: `${item.health * 10}%`,
-                backgroundColor: getHealthBarColor(item.health),
+                width: `${score * 10}%`,
+                backgroundColor: getHealthBarColor(score),
               },
             ]}
           />
         </View>
         <UIButton
+          variant="card"
           backgroundColor={'#272727'}
           color={'white'}
           onPress={onRecipePress}
@@ -63,7 +81,6 @@ export const FoodCard = ({
 
 const localStyles = StyleSheet.create({
   foodCard: {
-    flex: 1,
     borderRadius: 20,
     backgroundColor: '#fff',
     overflow: 'hidden',

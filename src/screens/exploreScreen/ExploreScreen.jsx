@@ -1,32 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import { TabButton, Header } from './components';
 import { FoodCard } from '../../components/cards/FoodCard';
-import recipesData from '../../data/recipes.json';
-import { calculateHealthScore } from '../../utils/healthScore';
-import { getRecipeImage } from '../../utils/imageMapper';
 import { styles } from '../../themes';
 import NoResult from '../../components/noResult';
-import { getBgColor } from '../../utils/themesUtils';
-
-const transformRecipesToFoodData = recipes => {
-  return recipes.map(recipe => {
-    const healthData = calculateHealthScore(recipe.macros);
-    return {
-      id: recipe.id.toString(),
-      name: recipe.name,
-      kcal: recipe.totalCalories,
-      category: recipe.mealType,
-      health: healthData.score,
-      tag: recipe.category,
-      bgColor: getBgColor(recipe.mealType),
-      image: getRecipeImage(recipe.image),
-      rating: recipe.rating,
-    };
-  });
-};
-
-const FOOD_DATA = transformRecipesToFoodData(recipesData.recipes);
+import { useDispatch, useSelector } from 'react-redux';
+import { getDeash } from '../../features/explore/exploreAction';
+import { selectData, selectLoading } from '../../features/explore/exploreSlice';
+import Loading from '../../components/loading/Loading';
+import { useDebounce } from '../../hooks';
 
 const MEAL_TABS = [
   { id: 'all', label: 'All', emoji: '✨', time: '' },
@@ -37,21 +19,31 @@ const MEAL_TABS = [
 ];
 
 const ExploreScreen = ({ navigation }) => {
+  const data = useSelector(selectData);
+  const loading = useSelector(selectLoading);
+  const dispatch = useDispatch();
+
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedItems, setSavedItems] = useState({});
 
+  // Debounce the search query
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  useEffect(() => {
+    const params = {};
+    if (debouncedSearchQuery) {
+      params.q = debouncedSearchQuery;
+    }
+    if (activeTab !== 'all') {
+      params.dish_type = activeTab;
+    }
+    dispatch(getDeash(params));
+  }, [dispatch, debouncedSearchQuery, activeTab]);
+
   const toggleSave = id => {
     setSavedItems(prev => ({ ...prev, [id]: !prev[id] }));
   };
-
-  const filteredData = FOOD_DATA.filter(food => {
-    const matchesTab = activeTab === 'all' || food.category === activeTab;
-    const matchesSearch = food.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
-  });
 
   const renderFoodCard = ({ item }) => (
     <FoodCard
@@ -59,8 +51,8 @@ const ExploreScreen = ({ navigation }) => {
       isSaved={savedItems[item.id]}
       onToggleSave={toggleSave}
       onRecipePress={() => {
-        navigation.navigate('ExploreRecipient', {
-          recipeId: parseInt(item.id, 10),
+        navigation.navigate('Recipient', {
+          recipeId: item.id,
         });
       }}
     />
@@ -90,18 +82,23 @@ const ExploreScreen = ({ navigation }) => {
   return (
     <View style={localStyles.container}>
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      <FlatList
-        data={filteredData}
-        renderItem={renderFoodCard}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        style={styles.flex}
-        columnWrapperStyle={localStyles.columnWrapper}
-        contentContainerStyle={localStyles.listContent}
-        ListHeaderComponent={renderListHeader}
-        ListEmptyComponent={<NoResult />}
-        showsVerticalScrollIndicator={false}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={data?.dishes}
+          renderItem={renderFoodCard}
+          keyExtractor={item => item.id}
+          numColumns={2}
+          style={styles.flex}
+          keyboardDismissMode="on-drag"
+          columnWrapperStyle={localStyles.columnWrapper}
+          contentContainerStyle={localStyles.listContent}
+          ListHeaderComponent={renderListHeader}
+          ListEmptyComponent={<NoResult />}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };

@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { UIToggleSwitch } from '../common-ui/UIToggleSwitch';
 
 export const UIOptionRow = ({
@@ -11,10 +17,14 @@ export const UIOptionRow = ({
   options = [],
   isDanger = false,
   onPress,
+  loading = false,
 }) => {
   const renderRightContent = () => {
     switch (type) {
       case 'toggle':
+        if (loading) {
+          return <ActivityIndicator size="small" color="#272727" />;
+        }
         return <UIToggleSwitch value={value} onToggle={onValueChange} />;
 
       case 'select':
@@ -45,11 +55,16 @@ export const UIOptionRow = ({
       case 'arrow':
       case 'danger':
         return (
-          <Text
-            style={[localStyles.arrow, isDanger && localStyles.arrowDanger]}
-          >
-            ›
-          </Text>
+          <View style={localStyles.arrowContainer}>
+            {value && (
+              <Text style={localStyles.arrowValue}>{value}</Text>
+            )}
+            <Text
+              style={[localStyles.arrow, isDanger && localStyles.arrowDanger]}
+            >
+              ›
+            </Text>
+          </View>
         );
 
       default:
@@ -152,6 +167,16 @@ const localStyles = StyleSheet.create({
   },
   pillTextActive: {
     color: '#fff',
+  },
+  arrowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  arrowValue: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#9CA3AF',
   },
   arrow: {
     fontSize: 16,
