@@ -19,9 +19,12 @@ export const getUserMeasurement = createAsyncThunk(
 
 export const getMyDishes = createAsyncThunk(
   'get/getMyDishes',
-  async (_, { rejectWithValue }) => {
+  async (params = {}, { rejectWithValue }) => {
     try {
-      const data = await ApiClient.get('/dishes/my');
+      const { offset = 0, limit = 10 } = params;
+      const data = await ApiClient.get('/dishes/my', {
+        params: { offset, limit },
+      });
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

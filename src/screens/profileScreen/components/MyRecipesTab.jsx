@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
-import { Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { FlatList, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { FoodCard } from '../../../components/cards/FoodCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMyDishes } from '../../../features/user/userAction';
 import {
   selectMyDishes,
   selectMyDishesLoading,
+  selectMyDishesLoadingMore,
+  selectMyDishesHasMore,
 } from '../../../features/user/userSlice';
 import Loading from '../../../components/loading/Loading';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +15,8 @@ import { useNavigation } from '@react-navigation/native';
 const MyRecipesTab = ({ onAdd }) => {
   const dispatch = useDispatch();
   const loading = useSelector(selectMyDishesLoading);
+  const loadingMore = useSelector(selectMyDishesLoadingMore);
+  const hasMore = useSelector(selectMyDishesHasMore);
   const data = useSelector(selectMyDishes);
   const navigation = useNavigation();
 
@@ -23,8 +27,26 @@ const MyRecipesTab = ({ onAdd }) => {
     });
   };
 
+  const fetchData = useCallback(
+    (offset = 0) => {
+      const params = {
+        offset,
+        limit: 10,
+      };
+      dispatch(getMyDishes(params));
+    },
+    [dispatch],
+  );
+
+  const handleLoadMore = useCallback(() => {
+    if (!loadingMore && hasMore && data?.dishes?.length > 0) {
+      const nextOffset = data.dishes.length;
+      fetchData(nextOffset);
+    }
+  }, [loadingMore, hasMore, data?.dishes?.length, fetchData]);
+
   useEffect(() => {
-    dispatch(getMyDishes({}));
+    fetchData(0);
   }, [dispatch]);
 
   const renderRecipeCard = ({ item }) => {
@@ -38,15 +60,14 @@ const MyRecipesTab = ({ onAdd }) => {
     );
   };
 
-  const renderFooter = () => (
-    <TouchableOpacity style={localStyles.addCTA} onPress={onAdd}>
-      <Text style={localStyles.addEmoji}>👨‍🍳</Text>
-      <Text style={localStyles.addTitle}>Add Your Own Recipe</Text>
-      <Text style={localStyles.addSubtitle}>
-        Create and save your custom recipes here
-      </Text>
-    </TouchableOpacity>
-  );
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <View style={localStyles.footerLoader}>
+        <ActivityIndicator size="small" color="#00C853" />
+      </View>
+    );
+  };
 
   if (loading) {
     return <Loading />;
@@ -54,14 +75,16 @@ const MyRecipesTab = ({ onAdd }) => {
 
   return (
     <FlatList
-      data={data.dishes}
+      data={data?.dishes}
       renderItem={renderRecipeCard}
       keyExtractor={item => item.id.toString()}
       numColumns={2}
       columnWrapperStyle={localStyles.columnWrapper}
       contentContainerStyle={localStyles.listContent}
-      ListFooterComponent={renderFooter}
       showsVerticalScrollIndicator={false}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={renderFooter}
     />
   );
 };
@@ -74,6 +97,10 @@ const localStyles = StyleSheet.create({
   },
   columnWrapper: {
     gap: 12,
+  },
+  footerLoader: {
+    paddingVertical: 20,
+    alignItems: 'center',
   },
   addCTA: {
     marginTop: 8,
