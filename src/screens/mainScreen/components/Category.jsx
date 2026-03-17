@@ -92,8 +92,8 @@ const localStyles = StyleSheet.create({
     transform: [{ scale: 0.95 }],
   },
   imgWrapper: {
-    width: 65,
-    height: 65,
+    width: 55,
+    height: 55,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
@@ -111,8 +111,8 @@ const localStyles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   img: {
-    width: 45,
-    height: 35,
+    width: 40,
+    height: 40,
   },
   paddingLeft: {
     paddingLeft: 5,
