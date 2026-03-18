@@ -1,13 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
+import { Calendar, CalendarDays } from 'lucide-react-native';
+import UIViewToggle from '../../../common-ui/UIViewToggle';
 
-const Header = () => {
+const Header = ({ viewMode, onViewModeChange, currentMonth }) => {
+  const viewOptions = [
+    {
+      value: 'week',
+      label: 'Week',
+      icon: <CalendarDays />,
+    },
+    {
+      value: 'month',
+      label: 'Month',
+      icon: <Calendar />,
+    },
+  ];
+
   return (
     <View style={styles.header}>
       <View>
         <Text style={styles.headerTitle}>Meal Plan</Text>
-        <Text style={styles.headerSubtitle}>February 2026</Text>
+        <Text style={styles.headerSubtitle}>{currentMonth}</Text>
       </View>
+      <UIViewToggle
+        options={viewOptions}
+        activeValue={viewMode}
+        onChange={onViewModeChange}
+      />
     </View>
   );
 };

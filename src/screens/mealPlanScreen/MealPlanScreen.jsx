@@ -3,6 +3,7 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import {
   Header,
   DaySelector,
+  CalendarView,
   SummaryCard,
   MealSection,
   WeeklyChart,
@@ -60,12 +61,29 @@ const MealPlanScreen = ({ navigation }) => {
   const [activeDay, setActiveDay] = useState(
     weeklyData[1]?.date || new Date().getDate(),
   );
+  const [viewMode, setViewMode] = useState('week'); // 'week' or 'month'
   const [expandedSections, setExpandedSections] = useState({
     breakfast: true,
     lunch: false,
     dinner: false,
     snacks: false,
   });
+
+  // Calculate current month display
+  const currentMonth = useMemo(() => {
+    const selectedDay = weeklyData.find(day => day.date === activeDay);
+    if (selectedDay?.fullDate) {
+      const date = new Date(selectedDay.fullDate);
+      return date.toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+      });
+    }
+    return new Date().toLocaleDateString('en-US', {
+      month: 'long',
+      year: 'numeric',
+    });
+  }, [weeklyData, activeDay]);
 
   const mealSections = [
     {
@@ -151,13 +169,26 @@ const MealPlanScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header />
-
-      <DaySelector
-        weeklyData={weeklyData}
-        activeDay={activeDay}
-        onDayChange={setActiveDay}
+      <Header
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        currentMonth={currentMonth}
       />
+
+      {viewMode === 'week' ? (
+        <DaySelector
+          weeklyData={weeklyData}
+          activeDay={activeDay}
+          onDayChange={setActiveDay}
+        />
+      ) : (
+        <CalendarView
+          weeklyData={weeklyData}
+          activeDay={activeDay}
+          onDayChange={setActiveDay}
+          allMealData={data}
+        />
+      )}
 
       <ScrollView
         style={styles.scrollView}
