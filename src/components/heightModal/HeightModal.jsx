@@ -36,7 +36,7 @@ const HeightModal = ({
   onClose,
   loading = false,
 }) => {
-  const [unit, setUnit] = useState('cm');
+  const unit = 'cm';
   const [cm, setCm] = useState(current || 170);
 
   const bottomSheetRef = useRef(null);
@@ -90,8 +90,8 @@ const HeightModal = ({
     [],
   );
 
-  const cmToFeetInches = cm => {
-    const totalInches = cm / 2.54;
+  const cmToFeetInches = paramCm => {
+    const totalInches = paramCm / 2.54;
     const feet = Math.floor(totalInches / 12);
     const inches = Math.round(totalInches % 12);
     return { feet, inches };
