@@ -37,7 +37,7 @@ const WeightModal = ({
   onClose,
   loading = false,
 }) => {
-  const [unit, setUnit] = useState('kg');
+  const unit = 'kg';
   const [kg, setKg] = useState(current || 70);
 
   const bottomSheetRef = useRef(null);
@@ -109,10 +109,6 @@ const WeightModal = ({
   // Ideal weight range (BMI 18.5–24.9)
   const idealMin = Math.round(18.5 * (height / 100) ** 2);
   const idealMax = Math.round(24.9 * (height / 100) ** 2);
-
-  // Slider positions (0–100%)
-  const idealMinPct = ((idealMin - MIN) / (MAX - MIN)) * 100;
-  const idealMaxPct = ((idealMax - MIN) / (MAX - MIN)) * 100;
 
   // Display value: kg or lbs
   const displayVal = unit === 'kg' ? kg : Math.round(kg * 2.2046);
