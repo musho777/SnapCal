@@ -47,6 +47,9 @@ const SummaryCard = ({
     extrapolate: 'clamp',
   });
 
+  // Check if burned calories exceed the goal
+  const isOverGoal = totalKcal > goalKcal;
+
   return (
     <View style={styles.summaryCard}>
       <View style={styles.decorativeCircleLarge} />
@@ -68,7 +71,11 @@ const SummaryCard = ({
       <View style={styles.progressContainer}>
         <View style={styles.progressTrack}>
           <Animated.View
-            style={[styles.progressBar, { width: progressWidth }]}
+            style={[
+              styles.progressBar,
+              { width: progressWidth },
+              isOverGoal && styles.progressBarOverGoal,
+            ]}
           />
         </View>
         <View style={styles.progressLabels}>
@@ -206,6 +213,9 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#fff',
     borderRadius: 4,
+  },
+  progressBarOverGoal: {
+    backgroundColor: '#EF4444',
   },
   progressLabels: {
     flexDirection: 'row',
