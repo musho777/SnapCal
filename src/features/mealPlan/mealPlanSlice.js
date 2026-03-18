@@ -58,7 +58,9 @@ const mealPlanSlice = createSlice({
             );
           } else {
             // Add to burned (track)
-            const calories = dish?.calories_at_time || 0;
+            const baseCalories = dish?.calories_at_time || 0;
+            const servings = dish?.servings || 1;
+            const calories = baseCalories * servings;
             caloriesDiff = calories;
 
             newBurnedDishes = [
@@ -119,7 +121,9 @@ const mealPlanSlice = createSlice({
               (_, idx) => idx !== existingIndex,
             );
           } else {
-            const calories = dish?.calories_at_time || 0;
+            const baseCalories = dish?.calories_at_time || 0;
+            const servings = dish?.servings || 1;
+            const calories = baseCalories * servings;
             caloriesDiff = calories;
 
             newBurnedDishes = [

@@ -118,7 +118,6 @@ const MealSection = ({
                           : require('../../../assets/greekYogurt.png')
                       }
                     />
-                    {/* <Text style={styles.foodEmoji}>{food.emoji || '🍌'}</Text> */}
                   </View>
                   <View style={styles.foodInfo}>
                     <View style={styles.foodNameContainer}>
@@ -279,13 +278,13 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 10,
     marginBottom: 8,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#F3F4F6',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.03,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowRadius: 1,
+    elevation: 1,
   },
   foodItemBurned: {
     backgroundColor: '#F0FDF4',
