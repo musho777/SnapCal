@@ -177,12 +177,14 @@ const MealPlanScreen = ({ navigation }) => {
 
       {viewMode === 'week' ? (
         <DaySelector
+          key="week-selector"
           weeklyData={weeklyData}
           activeDay={activeDay}
           onDayChange={setActiveDay}
         />
       ) : (
         <CalendarView
+          key="month-calendar"
           weeklyData={weeklyData}
           activeDay={activeDay}
           onDayChange={setActiveDay}

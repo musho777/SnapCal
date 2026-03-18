@@ -1,9 +1,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Animated, { FadeInLeft, FadeOutRight } from 'react-native-reanimated';
 
 const DaySelector = ({ weeklyData, activeDay, onDayChange }) => {
   return (
-    <View style={styles.daySelectorContainer}>
+    <Animated.View
+      style={styles.daySelectorContainer}
+      entering={FadeInLeft.duration(300)}
+      exiting={FadeOutRight.duration(300)}
+    >
       <View style={styles.daySelector}>
         {weeklyData.map(day => {
           const isActive = activeDay === day.id;
@@ -29,7 +34,7 @@ const DaySelector = ({ weeklyData, activeDay, onDayChange }) => {
           );
         })}
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 
 const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
   const markedDates = useMemo(() => {
@@ -46,7 +47,11 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
     : new Date().toISOString().substring(0, 7);
 
   return (
-    <View style={styles.calendarContainer}>
+    <Animated.View
+      style={styles.calendarContainer}
+      entering={FadeInRight.duration(300)}
+      exiting={FadeOutLeft.duration(300)}
+    >
       <Calendar
         current={currentMonth}
         onDayPress={handleDayPress}
@@ -75,7 +80,7 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
         hideExtraDays={false}
         style={styles.calendar}
       />
-    </View>
+    </Animated.View>
   );
 };
 
