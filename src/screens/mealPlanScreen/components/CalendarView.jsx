@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 
@@ -56,6 +56,16 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
         current={currentMonth}
         onDayPress={handleDayPress}
         markedDates={markedDates}
+        hideArrows={false}
+        disableArrowLeft={false}
+        disableArrowRight={false}
+        renderArrow={(direction) => {
+          return (
+            <View style={styles.arrow}>
+              {direction === 'left' ? <Text style={styles.arrowText}>‹</Text> : <Text style={styles.arrowText}>›</Text>}
+            </View>
+          );
+        }}
         theme={{
           backgroundColor: '#ffffff',
           calendarBackground: '#ffffff',
@@ -94,6 +104,14 @@ const styles = StyleSheet.create({
   },
   calendar: {
     borderRadius: 12,
+  },
+  arrow: {
+    padding: 10,
+  },
+  arrowText: {
+    fontSize: 24,
+    color: '#272727',
+    fontWeight: 'bold',
   },
 });
 
