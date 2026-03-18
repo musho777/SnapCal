@@ -140,8 +140,7 @@ const MealPlanScreen = ({ navigation }) => {
 
     const params = {
       date: selectedDay.dateString,
-      dishId: food.dish_id,
-      mealId: food.meal_id,
+      mealDishId: food.id,
     };
 
     dispatch(toggleBurnedDishOptimistic(params));

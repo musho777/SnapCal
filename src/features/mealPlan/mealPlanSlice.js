@@ -22,15 +22,28 @@ const mealPlanSlice = createSlice({
   reducers: {
     // Optimistic update: immediately toggle burned status
     toggleBurnedDishOptimistic: (state, { payload }) => {
-      const { date, dishId, mealId } = payload;
+      const { date, mealDishId } = payload;
 
       state.data.mealPlan = state.data.mealPlan.map(dayPlan => {
         if (dayPlan.log_date === date) {
           const burnedDishes = dayPlan.burned_dishes || [];
 
-          // Check if already burned
+          // Find the meal_dish using mealDishId
+          let dish = null;
+
+          for (const meal of dayPlan.meals || []) {
+            const foundDish = meal.meal_dishes?.find(d => d.id === mealDishId);
+            if (foundDish) {
+              dish = foundDish;
+              break;
+            }
+          }
+
+          if (!dish) return dayPlan;
+
+          // Check if already burned using meal_dish_id
           const existingIndex = burnedDishes.findIndex(
-            burned => burned.dish_id === dishId && burned.meal_id === mealId,
+            burned => burned.meal_dish_id === mealDishId,
           );
 
           let newBurnedDishes;
@@ -45,8 +58,6 @@ const mealPlanSlice = createSlice({
             );
           } else {
             // Add to burned (track)
-            const meal = dayPlan.meals?.find(m => m.id === mealId);
-            const dish = meal?.meal_dishes?.find(d => d.dish_id === dishId);
             const calories = dish?.calories_at_time || 0;
             caloriesDiff = calories;
 
@@ -54,8 +65,7 @@ const mealPlanSlice = createSlice({
               ...burnedDishes,
               {
                 id: `temp-${Date.now()}`, // Temporary ID
-                dish_id: dishId,
-                meal_id: mealId,
+                meal_dish_id: mealDishId,
                 daily_log_id: dayPlan.id,
                 calories_burned: calories,
                 dish: dish?.dish,
@@ -74,15 +84,29 @@ const mealPlanSlice = createSlice({
     },
     // Revert optimistic update on error
     revertBurnedDishOptimistic: (state, { payload }) => {
-      const { date, dishId, mealId } = payload;
+      const { date, mealDishId } = payload;
 
       // Just toggle again to revert
       state.data.mealPlan = state.data.mealPlan.map(dayPlan => {
         if (dayPlan.log_date === date) {
           const burnedDishes = dayPlan.burned_dishes || [];
 
+          // Find the meal_dish using mealDishId
+          let dish = null;
+
+          for (const meal of dayPlan.meals || []) {
+            const foundDish = meal.meal_dishes?.find(d => d.id === mealDishId);
+            if (foundDish) {
+              dish = foundDish;
+              break;
+            }
+          }
+
+          if (!dish) return dayPlan;
+
+          // Check if already burned using meal_dish_id
           const existingIndex = burnedDishes.findIndex(
-            burned => burned.dish_id === dishId && burned.meal_id === mealId,
+            burned => burned.meal_dish_id === mealDishId,
           );
 
           let newBurnedDishes;
@@ -95,8 +119,6 @@ const mealPlanSlice = createSlice({
               (_, idx) => idx !== existingIndex,
             );
           } else {
-            const meal = dayPlan.meals?.find(m => m.id === mealId);
-            const dish = meal?.meal_dishes?.find(d => d.dish_id === dishId);
             const calories = dish?.calories_at_time || 0;
             caloriesDiff = calories;
 
@@ -104,8 +126,7 @@ const mealPlanSlice = createSlice({
               ...burnedDishes,
               {
                 id: `temp-${Date.now()}`,
-                dish_id: dishId,
-                meal_id: mealId,
+                meal_dish_id: mealDishId,
                 daily_log_id: dayPlan.id,
                 calories_burned: calories,
                 dish: dish?.dish,
@@ -144,37 +165,22 @@ const mealPlanSlice = createSlice({
         const { mealDishId } = payload;
 
         state.data.mealPlan = state.data.mealPlan.map(dayPlan => {
-          // Find the dish being deleted to get its info
-          let deletedDish = null;
-          let deletedDishMealId = null;
-          for (const meal of dayPlan.meals) {
-            const dish = meal.meal_dishes.find(d => d.id === mealDishId);
-            if (dish) {
-              deletedDish = dish;
-              deletedDishMealId = meal.id;
-              break;
-            }
-          }
-
           // Check if the deleted dish was burned
           let caloriesDiff = 0;
           let newBurnedDishes = dayPlan.burned_dishes || [];
 
-          if (deletedDish && deletedDishMealId) {
-            const burnedIndex = newBurnedDishes.findIndex(
-              burned =>
-                burned.dish_id === deletedDish.dish_id &&
-                burned.meal_id === deletedDishMealId,
-            );
+          // Check if the deleted dish was burned using meal_dish_id
+          const burnedIndex = newBurnedDishes.findIndex(
+            burned => burned.meal_dish_id === mealDishId,
+          );
 
-            if (burnedIndex >= 0) {
-              // Dish was burned, subtract its calories
-              const burnedDish = newBurnedDishes[burnedIndex];
-              caloriesDiff = -(burnedDish.calories_burned || 0);
-              newBurnedDishes = newBurnedDishes.filter(
-                (_, idx) => idx !== burnedIndex,
-              );
-            }
+          if (burnedIndex >= 0) {
+            // Dish was burned, subtract its calories
+            const burnedDish = newBurnedDishes[burnedIndex];
+            caloriesDiff = -(burnedDish.calories_burned || 0);
+            newBurnedDishes = newBurnedDishes.filter(
+              (_, idx) => idx !== burnedIndex,
+            );
           }
 
           // Update meals and recalculate total_calories

@@ -85,9 +85,7 @@ const MealSection = ({
           ) : (
             foods?.meal_dishes?.map(food => {
               const isBurned = burnedDishes?.some(
-                burned =>
-                  burned.dish_id === food.dish_id &&
-                  burned.meal_id === food.meal_id,
+                burned => burned.meal_dish_id === food.id,
               );
               const isNotBurnedInPast = !isBurned && isPastDate;
 

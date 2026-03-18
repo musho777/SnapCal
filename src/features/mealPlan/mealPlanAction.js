@@ -42,12 +42,36 @@ export const updateDailyLog = createAsyncThunk(
 
 export const burnCalory = createAsyncThunk(
   'mealPlan/burnCalory',
-  async ({ date, dishId, mealId }, { rejectWithValue }) => {
+  async ({ date, mealDishId }, { rejectWithValue, getState }) => {
     try {
+      // Find dishId and mealId from mealDishId
+      const state = getState();
+      const mealPlan = state.mealPlan?.data?.mealPlan || [];
+      const dayPlan = mealPlan.find(d => d.log_date === date);
+
+      let dishId = null;
+      let mealId = null;
+
+      if (dayPlan) {
+        for (const meal of dayPlan.meals || []) {
+          const foundDish = meal.meal_dishes?.find(d => d.id === mealDishId);
+          if (foundDish) {
+            dishId = foundDish.dish_id;
+            mealId = meal.id;
+            break;
+          }
+        }
+      }
+
+      if (!dishId || !mealId) {
+        return rejectWithValue('Could not find dish or meal');
+      }
+
       const data = await ApiClient.post(
-        `/logs/daily/${date}/meals/${mealId}/burned-dishes/${dishId}`,
+        `/logs/daily/${date}/meal-dishes/${mealDishId}/toggle-burned
+       `,
       );
-      return { ...data, requestParams: { date, dishId, mealId } };
+      return { ...data, requestParams: { date, mealDishId } };
     } catch (error) {
       console.error('burnCalory error:', error);
       return rejectWithValue(error.response?.data?.message || error.message);
