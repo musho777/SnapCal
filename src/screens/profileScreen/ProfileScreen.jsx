@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Header, SavedTab, MyRecipesTab, SettingsTab } from './components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+import { getPreferences } from '../../features/notifications/notificationsAction';
+import { useDispatch } from 'react-redux';
 
 const ProfileScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('Settings');
@@ -9,7 +12,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const [userName, setUserName] = useState('John Doe');
   const userEmail = 'john.doe@example.com';
-
+  const dispatch = useDispatch();
   const [darkMode, setDarkMode] = useState(false);
   const [weightUnit, setWeightUnit] = useState('kg');
   const [heightUnit, setHeightUnit] = useState('cm');
@@ -30,8 +33,15 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+    dispatch(getPreferences());
     getUserData();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setActiveTab('Settings');
+    }, []),
+  );
 
   const renderTabContent = () => {
     switch (activeTab) {

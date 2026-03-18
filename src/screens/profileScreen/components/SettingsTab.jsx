@@ -15,10 +15,7 @@ import {
   removeAccessToken,
   removeRefreshToken,
 } from '../../../api/TokenService';
-import {
-  getPreferences,
-  updatePreference,
-} from '../../../features/notifications/notificationsAction';
+import { updatePreference } from '../../../features/notifications/notificationsAction';
 import {
   selectPreference,
   selectLoadingPreference,
@@ -93,10 +90,6 @@ const SettingsTab = ({
       setAlertVisible(true);
     }
   };
-
-  useEffect(() => {
-    dispatch(getPreferences());
-  }, []);
 
   useEffect(() => {
     if (notificationPreference && Array.isArray(notificationPreference)) {
