@@ -16,10 +16,9 @@ const CalendarView = ({ activeDay, onDayChange, allMealData }) => {
         }
       });
     }
-
-    if (activeDay?.dateString) {
-      marked[activeDay.dateString] = {
-        ...marked[activeDay.dateString],
+    if (activeDay?.fullDate) {
+      marked[activeDay.fullDate] = {
+        ...marked[activeDay.fullDate],
         selected: true,
         selectedColor: '#272727',
         selectedTextColor: '#fff',
@@ -29,10 +28,6 @@ const CalendarView = ({ activeDay, onDayChange, allMealData }) => {
     return marked;
   }, [activeDay, allMealData]);
 
-  const currentMonth = activeDay?.dateString
-    ? activeDay.dateString.substring(0, 7)
-    : new Date().toISOString().substring(0, 7);
-
   return (
     <Animated.View
       style={styles.calendarContainer}
@@ -40,7 +35,6 @@ const CalendarView = ({ activeDay, onDayChange, allMealData }) => {
       exiting={FadeOutLeft.duration(300)}
     >
       <Calendar
-        current={currentMonth}
         onDayPress={day => {
           const date = new Date(day.dateString);
           onDayChange({
