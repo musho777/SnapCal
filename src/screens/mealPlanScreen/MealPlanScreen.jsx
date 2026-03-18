@@ -51,16 +51,22 @@ const MealPlanScreen = ({ navigation }) => {
         date: date,
         id: date,
         calories: dayData?.calories_consumed || undefined,
-        fullDate: dateString,
+        dateString: dateString,
       });
     }
 
     return newData;
   }, [data]);
 
-  const [activeDay, setActiveDay] = useState(
-    weeklyData[1]?.date || new Date().getDate(),
-  );
+  const [activeDay, setActiveDay] = useState(() => {
+    const defaultDay = weeklyData[1] || weeklyData[0];
+    const dayData = data.find(d => d.log_date === defaultDay?.dateString);
+    return {
+      fullDate: defaultDay?.dateString,
+      id: defaultDay?.id,
+      calories: dayData?.calories_consumed,
+    };
+  });
   const [viewMode, setViewMode] = useState('week'); // 'week' or 'month'
   const [expandedSections, setExpandedSections] = useState({
     breakfast: true,
@@ -71,9 +77,9 @@ const MealPlanScreen = ({ navigation }) => {
 
   // Calculate current month display
   const currentMonth = useMemo(() => {
-    const selectedDay = weeklyData.find(day => day.date === activeDay);
-    if (selectedDay?.fullDate) {
-      const date = new Date(selectedDay.fullDate);
+    const selectedDay = weeklyData.find(day => day.id === activeDay?.id);
+    if (selectedDay?.dateString) {
+      const date = new Date(selectedDay.dateString);
       return date.toLocaleDateString('en-US', {
         month: 'long',
         year: 'numeric',
@@ -130,11 +136,11 @@ const MealPlanScreen = ({ navigation }) => {
   };
 
   const handleFoodPress = async food => {
-    const selectedDay = weeklyData.find(day => day.date === activeDay);
+    const selectedDay = weeklyData.find(day => day.id === activeDay?.id);
     if (!selectedDay) return;
 
     const params = {
-      date: selectedDay.fullDate,
+      date: selectedDay.dateString,
       dishId: food.dish_id,
       mealId: food.meal_id,
     };
@@ -154,6 +160,14 @@ const MealPlanScreen = ({ navigation }) => {
     });
   };
 
+  const handleDayPress = day => {
+    const dayData = data.find(d => d.log_date === day.dateString);
+    setActiveDay({
+      fullDate: day.dateString,
+      id: day.id,
+      calories: dayData?.calories_consumed,
+    });
+  };
   useEffect(() => {
     dispatch(getMainPlanRange({}));
   }, [dispatch]);
@@ -162,11 +176,10 @@ const MealPlanScreen = ({ navigation }) => {
     return <Loading />;
   }
 
-  const selectedDay = weeklyData.find(day => day.date === activeDay);
+  const selectedDay = weeklyData.find(day => day.id === activeDay?.id);
   const activeDayData = data.find(
-    dayData => dayData.log_date === selectedDay?.fullDate,
+    dayData => dayData.log_date === activeDay?.fullDate,
   );
-
   return (
     <View style={styles.container}>
       <Header
@@ -180,15 +193,16 @@ const MealPlanScreen = ({ navigation }) => {
           <DaySelector
             key="week-selector"
             weeklyData={weeklyData}
-            activeDay={activeDay}
-            onDayChange={setActiveDay}
+            activeDay={activeDay.id}
+            onDayChange={handleDayPress}
           />
         ) : (
           <CalendarView
             key="month-calendar"
+            data={data}
             weeklyData={weeklyData}
-            activeDay={activeDay}
-            onDayChange={setActiveDay}
+            activeDay={activeDay.id}
+            onDayChange={handleDayPress}
             allMealData={data}
           />
         )}
@@ -215,7 +229,7 @@ const MealPlanScreen = ({ navigation }) => {
                 onDeleteFood={mealDishId => deleteFood(mealDishId)}
                 onFoodPress={food => handleFoodPress(food)}
                 onAddFood={() => handleAddFood(section.id)}
-                activeDate={selectedDay?.fullDate}
+                activeDate={selectedDay?.dateString}
               />
             );
           })}

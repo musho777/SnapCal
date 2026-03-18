@@ -6,7 +6,6 @@ import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
   const markedDates = useMemo(() => {
     const marked = {};
-
     if (allMealData && Array.isArray(allMealData)) {
       allMealData.forEach(dayData => {
         if (dayData.log_date && dayData.calories_consumed > 0) {
@@ -18,10 +17,10 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
       });
     }
 
-    const selectedDay = weeklyData.find(day => day.date === activeDay);
-    if (selectedDay?.fullDate) {
-      marked[selectedDay.fullDate] = {
-        ...marked[selectedDay.fullDate],
+    const selectedDay = weeklyData.find(day => day.id === activeDay);
+    if (selectedDay?.dateString) {
+      marked[selectedDay.dateString] = {
+        ...marked[selectedDay.dateString],
         selected: true,
         selectedColor: '#272727',
         selectedTextColor: '#fff',
@@ -31,19 +30,9 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
     return marked;
   }, [weeklyData, activeDay, allMealData]);
 
-  const handleDayPress = day => {
-    const matchingDay = weeklyData.find(d => d.fullDate === day.dateString);
-    if (matchingDay) {
-      onDayChange(matchingDay.date);
-    } else {
-      const dateObj = new Date(day.dateString);
-      onDayChange(dateObj.getDate());
-    }
-  };
-
-  const selectedDay = weeklyData.find(day => day.date === activeDay);
-  const currentMonth = selectedDay?.fullDate
-    ? selectedDay.fullDate.substring(0, 7)
+  const selectedDay = weeklyData.find(day => day.id === activeDay);
+  const currentMonth = selectedDay?.dateString
+    ? selectedDay.dateString.substring(0, 7)
     : new Date().toISOString().substring(0, 7);
 
   return (
@@ -54,15 +43,26 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
     >
       <Calendar
         current={currentMonth}
-        onDayPress={handleDayPress}
+        onDayPress={(day) => {
+          const date = new Date(day.dateString);
+          onDayChange({
+            dateString: day.dateString,
+            id: date.getDate(),
+            day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()],
+          });
+        }}
         markedDates={markedDates}
         hideArrows={false}
         disableArrowLeft={false}
         disableArrowRight={false}
-        renderArrow={(direction) => {
+        renderArrow={direction => {
           return (
             <View style={styles.arrow}>
-              {direction === 'left' ? <Text style={styles.arrowText}>‹</Text> : <Text style={styles.arrowText}>›</Text>}
+              {direction === 'left' ? (
+                <Text style={styles.arrowText}>‹</Text>
+              ) : (
+                <Text style={styles.arrowText}>›</Text>
+              )}
             </View>
           );
         }}

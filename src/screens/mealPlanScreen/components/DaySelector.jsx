@@ -17,7 +17,7 @@ const DaySelector = ({ weeklyData, activeDay, onDayChange }) => {
             <TouchableOpacity
               key={day.id}
               style={[styles.dayButton, isActive && styles.dayButtonActive]}
-              onPress={() => onDayChange(day.id)}
+              onPress={() => onDayChange(day)}
             >
               <Text
                 style={[styles.dayLabel, isActive && styles.dayLabelActive]}
