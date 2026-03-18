@@ -233,7 +233,7 @@ const MealPlanScreen = ({ navigation }) => {
             );
           })}
 
-          <WeeklyChart weeklyData={weeklyData} activeDay={activeDay} />
+          <WeeklyChart weeklyData={weeklyData} activeDay={activeDay.id} />
         </View>
       </ScrollView>
     </View>
