@@ -75,7 +75,6 @@ const MealPlanScreen = ({ navigation }) => {
     snacks: false,
   });
 
-  // Calculate current month display
   const currentMonth = useMemo(() => {
     const selectedDay = weeklyData.find(day => day.id === activeDay?.id);
     if (selectedDay?.dateString) {
@@ -164,7 +163,9 @@ const MealPlanScreen = ({ navigation }) => {
     const dayData = data.find(d => d.log_date === day.dateString);
     setActiveDay({
       fullDate: day.dateString,
-      id: day.id,
+      dateString: day.dateString,
+      id: day.id || day.day,
+      date: day.id || day.day,
       calories: dayData?.calories_consumed,
     });
   };
@@ -176,7 +177,6 @@ const MealPlanScreen = ({ navigation }) => {
     return <Loading />;
   }
 
-  const selectedDay = weeklyData.find(day => day.id === activeDay?.id);
   const activeDayData = data.find(
     dayData => dayData.log_date === activeDay?.fullDate,
   );
@@ -200,8 +200,7 @@ const MealPlanScreen = ({ navigation }) => {
           <CalendarView
             key="month-calendar"
             data={data}
-            weeklyData={weeklyData}
-            activeDay={activeDay.id}
+            activeDay={activeDay}
             onDayChange={handleDayPress}
             allMealData={data}
           />
@@ -229,7 +228,7 @@ const MealPlanScreen = ({ navigation }) => {
                 onDeleteFood={mealDishId => deleteFood(mealDishId)}
                 onFoodPress={food => handleFoodPress(food)}
                 onAddFood={() => handleAddFood(section.id)}
-                activeDate={selectedDay?.dateString}
+                activeDate={activeDay?.dateString}
               />
             );
           })}

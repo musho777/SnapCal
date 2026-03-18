@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 
-const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
+const CalendarView = ({ activeDay, onDayChange, allMealData }) => {
   const markedDates = useMemo(() => {
     const marked = {};
     if (allMealData && Array.isArray(allMealData)) {
@@ -17,10 +17,9 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
       });
     }
 
-    const selectedDay = weeklyData.find(day => day.id === activeDay);
-    if (selectedDay?.dateString) {
-      marked[selectedDay.dateString] = {
-        ...marked[selectedDay.dateString],
+    if (activeDay?.dateString) {
+      marked[activeDay.dateString] = {
+        ...marked[activeDay.dateString],
         selected: true,
         selectedColor: '#272727',
         selectedTextColor: '#fff',
@@ -28,11 +27,10 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
     }
 
     return marked;
-  }, [weeklyData, activeDay, allMealData]);
+  }, [activeDay, allMealData]);
 
-  const selectedDay = weeklyData.find(day => day.id === activeDay);
-  const currentMonth = selectedDay?.dateString
-    ? selectedDay.dateString.substring(0, 7)
+  const currentMonth = activeDay?.dateString
+    ? activeDay.dateString.substring(0, 7)
     : new Date().toISOString().substring(0, 7);
 
   return (
@@ -43,12 +41,14 @@ const CalendarView = ({ weeklyData, activeDay, onDayChange, allMealData }) => {
     >
       <Calendar
         current={currentMonth}
-        onDayPress={(day) => {
+        onDayPress={day => {
           const date = new Date(day.dateString);
           onDayChange({
             dateString: day.dateString,
             id: date.getDate(),
-            day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()],
+            day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][
+              date.getDay()
+            ],
           });
         }}
         markedDates={markedDates}
