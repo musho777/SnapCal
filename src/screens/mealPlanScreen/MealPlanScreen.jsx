@@ -212,6 +212,7 @@ const MealPlanScreen = ({ navigation }) => {
             totalCarbs={activeDayData?.carbs_consumed_g || 0}
             totalProtein={activeDayData?.protein_consumed_g || 0}
             totalFat={activeDayData?.fats_consumed_g || 0}
+            selectedDate={activeDay?.fullDate}
           />
           {mealSections.map(section => {
             const foods =

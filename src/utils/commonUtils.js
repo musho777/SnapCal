@@ -107,3 +107,20 @@ export const formatTimestamp = (
     return `${formatDate()} ${formatTime()}`;
   }
 };
+
+/**
+ * Check if a date string is today
+ * @param {string} dateString - Date string in format "YYYY-MM-DD"
+ * @returns {boolean} True if the date is today, false otherwise
+ */
+export const isToday = dateString => {
+  if (!dateString) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const compareDate = new Date(dateString);
+  compareDate.setHours(0, 0, 0, 0);
+
+  return today.getTime() === compareDate.getTime();
+};

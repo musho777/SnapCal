@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Animated, StyleSheet } from 'react-native';
+import { isToday, formatTimestamp } from '../../../utils/commonUtils';
 
 const SummaryCard = ({
   totalKcal,
@@ -7,7 +8,12 @@ const SummaryCard = ({
   totalCarbs,
   totalProtein,
   totalFat,
+  selectedDate,
 }) => {
+  // Get the date label
+  const dateLabel = isToday(selectedDate)
+    ? "TODAY'S CALORIES"
+    : formatTimestamp(selectedDate, 'date', { dateStyle: 'medium' }).toUpperCase() + "'S CALORIES";
   const percentComplete = Math.min(
     Math.round((totalKcal / goalKcal) * 100),
     100,
@@ -48,7 +54,7 @@ const SummaryCard = ({
 
       <View style={styles.summaryTop}>
         <View>
-          <Text style={styles.summaryLabel}>TODAY'S CALORIES</Text>
+          <Text style={styles.summaryLabel}>{dateLabel}</Text>
           <View style={styles.summaryCalorieRow}>
             <Text style={styles.summaryCalories}>{totalKcal || 0}</Text>
             <Text style={styles.summaryGoal}> / {goalKcal || 0} Kcal</Text>
