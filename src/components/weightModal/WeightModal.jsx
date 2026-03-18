@@ -24,7 +24,6 @@ import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetBackdrop,
-  BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 
 const MIN = 30;
@@ -127,6 +126,9 @@ const WeightModal = ({
       backdropComponent={renderBackdrop}
       handleIndicatorStyle={styles.handleIndicator}
       backgroundStyle={styles.bottomSheetBackground}
+      activeOffsetX={[-999, 999]}
+      activeOffsetY={[-5, 5]}
+      enableContentPanningGesture={false}
     >
       <BottomSheetView style={styles.headerContainer}>
         <View style={styles.header}>
@@ -150,10 +152,7 @@ const WeightModal = ({
         </View>
       </BottomSheetView>
 
-      <BottomSheetScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <BottomSheetView style={styles.content}>
         {/* <View style={styles.unitToggle}>
           {['kg', 'lbs'].map(u => (
             <TouchableOpacity
@@ -252,7 +251,7 @@ const WeightModal = ({
             </TouchableOpacity>
           </View>
         </View>
-      </BottomSheetScrollView>
+      </BottomSheetView>
     </BottomSheetModal>
   );
 };
@@ -274,7 +273,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     backgroundColor: '#fff',
   },
-  scrollContent: {
+  content: {
     paddingTop: 80,
     paddingBottom: 40,
   },
