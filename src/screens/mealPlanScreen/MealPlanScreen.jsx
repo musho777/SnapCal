@@ -175,55 +175,53 @@ const MealPlanScreen = ({ navigation }) => {
         currentMonth={currentMonth}
       />
 
-      {viewMode === 'week' ? (
-        <DaySelector
-          key="week-selector"
-          weeklyData={weeklyData}
-          activeDay={activeDay}
-          onDayChange={setActiveDay}
-        />
-      ) : (
-        <CalendarView
-          key="month-calendar"
-          weeklyData={weeklyData}
-          activeDay={activeDay}
-          onDayChange={setActiveDay}
-          allMealData={data}
-        />
-      )}
+      <ScrollView style={styles.scrollView}>
+        {viewMode === 'week' ? (
+          <DaySelector
+            key="week-selector"
+            weeklyData={weeklyData}
+            activeDay={activeDay}
+            onDayChange={setActiveDay}
+          />
+        ) : (
+          <CalendarView
+            key="month-calendar"
+            weeklyData={weeklyData}
+            activeDay={activeDay}
+            onDayChange={setActiveDay}
+            allMealData={data}
+          />
+        )}
+        <View style={styles.scrollContent}>
+          <SummaryCard
+            totalKcal={activeDayData?.calories_burned || null}
+            goalKcal={activeDayData?.target_calories || null}
+            totalCarbs={activeDayData?.carbs_consumed_g || 0}
+            totalProtein={activeDayData?.protein_consumed_g || 0}
+            totalFat={activeDayData?.fats_consumed_g || 0}
+          />
+          {mealSections.map(section => {
+            const foods =
+              activeDayData?.meals.find(e => e.meal_type === section.id) || {};
+            const isExpanded = expandedSections[section.id];
+            return (
+              <MealSection
+                key={section.id}
+                section={section}
+                foods={foods || null}
+                burnedDishes={activeDayData?.burned_dishes || []}
+                isExpanded={isExpanded}
+                onToggle={() => toggleSection(section.id)}
+                onDeleteFood={mealDishId => deleteFood(mealDishId)}
+                onFoodPress={food => handleFoodPress(food)}
+                onAddFood={() => handleAddFood(section.id)}
+                activeDate={selectedDay?.fullDate}
+              />
+            );
+          })}
 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <SummaryCard
-          totalKcal={activeDayData?.calories_burned || null}
-          goalKcal={activeDayData?.target_calories || null}
-          totalCarbs={activeDayData?.carbs_consumed_g || 0}
-          totalProtein={activeDayData?.protein_consumed_g || 0}
-          totalFat={activeDayData?.fats_consumed_g || 0}
-        />
-        {mealSections.map(section => {
-          const foods =
-            activeDayData?.meals.find(e => e.meal_type === section.id) || {};
-          const isExpanded = expandedSections[section.id];
-          return (
-            <MealSection
-              key={section.id}
-              section={section}
-              foods={foods || null}
-              burnedDishes={activeDayData?.burned_dishes || []}
-              isExpanded={isExpanded}
-              onToggle={() => toggleSection(section.id)}
-              onDeleteFood={mealDishId => deleteFood(mealDishId)}
-              onFoodPress={food => handleFoodPress(food)}
-              onAddFood={() => handleAddFood(section.id)}
-              activeDate={selectedDay?.fullDate}
-            />
-          );
-        })}
-
-        <WeeklyChart weeklyData={weeklyData} activeDay={activeDay} />
+          <WeeklyChart weeklyData={weeklyData} activeDay={activeDay} />
+        </View>
       </ScrollView>
     </View>
   );
