@@ -10,6 +10,7 @@ import {
 import ApiClient from '../../api/axiosClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import NotificationService from '../../services/notificationService/notificationService';
 
 const FCM_TOKEN_STORAGE_KEY = 'last_sent_fcm_token';
 
@@ -139,6 +140,9 @@ export const createGuestUser = createAsyncThunk(
   'auth/creteGuest',
   async (data, { rejectWithValue }) => {
     try {
+      const fcmToken = await NotificationService.getToken();
+      const deviceType = Platform.OS === 'ios' ? 'ios' : 'android';
+      console.log(fcmToken, deviceType);
       const response = await ApiClient.post('/auth/guest/session', {
         date_of_birth: '2001-09-03',
         height_cm: data.height,
@@ -153,8 +157,8 @@ export const createGuestUser = createAsyncThunk(
         target_fats_g: 0,
         diet_tag_ids: [data.diet],
         measurement_system: 'metric',
-        fcm_token: 'string',
-        fcm_device_type: 'android',
+        fcm_token: fcmToken || '',
+        fcm_device_type: deviceType,
       });
       if (response.access_token) {
         await setAccessToken(response.access_token);
