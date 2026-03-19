@@ -33,10 +33,14 @@ import {
 } from './constants';
 import { styles } from '../../themes';
 import { GoBackIcon } from '../../assets/Icons';
+import { useDispatch } from 'react-redux';
+import { createGuestUser } from '../../features/auth/authActions';
 
-const OnboardingFlow = ({ onComplete }) => {
+const OnboardingFlow = () => {
   const navigation = useNavigation();
   const [screen, setScreen] = useState('splash');
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState('forward');
   const [data, setData] = useState({
@@ -51,7 +55,6 @@ const OnboardingFlow = ({ onComplete }) => {
     customCalories: null,
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const bgColor = new RNAnimated.Value(0);
 
   useEffect(() => {
@@ -139,14 +142,15 @@ const OnboardingFlow = ({ onComplete }) => {
   };
 
   const handleFinish = async () => {
+    setLoading(true);
     try {
       await AsyncStorage.setItem('onboardingCompleted', 'true');
-      if (onComplete) {
-        onComplete(data);
-      }
+      await dispatch(createGuestUser(data)).unwrap();
       navigation.replace('MainApp');
     } catch (error) {
       console.error('Error saving onboarding data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -155,7 +159,7 @@ const OnboardingFlow = ({ onComplete }) => {
   }
 
   if (screen === 'done') {
-    return <DoneScreen data={data} onFinish={handleFinish} />;
+    return <DoneScreen loading={loading} data={data} onFinish={handleFinish} />;
   }
 
   const currentMeta = STEPS_META[step];
@@ -165,12 +169,6 @@ const OnboardingFlow = ({ onComplete }) => {
       <TouchableOpacity onPress={goBack} style={localStyles.zIndex}>
         <GoBackIcon />
       </TouchableOpacity>
-
-      {/* <IllustrationHeader
-        meta={currentMeta}
-        currentStep={step}
-        totalSteps={STEPS_META.length}
-      /> */}
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'height'}

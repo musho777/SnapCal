@@ -1,12 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Animated, {
   FadeInLeft,
   useSharedValue,
@@ -14,8 +7,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { GOAL_OPTIONS, DIET_OPTIONS, ACTIVITY_OPTIONS } from './constants';
+import { UIButton } from '../../common-ui/uIButton';
 
-const DoneScreen = ({ data, onFinish }) => {
+const DoneScreen = ({ data, onFinish, loading }) => {
   const confettiScale = useSharedValue(0.5);
 
   useEffect(() => {
@@ -93,13 +87,18 @@ const DoneScreen = ({ data, onFinish }) => {
         </View>
       </ScrollView>
       <View style={styles.ctaContainer}>
-        <TouchableOpacity
+        <UIButton
+          loading={loading}
+          onPress={onFinish}
+          title={'Start Tracking'}
+        />
+        {/* <TouchableOpacity
           onPress={onFinish}
           style={styles.button}
           activeOpacity={0.9}
         >
           <Text style={styles.buttonText}>Start Tracking</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -239,29 +238,6 @@ const styles = StyleSheet.create({
   ctaContainer: {
     padding: 24,
     paddingBottom: 40,
-  },
-  button: {
-    backgroundColor: '#1A1A1A',
-    borderRadius: 22,
-    padding: 18,
-    alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.3,
-        shadowRadius: 28,
-        shadowOffset: { width: 0, height: 8 },
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '900',
-    letterSpacing: -0.3,
   },
 });
 

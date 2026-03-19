@@ -134,3 +134,34 @@ export const deleteFCMToken = createAsyncThunk(
     }
   },
 );
+
+export const createGuestUser = createAsyncThunk(
+  'auth/creteGuest',
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await ApiClient.post('/auth/guest/session', {
+        date_of_birth: '2001-09-03',
+        height_cm: data.height,
+        current_weight_kg: data.weight,
+        gender: data.gender,
+        goal: data.goal,
+        activity_level: data.activity,
+        target_weight_kg: 0,
+        target_calories: data.calorieGoal,
+        target_protein_g: 0,
+        target_carbs_g: 0,
+        target_fats_g: 0,
+        diet_tag_ids: [data.diet],
+        measurement_system: 'metric',
+        fcm_token: 'string',
+        fcm_device_type: 'android',
+      });
+      if (response.access_token) {
+        await setAccessToken(response.access_token);
+      }
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);

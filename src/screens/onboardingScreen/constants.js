@@ -60,25 +60,25 @@ export const STEPS_META = [
 
 export const GOAL_OPTIONS = [
   {
-    id: 'lose',
+    id: 'lose_weight',
     icon: '📉',
     title: 'Lose Weight',
     subtitle: 'Get lean and fit',
   },
   {
-    id: 'maintain',
+    id: 'maintain_weight',
     icon: '⚖️',
     title: 'Maintain Weight',
     subtitle: 'Stay where you are',
   },
   {
-    id: 'gain',
+    id: 'gain_weight',
     icon: '📈',
     title: 'Gain Weight',
     subtitle: 'Build muscle mass',
   },
   {
-    id: 'healthy',
+    id: 'eat_healthy',
     icon: '🌱',
     title: 'Eat Healthy',
     subtitle: 'Improve nutrition',
@@ -87,7 +87,11 @@ export const GOAL_OPTIONS = [
 
 export const DIET_OPTIONS = [
   { id: 'none', icon: '🍽️', title: 'No Restrictions' },
-  { id: 'vegetarian', icon: '🥕', title: 'Vegetarian' },
+  {
+    id: 'c8fe1c08-eb31-465b-b031-7ab559201ce8',
+    icon: '🥕',
+    title: 'Vegetarian',
+  },
   { id: 'vegan', icon: '🌱', title: 'Vegan' },
   { id: 'pescatarian', icon: '🐟', title: 'Pescatarian' },
   { id: 'keto', icon: '🥑', title: 'Keto' },
