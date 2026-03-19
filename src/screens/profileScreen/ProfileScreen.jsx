@@ -9,13 +9,8 @@ import { useDispatch } from 'react-redux';
 const ProfileScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('Settings');
   const [user, setUser] = useState({});
-
-  const [userName, setUserName] = useState('John Doe');
-  const userEmail = 'john.doe@example.com';
   const dispatch = useDispatch();
   const [darkMode, setDarkMode] = useState(false);
-  const [weightUnit, setWeightUnit] = useState('kg');
-  const [heightUnit, setHeightUnit] = useState('cm');
   const [language, setLanguage] = useState('English');
   const [weight, setWeight] = useState(70);
   const [height, setHeight] = useState(175);
@@ -52,15 +47,8 @@ const ProfileScreen = ({ navigation }) => {
       case 'Settings':
         return (
           <SettingsTab
-            userName={userName}
-            userEmail={userEmail}
-            onNameChange={setUserName}
             darkMode={darkMode}
             setDarkMode={setDarkMode}
-            weightUnit={weightUnit}
-            setWeightUnit={setWeightUnit}
-            heightUnit={heightUnit}
-            setHeightUnit={setHeightUnit}
             language={language}
             setLanguage={setLanguage}
             weight={weight}

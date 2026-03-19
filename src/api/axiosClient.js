@@ -94,7 +94,7 @@ client.interceptors.response.use(
         } catch (err) {
           await removeAccessToken();
           await removeRefreshToken();
-          navigate('LoginScreen');
+          navigate('Onboarding');
           throw new ApiError('Failed to refresh access token', 401);
         }
       } else {
@@ -102,7 +102,6 @@ client.interceptors.response.use(
           logoutInitiated = true;
           await removeAccessToken();
           await removeRefreshToken();
-          navigate('LoginScreen');
         }
         throw new ApiError(message || 'Authentication error', status);
       }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import WeightModal from '../../../components/weightModal';
 import HeightModal from '../../../components/heightModal';
 import AlertModal from '../../../components/alertModal/AlertModal';
@@ -55,8 +55,13 @@ const SettingsTab = ({
     await removeAccessToken();
     await removeRefreshToken();
     await AsyncStorage.removeItem('onboardingCompleted');
-
-    navigation.navigate('LoginScreen');
+    await AsyncStorage.removeItem('user');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Onboarding' }],
+      }),
+    );
   };
 
   const handleOpenWeightModal = () => {
