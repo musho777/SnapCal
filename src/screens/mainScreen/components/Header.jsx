@@ -39,7 +39,7 @@ export const Header = () => {
         <View>
           <Text style={styles.caption}>Hello</Text>
           <Text style={styles.h5}>
-            {user.name} {user.surname}
+            {user.name || 'Guest'} {user.surname}
           </Text>
         </View>
       </View>

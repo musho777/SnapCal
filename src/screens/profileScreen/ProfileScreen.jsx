@@ -64,7 +64,8 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <View style={localStyles.container}>
       <Header
-        userName={`${user.profile?.first_name} ${user.profile?.last_name}`}
+        name={user.profile?.first_name || 'Guest'}
+        surname={user.profile?.last_name || ''}
         userEmail={user.email}
         activeTab={activeTab}
         onTabChange={setActiveTab}

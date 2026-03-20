@@ -2,15 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { UITabBar } from '../../../common-ui/UITabBar';
 
-const Header = ({ userName, userEmail, activeTab, onTabChange }) => {
-  const getInitials = name => {
-    if (name) {
-      const names = name.split(' ');
-      if (names.length >= 2) {
-        return `${names[0][0]}${names[1][0]}`.toUpperCase();
-      }
-      return name.substring(0, 2).toUpperCase();
+const Header = ({ userEmail, activeTab, onTabChange, name, surname }) => {
+  const getInitials = () => {
+    if (name && surname) {
+      return `${name[0][0]}${surname[0]}`.toUpperCase();
     }
+    return name.substring(0, 2).toUpperCase();
   };
 
   return (
@@ -18,14 +15,16 @@ const Header = ({ userName, userEmail, activeTab, onTabChange }) => {
       <View style={localStyles.userRow}>
         <View>
           <View style={localStyles.avatar}>
-            <Text style={localStyles.avatarText}>{getInitials(userName)}</Text>
+            <Text style={localStyles.avatarText}>{getInitials()}</Text>
           </View>
           <View style={localStyles.onlineDot} />
         </View>
 
         <View style={localStyles.userInfo}>
-          <Text style={localStyles.userName}>{userName}</Text>
-          <Text style={localStyles.userEmail}>{userEmail}</Text>
+          <Text style={localStyles.userName}>
+            {name} {surname}
+          </Text>
+          {userEmail && <Text style={localStyles.userEmail}>{userEmail}</Text>}
           {/* <View style={localStyles.badgeRow}>
             <View style={localStyles.badgePrimary}>
               <Text style={localStyles.badgePrimaryText}>Free Plan</Text>
