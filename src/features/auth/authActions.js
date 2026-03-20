@@ -155,7 +155,7 @@ export const createGuestUser = createAsyncThunk(
         target_protein_g: 0,
         target_carbs_g: 0,
         target_fats_g: 0,
-        diet_tag_ids: data.diet,
+        diet_tag_ids: data.diet.map(d => d.id),
         measurement_system: 'metric',
         fcm_token: fcmToken || '',
         fcm_device_type: deviceType,

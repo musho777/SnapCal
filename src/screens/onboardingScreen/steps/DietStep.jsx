@@ -29,8 +29,8 @@ const DietStep = ({ selectedDiet, onSelectDiet, accentColor, accentLight }) => {
           >
             <DietOption
               option={option}
-              isSelected={selectedDiet.includes(option.id)}
-              onPress={() => onSelectDiet(option.id)}
+              isSelected={selectedDiet.some(d => d.id === option.id)}
+              onPress={() => onSelectDiet(option)}
               accentColor={accentColor}
               accentLight={accentLight}
             />

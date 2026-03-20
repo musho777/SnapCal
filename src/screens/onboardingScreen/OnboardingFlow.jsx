@@ -102,9 +102,11 @@ const OnboardingFlow = () => {
   };
 
   const handleSelectDiet = diet => {
-    const newDiets = data.diet.includes(diet)
-      ? data.diet.filter(d => d !== diet)
-      : [...data.diet, diet];
+    const exists = data.diet.some(d => d.id === diet.id);
+    const newDiets = exists
+      ? data.diet.filter(d => d.id !== diet.id)
+      : [...data.diet, { id: diet.id, title: diet.title }];
+
     updateData({ diet: newDiets });
   };
 

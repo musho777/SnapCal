@@ -6,7 +6,7 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import { GOAL_OPTIONS, DIET_OPTIONS, ACTIVITY_OPTIONS } from './constants';
+import { GOAL_OPTIONS, ACTIVITY_OPTIONS } from './constants';
 import { UIButton } from '../../common-ui/uIButton';
 import { calculateAgeFromBirthDate } from '../../utils/commonUtils';
 
@@ -25,7 +25,6 @@ const DoneScreen = ({ data, onFinish, loading }) => {
   }));
 
   const goalOption = GOAL_OPTIONS.find(opt => opt.id === data.goal);
-  const dietOption = DIET_OPTIONS.find(opt => opt.id === data.diet);
   const activityOption = ACTIVITY_OPTIONS.find(opt => opt.id === data.activity);
 
   return (
@@ -71,7 +70,7 @@ const DoneScreen = ({ data, onFinish, loading }) => {
             <SummaryRow
               icon="🥗"
               label="Diet"
-              value={dietOption?.title || data.diet}
+              value={data.diet.map(d => d.title).join(', ')}
               delay={160}
             />
             <SummaryRow
@@ -96,13 +95,6 @@ const DoneScreen = ({ data, onFinish, loading }) => {
           onPress={onFinish}
           title={'Start Tracking'}
         />
-        {/* <TouchableOpacity
-          onPress={onFinish}
-          style={styles.button}
-          activeOpacity={0.9}
-        >
-          <Text style={styles.buttonText}>Start Tracking</Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );
