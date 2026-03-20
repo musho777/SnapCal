@@ -13,12 +13,12 @@ import Animated, {
   withTiming,
   FadeInUp,
 } from 'react-native-reanimated';
-import { calculateMacros } from '../constants';
 
 const CaloriesStep = ({
   suggestedCalories,
   customCalories,
   onSetCustomCalories,
+  macros,
   accentColor,
   accentLight,
 }) => {
@@ -43,7 +43,7 @@ const CaloriesStep = ({
   };
 
   const displayedCalories = customCalories || suggestedCalories;
-  const macros = calculateMacros(displayedCalories, 'maintain');
+
   useEffect(() => {
     inputHeight.value = withTiming(showCustomInput ? 70 : 0, {
       duration: 300,

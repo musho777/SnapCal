@@ -30,6 +30,7 @@ import {
   calculateBMR,
   calculateTDEE,
   adjustCaloriesForGoal,
+  calculateMacros,
 } from './constants';
 import { styles } from '../../themes';
 import { GoBackIcon } from '../../assets/Icons';
@@ -146,7 +147,9 @@ const OnboardingFlow = () => {
     setLoading(true);
     try {
       await AsyncStorage.setItem('onboardingCompleted', 'true');
-      await dispatch(createGuestUser(data)).unwrap();
+      const finalCalories = data.customCalories || parseInt(data.calorieGoal, 10);
+      const macros = calculateMacros(finalCalories, 'maintain');
+      await dispatch(createGuestUser({ ...data, macros })).unwrap();
       navigation.replace('MainApp');
     } catch (error) {
       console.error('Error saving onboarding data:', error);
@@ -259,7 +262,10 @@ const StepContent = ({
             accentLight={currentMeta.accentLight}
           />
         );
-      case 4:
+      case 4: {
+        const finalCalories =
+          data.customCalories || parseInt(data.calorieGoal, 10) || 2000;
+        const macros = calculateMacros(finalCalories, 'maintain');
         return (
           <CaloriesStep
             suggestedCalories={parseInt(data.calorieGoal, 10) || 2000}
@@ -270,10 +276,12 @@ const StepContent = ({
                 calorieGoal: calories.toString(),
               })
             }
+            macros={macros}
             accentColor={currentMeta.accent}
             accentLight={currentMeta.accentLight}
           />
         );
+      }
       default:
         return null;
     }
