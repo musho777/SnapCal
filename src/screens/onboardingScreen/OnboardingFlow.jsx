@@ -49,7 +49,7 @@ const OnboardingFlow = () => {
     age: '',
     weight: '',
     height: '',
-    diet: '',
+    diet: [],
     activity: '',
     calorieGoal: '',
     customCalories: null,
@@ -67,11 +67,6 @@ const OnboardingFlow = () => {
       }).start();
     }
   }, [step, screen, bgColor]);
-
-  // const backgroundColor = bgColor.interpolate({
-  //   inputRange: [0, 1, 2, 3, 4],
-  //   outputRange: STEPS_META.map(meta => meta.bg),
-  // });
 
   useEffect(() => {
     if (screen === 'steps' && step === 4 && !data.calorieGoal) {
@@ -109,11 +104,18 @@ const OnboardingFlow = () => {
     setData(prev => ({ ...prev, ...newData }));
   };
 
+  const handleSelectDiet = diet => {
+    const newDiets = data.diet.includes(diet)
+      ? data.diet.filter(d => d !== diet)
+      : [...data.diet, diet];
+    updateData({ diet: newDiets });
+  };
+
   const canProceed = () => {
     if (step === 0) return !!data.goal;
     if (step === 1)
       return !!(data.weight && data.height && data.age && data.gender);
-    if (step === 2) return !!data.diet;
+    if (step === 2) return data.diet && data.diet.length > 0;
     if (step === 3) return !!data.activity;
     return true;
   };
@@ -172,7 +174,7 @@ const OnboardingFlow = () => {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'height'}
-        style={localStyles.keyboardAvoidingView}
+        style={styles.flex}
       >
         <StepContainer
           title={currentMeta.title}
@@ -182,6 +184,7 @@ const OnboardingFlow = () => {
             step={step}
             data={data}
             updateData={updateData}
+            handleSelectDiet={handleSelectDiet}
             currentMeta={currentMeta}
             direction={direction}
           />
@@ -197,7 +200,14 @@ const OnboardingFlow = () => {
   );
 };
 
-const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
+const StepContent = ({
+  step,
+  data,
+  updateData,
+  handleSelectDiet,
+  currentMeta,
+  direction,
+}) => {
   const translateX = useSharedValue(direction === 'back' ? -300 : 300);
   const opacity = useSharedValue(0);
 
@@ -236,7 +246,7 @@ const StepContent = ({ step, data, updateData, currentMeta, direction }) => {
         return (
           <DietStep
             selectedDiet={data.diet}
-            onSelectDiet={diet => updateData({ diet })}
+            onSelectDiet={handleSelectDiet}
             accentColor={currentMeta.accent}
             accentLight={currentMeta.accentLight}
           />
@@ -278,9 +288,6 @@ const localStyles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 20,
     paddingTop: 50,
-  },
-  keyboardAvoidingView: {
-    flex: 1,
   },
   zIndex: {
     zIndex: 1,
