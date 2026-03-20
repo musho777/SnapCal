@@ -35,6 +35,7 @@ import { styles } from '../../themes';
 import { GoBackIcon } from '../../assets/Icons';
 import { useDispatch } from 'react-redux';
 import { createGuestUser } from '../../features/auth/authActions';
+import { calculateAgeFromBirthDate } from '../../utils/commonUtils';
 
 const OnboardingFlow = () => {
   const navigation = useNavigation();
@@ -46,7 +47,7 @@ const OnboardingFlow = () => {
   const [data, setData] = useState({
     goal: '',
     gender: '',
-    age: '',
+    birthDate: '',
     weight: '',
     height: '',
     diet: [],
@@ -74,12 +75,8 @@ const OnboardingFlow = () => {
         opt => opt.id === data.activity,
       );
       if (activityOption) {
-        const bmr = calculateBMR(
-          data.weight,
-          data.height,
-          data.age,
-          data.gender,
-        );
+        const age = calculateAgeFromBirthDate(data.birthDate);
+        const bmr = calculateBMR(data.weight, data.height, age, data.gender);
         const tdee = calculateTDEE(bmr, activityOption.multiplier);
         const suggested = adjustCaloriesForGoal(tdee, data.goal);
 
@@ -95,7 +92,7 @@ const OnboardingFlow = () => {
     data.calorieGoal,
     data.weight,
     data.height,
-    data.age,
+    data.birthDate,
     data.gender,
     data.goal,
   ]);
@@ -114,7 +111,7 @@ const OnboardingFlow = () => {
   const canProceed = () => {
     if (step === 0) return !!data.goal;
     if (step === 1)
-      return !!(data.weight && data.height && data.age && data.gender);
+      return !!(data.weight && data.height && data.birthDate && data.gender);
     if (step === 2) return data.diet && data.diet.length > 0;
     if (step === 3) return !!data.activity;
     return true;

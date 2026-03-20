@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
   Text,
   StyleSheet,
   ScrollView,
+  Platform,
 } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { calculateBMI, getBMICategory } from '../constants';
 import UISelect from '../../../common-ui/uISelect';
+import {
+  convertBirthDateToISO,
+  parseBirthDateString,
+  formatISODateToDDMMYYYY,
+} from '../../../utils/commonUtils';
 
 const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const bmi = calculateBMI(data.weight, data.height);
   const bmiCategory = getBMICategory(bmi);
 
-  const ageOptions = Array.from({ length: 88 }, (_, i) => ({
-    label: `${i + 13} years`,
-    value: (i + 13).toString(),
-  }));
+  const birthDate = parseBirthDateString(data.birthDate);
+
+  const handleDateChange = (_, selectedDate) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    if (selectedDate) {
+      onUpdateData({ birthDate: convertBirthDateToISO(selectedDate) });
+    }
+  };
 
   const weightOptions = Array.from({ length: 171 }, (_, i) => ({
     label: `${i + 30} kg`,
@@ -84,15 +98,35 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(100)} style={styles.section}>
-          <UISelect
-            label="Age"
-            variant="meal"
-            placeholder="Select your age"
-            value={data.age}
-            onValueChange={value => onUpdateData({ age: value })}
-            options={ageOptions}
-            containerStyle={styles.inputContainer}
-          />
+          <Text style={styles.label}>Birth Date</Text>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={styles.datePickerButton}
+            activeOpacity={0.7}
+          >
+            <Text
+              style={[
+                styles.datePickerText,
+                !data.birthDate && styles.datePickerTextPlaceholder,
+              ]}
+            >
+              {data.birthDate
+                ? formatISODateToDDMMYYYY(data.birthDate)
+                : 'Select your birth date'}
+            </Text>
+            <Text style={styles.arrow}>▼</Text>
+          </TouchableOpacity>
+          {(showDatePicker || Platform.OS === 'ios') && (
+            <DateTimePicker
+              value={birthDate}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={handleDateChange}
+              maximumDate={new Date()}
+              minimumDate={new Date(1920, 0, 1)}
+              textColor={accentColor}
+            />
+          )}
         </Animated.View>
 
         <Animated.View entering={FadeInUp.delay(200)} style={styles.section}>
@@ -160,10 +194,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    marginBottom: 4,
+    fontSize: 11,
+    color: '#999',
+    fontWeight: '600',
+    marginBottom: 8,
   },
   genderRow: {
     flexDirection: 'row',
@@ -188,6 +222,29 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 2,
     borderColor: '#F0F0F0',
+  },
+  datePickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 16,
+    padding: 15,
+    borderWidth: 1.5,
+    borderColor: '#E8E8E8',
+  },
+  datePickerText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#272727',
+  },
+  datePickerTextPlaceholder: {
+    color: '#999',
+  },
+  arrow: {
+    fontSize: 10,
+    color: '#999',
+    marginLeft: 8,
   },
   bmiCard: {
     backgroundColor: '#FAFAFA',
