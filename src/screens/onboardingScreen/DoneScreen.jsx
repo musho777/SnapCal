@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { GOAL_OPTIONS, DIET_OPTIONS, ACTIVITY_OPTIONS } from './constants';
 import { UIButton } from '../../common-ui/uIButton';
+import { calculateAgeFromBirthDate } from '../../utils/commonUtils';
 
 const DoneScreen = ({ data, onFinish, loading }) => {
   const confettiScale = useSharedValue(0.5);
@@ -58,10 +59,13 @@ const DoneScreen = ({ data, onFinish, loading }) => {
               value={goalOption?.title || data.goal}
               delay={0}
             />
+            {console.log(data)}
             <SummaryRow
               icon="📏"
               label="Stats"
-              value={`${data.age} years, ${data.weight}kg, ${data.height}cm`}
+              value={`${calculateAgeFromBirthDate(data.birthDate)} years, ${
+                data.weight
+              }kg, ${data.height}cm`}
               delay={80}
             />
             <SummaryRow
