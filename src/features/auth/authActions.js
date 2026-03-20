@@ -142,7 +142,6 @@ export const createGuestUser = createAsyncThunk(
     try {
       const fcmToken = await NotificationService.getToken();
       const deviceType = Platform.OS === 'ios' ? 'ios' : 'android';
-      console.log(data);
       const response = await ApiClient.post('/auth/guest/session', {
         date_of_birth: data.birthDate,
         height_cm: data.height,

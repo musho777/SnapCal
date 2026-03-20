@@ -58,7 +58,6 @@ const DoneScreen = ({ data, onFinish, loading }) => {
               value={goalOption?.title || data.goal}
               delay={0}
             />
-            {console.log(data)}
             <SummaryRow
               icon="📏"
               label="Stats"

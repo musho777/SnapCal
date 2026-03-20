@@ -55,6 +55,7 @@ const OnboardingFlow = () => {
     activity: '',
     calorieGoal: '',
     customCalories: null,
+    macros: { protein: 0, carbs: 0, fat: 0 },
   });
 
   const bgColor = new RNAnimated.Value(0);
@@ -82,7 +83,11 @@ const OnboardingFlow = () => {
         const suggested = adjustCaloriesForGoal(tdee, data.goal);
 
         if (suggested) {
-          updateData({ calorieGoal: suggested.toString() });
+          const calculatedMacros = calculateMacros(suggested, 'maintain');
+          updateData({
+            calorieGoal: suggested.toString(),
+            macros: calculatedMacros,
+          });
         }
       }
     }
@@ -147,9 +152,7 @@ const OnboardingFlow = () => {
     setLoading(true);
     try {
       await AsyncStorage.setItem('onboardingCompleted', 'true');
-      const finalCalories = data.customCalories || parseInt(data.calorieGoal, 10);
-      const macros = calculateMacros(finalCalories, 'maintain');
-      await dispatch(createGuestUser({ ...data, macros })).unwrap();
+      await dispatch(createGuestUser(data)).unwrap();
       navigation.replace('MainApp');
     } catch (error) {
       console.error('Error saving onboarding data:', error);
@@ -262,26 +265,24 @@ const StepContent = ({
             accentLight={currentMeta.accentLight}
           />
         );
-      case 4: {
-        const finalCalories =
-          data.customCalories || parseInt(data.calorieGoal, 10) || 2000;
-        const macros = calculateMacros(finalCalories, 'maintain');
+      case 4:
         return (
           <CaloriesStep
             suggestedCalories={parseInt(data.calorieGoal, 10) || 2000}
             customCalories={data.customCalories}
-            onSetCustomCalories={calories =>
+            onSetCustomCalories={calories => {
+              const calculatedMacros = calculateMacros(calories, 'maintain');
               updateData({
                 customCalories: calories,
                 calorieGoal: calories.toString(),
-              })
-            }
-            macros={macros}
+                macros: calculatedMacros,
+              });
+            }}
+            macros={data.macros}
             accentColor={currentMeta.accent}
             accentLight={currentMeta.accentLight}
           />
         );
-      }
       default:
         return null;
     }

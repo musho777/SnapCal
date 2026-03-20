@@ -75,15 +75,15 @@ const CaloriesStep = ({
           <View style={styles.macrosRow}>
             <MacroPill
               label="Protein"
-              value={`${macros.protein}g`}
+              value={`${macros?.protein || 0}g`}
               color="#4A90D9"
             />
             <MacroPill
               label="Carbs"
-              value={`${macros.carbs}g`}
+              value={`${macros?.carbs || 0}g`}
               color="#3DBE7A"
             />
-            <MacroPill label="Fat" value={`${macros.fat}g`} color="#FF8C42" />
+            <MacroPill label="Fat" value={`${macros?.fat || 0}g`} color="#FF8C42" />
           </View>
         </Animated.View>
 
