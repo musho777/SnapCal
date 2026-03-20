@@ -31,6 +31,7 @@ export const userLogin = createAsyncThunk(
       if (data.access_token && data.refresh_token) {
         await setAccessToken(data.access_token);
         await setRefreshToken(data.refresh_token);
+        await AsyncStorage.setItem('user', JSON.stringify(data.user));
       }
       return data;
     } catch (error) {
@@ -160,6 +161,7 @@ export const createGuestUser = createAsyncThunk(
         fcm_device_type: deviceType,
       });
       if (response.access_token) {
+        await AsyncStorage.setItem('user', JSON.stringify(response.user));
         await setAccessToken(response.access_token);
       }
       return response;
