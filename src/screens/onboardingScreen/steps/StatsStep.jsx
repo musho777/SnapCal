@@ -11,18 +11,17 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { calculateBMI, getBMICategory } from '../constants';
 import UISelect from '../../../common-ui/uISelect';
-import {
-  convertBirthDateToISO,
-  parseBirthDateString,
-  formatISODateToDDMMYYYY,
-} from '../../../utils/commonUtils';
+import { convertBirthDateToISO } from '../../../utils/commonUtils';
 
 const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const bmi = calculateBMI(data.weight, data.height);
   const bmiCategory = getBMICategory(bmi);
 
-  const birthDate = parseBirthDateString(data.birthDate);
+  // Parse ISO date or use default date
+  const birthDate = data.birthDate
+    ? new Date(data.birthDate)
+    : new Date(2000, 0, 1);
 
   const handleDateChange = (_, selectedDate) => {
     if (Platform.OS === 'android') {
@@ -110,9 +109,7 @@ const StatsStep = ({ data, onUpdateData, accentColor, accentLight }) => {
                 !data.birthDate && styles.datePickerTextPlaceholder,
               ]}
             >
-              {data.birthDate
-                ? formatISODateToDDMMYYYY(data.birthDate)
-                : 'Select your birth date'}
+              {data.birthDate ? data.birthDate : 'Select your birth date'}
             </Text>
             <Text style={styles.arrow}>▼</Text>
           </TouchableOpacity>

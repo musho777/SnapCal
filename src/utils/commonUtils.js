@@ -126,104 +126,29 @@ export const isToday = dateString => {
 };
 
 /**
- * Parse birth date string (DD.MM.YYYY or ISO 8601 format) to Date object
- * @param {string} dateStr - Birth date string in format "DD.MM.YYYY" or "YYYY-MM-DD"
- * @returns {Date} Date object, or default date (Jan 1, 2000) if invalid
- */
-export const parseBirthDateString = dateStr => {
-  if (!dateStr) return new Date(2000, 0, 1);
-
-  // Check if it's ISO format (YYYY-MM-DD)
-  if (dateStr.includes('-')) {
-    const date = new Date(dateStr);
-    if (!isNaN(date.getTime())) {
-      return date;
-    }
-  }
-
-  // Check if it's DD.MM.YYYY format
-  const parts = dateStr.split('.');
-  if (parts.length === 3) {
-    return new Date(parts[2], parts[1] - 1, parts[0]);
-  }
-
-  return new Date(2000, 0, 1);
-};
-
-/**
- * Format ISO date string (YYYY-MM-DD) to DD.MM.YYYY format
- * @param {string} isoDateStr - ISO date string (e.g., "2001-03-03")
- * @returns {string} Formatted date string in DD.MM.YYYY format (e.g., "03.03.2001")
- */
-export const formatISODateToDDMMYYYY = isoDateStr => {
-  if (!isoDateStr) return '';
-
-  // If already in DD.MM.YYYY format, return as is
-  if (isoDateStr.includes('.')) return isoDateStr;
-
-  // Parse ISO format YYYY-MM-DD
-  const parts = isoDateStr.split('-');
-  if (parts.length === 3) {
-    const year = parts[0];
-    const month = parts[1];
-    const day = parts[2];
-    return `${day}.${month}.${year}`;
-  }
-
-  return '';
-};
-
-/**
- * Convert birth date from Date object or DD.MM.YYYY string to ISO 8601 format
- * @param {Date|string} date - Date object or birth date string in format "DD.MM.YYYY" (e.g., "03.03.2001")
+ * Convert Date object to ISO 8601 date string
+ * @param {Date} date - Date object
  * @returns {string|null} ISO 8601 date string (e.g., "2001-03-03"), or null if invalid
  */
 export const convertBirthDateToISO = date => {
-  if (!date) return null;
+  if (!date || !(date instanceof Date)) return null;
 
-  // If it's a Date object
-  if (date instanceof Date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-  // If it's a string in DD.MM.YYYY format
-  if (typeof date === 'string') {
-    const parts = date.split('.');
-    if (parts.length !== 3) return null;
-
-    const day = parts[0];
-    const month = parts[1];
-    const year = parts[2];
-
-    return `${year}-${month}-${day}`;
-  }
-
-  return null;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
 
 /**
- * Calculate age from birth date string (DD.MM.YYYY or ISO 8601 format)
- * @param {string} birthDateStr - Birth date string in format "DD.MM.YYYY" or "YYYY-MM-DD"
+ * Calculate age from ISO birth date string
+ * @param {string} birthDateStr - Birth date string in ISO format "YYYY-MM-DD" (e.g., "2001-03-03")
  * @returns {number|null} Age in years, or null if invalid date
  */
 export const calculateAgeFromBirthDate = birthDateStr => {
   if (!birthDateStr) return null;
 
-  let birthDate;
-
-  // Check if it's ISO format (YYYY-MM-DD)
-  if (birthDateStr.includes('-')) {
-    birthDate = new Date(birthDateStr);
-    if (isNaN(birthDate.getTime())) return null;
-  } else {
-    // Parse DD.MM.YYYY format
-    const parts = birthDateStr.split('.');
-    if (parts.length !== 3) return null;
-    birthDate = new Date(parts[2], parts[1] - 1, parts[0]);
-  }
+  const birthDate = new Date(birthDateStr);
+  if (isNaN(birthDate.getTime())) return null;
 
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
