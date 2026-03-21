@@ -80,7 +80,7 @@ const localStyles = StyleSheet.create({
   },
   categories: {
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingTop: 10,
   },
   box: {
     justifyContent: 'center',

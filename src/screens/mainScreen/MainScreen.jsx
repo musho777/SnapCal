@@ -1,4 +1,10 @@
-import { ScrollView, StyleSheet, View, RefreshControl } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  RefreshControl,
+  Text,
+} from 'react-native';
 import { styles } from '../../themes';
 
 import { Header } from './components/Header';
@@ -77,8 +83,8 @@ const MainScreen = ({ navigation }) => {
 
   return (
     <ScrollView
-      contentContainerStyle={localStyled.contentContainerStyle}
-      style={[styles.page, localStyled.page]}
+      contentContainerStyle={localStyles.contentContainerStyle}
+      style={[styles.page, localStyles.page]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -89,40 +95,51 @@ const MainScreen = ({ navigation }) => {
       <Category data={categories} navigation={navigation} />
 
       {loading ? (
-        <View style={localStyled.loadingWrapper}>
+        <View style={localStyles.loadingWrapper}>
           <Loading size={100} />
         </View>
       ) : (
-        <ScrollView
-          style={localStyled.paddingLeft}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-          {data?.map((elm, i) => {
-            return (
-              <View
-                style={[
-                  localStyled.recipeCardWrapper,
-                  i === data.length - 1 && localStyled.marginLeft,
-                ]}
-                key={i}
-              >
-                <FoodCard
-                  item={elm}
-                  flex={false}
-                  isSaved={elm.is_saved || false}
-                  onRecipePress={() => handleShowRecipients(elm.id)}
-                />
-              </View>
-            );
-          })}
-        </ScrollView>
+        <View style={localStyles.gap10}>
+          <Text style={styles.title}>Suggestion for You</Text>
+          {data?.length === 0 ? (
+            <View style={localStyles.emptyState}>
+              <Text style={localStyles.emptyStateText}>
+                No suggestions available at the moment
+              </Text>
+            </View>
+          ) : (
+            <ScrollView
+              style={localStyles.paddingLeft}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            >
+              {data?.map((elm, i) => {
+                return (
+                  <View
+                    style={[
+                      localStyles.recipeCardWrapper,
+                      i === data.length - 1 && localStyles.marginLeft,
+                    ]}
+                    key={i}
+                  >
+                    <FoodCard
+                      item={elm}
+                      flex={false}
+                      isSaved={elm.is_saved || false}
+                      onRecipePress={() => handleShowRecipients(elm.id)}
+                    />
+                  </View>
+                );
+              })}
+            </ScrollView>
+          )}
+        </View>
       )}
     </ScrollView>
   );
 };
 
-const localStyled = StyleSheet.create({
+const localStyles = StyleSheet.create({
   recipeCardWrapper: {
     marginRight: 15,
     paddingBottom: 10,
@@ -143,6 +160,21 @@ const localStyled = StyleSheet.create({
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  emptyState: {
+    width: '100%',
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: '#888',
+    textAlign: 'center',
+  },
+  gap10: {
+    gap: 15,
   },
 });
 
