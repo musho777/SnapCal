@@ -7,9 +7,7 @@ import { Category } from './components/Category';
 import { WaterTracker } from './components/WaterTracker';
 import { FoodCard } from '../../components/cards/FoodCard';
 import { useEffect, useState, useCallback } from 'react';
-import { getDeash } from '../../features/explore/exploreAction';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectData, selectLoading } from '../../features/explore/exploreSlice';
 import Loading from '../../components/loading/Loading';
 import {
   loadWaterIntake,
@@ -18,15 +16,22 @@ import {
 } from '../../utils/waterStorage';
 import { useFocusEffect } from '@react-navigation/native';
 import { getNotifications } from '../../features/notifications/notificationsAction';
-import { getCategoryForHome } from '../../features/home/homeAction';
-import { selectCategoryData } from '../../features/home/homeSlice';
+import {
+  getCategoryForHome,
+  getDishesRecommended,
+} from '../../features/home/homeAction';
+import {
+  selectCategoryData,
+  selectedRecommendedData,
+  selectedRecommendedLoading,
+} from '../../features/home/homeSlice';
 
 const MainScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const data = useSelector(selectData);
+  const data = useSelector(selectedRecommendedData);
   const categories = useSelector(selectCategoryData);
 
-  const loading = useSelector(selectLoading);
+  const loading = useSelector(selectedRecommendedLoading);
   const [waterIntake, setWaterIntake] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -43,7 +48,9 @@ const MainScreen = ({ navigation }) => {
       const savedWater = await loadWaterIntake();
       setWaterIntake(savedWater);
     }
-    dispatch(getDeash({}));
+    dispatch(getDishesRecommended({ limit: 10 }));
+    dispatch(getNotifications({ limit: 10, offset: 0 }));
+    dispatch(getCategoryForHome({ limit: 10, offset: 0 }));
     setRefreshing(false);
   }, [dispatch]);
 
@@ -54,7 +61,7 @@ const MainScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(getCategoryForHome({ limit: 10, offset: 0 }));
-    dispatch(getDeash({}));
+    dispatch(getDishesRecommended({ limit: 10 }));
     const loadWater = async () => {
       const savedWater = await loadWaterIntake();
       setWaterIntake(savedWater);
@@ -64,7 +71,7 @@ const MainScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      dispatch(getNotifications({}));
+      dispatch(getNotifications({ limit: 10, offset: 0 }));
     }, []),
   );
 
@@ -91,12 +98,12 @@ const MainScreen = ({ navigation }) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          {data?.dishes?.map((elm, i) => {
+          {data?.map((elm, i) => {
             return (
               <View
                 style={[
                   localStyled.recipeCardWrapper,
-                  i === data.dishes.length - 1 && localStyled.marginLeft,
+                  i === data.length - 1 && localStyled.marginLeft,
                 ]}
                 key={i}
               >

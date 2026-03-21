@@ -14,3 +14,16 @@ export const getCategoryForHome = createAsyncThunk(
     }
   },
 );
+
+export const getDishesRecommended = createAsyncThunk(
+  'get/recommended',
+  async (params, { rejectWithValue }) => {
+    const queries = buildQueryString(params);
+    try {
+      const data = await ApiClient.get(`/dishes/recommended?${queries}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  },
+);
