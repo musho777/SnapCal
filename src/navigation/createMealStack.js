@@ -21,6 +21,31 @@ const STEP_ROUTES = {
   Step6Review: 6,
 };
 
+const CustomHeader = ({ route, navigation }) => {
+  // Hide header on Success screen
+  if (route.name === 'Success') {
+    return null;
+  }
+
+  const currentStep = STEP_ROUTES[route.name];
+
+  const handleBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.getParent()?.goBack();
+    }
+  };
+
+  return (
+    <WizardHeader
+      currentStep={currentStep}
+      onBack={handleBack}
+      totalSteps={6}
+    />
+  );
+};
+
 const CreateMealStack = () => {
   return (
     <CreateMealProvider>
@@ -29,30 +54,7 @@ const CreateMealStack = () => {
           headerShown: true,
           animation: 'fade',
           animationDuration: 200,
-          header: ({ route, navigation }) => {
-            // Hide header on Success screen
-            if (route.name === 'Success') {
-              return null;
-            }
-
-            const currentStep = STEP_ROUTES[route.name];
-
-            const handleBack = () => {
-              if (navigation.canGoBack()) {
-                navigation.goBack();
-              } else {
-                navigation.getParent()?.goBack();
-              }
-            };
-
-            return (
-              <WizardHeader
-                currentStep={currentStep}
-                onBack={handleBack}
-                totalSteps={6}
-              />
-            );
-          },
+          header: CustomHeader,
         }}
         initialRouteName="Step1BasicInfo"
       >
