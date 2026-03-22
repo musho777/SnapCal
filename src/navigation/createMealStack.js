@@ -27,7 +27,8 @@ const CreateMealStack = () => {
       <Stack.Navigator
         screenOptions={{
           headerShown: true,
-          animation: 'slide_from_right',
+          animation: 'fade',
+          animationDuration: 200,
           header: ({ route, navigation }) => {
             // Hide header on Success screen
             if (route.name === 'Success') {
