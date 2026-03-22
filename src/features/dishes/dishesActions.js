@@ -93,7 +93,13 @@ export const createDish = createAsyncThunk(
 
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('Create dish error:', error);
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.message ||
+        'Failed to create dish. Please check your connection and try again.';
+      return rejectWithValue(errorMessage);
     }
   },
 );

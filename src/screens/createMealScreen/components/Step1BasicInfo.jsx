@@ -9,13 +9,7 @@ import {
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import UIInput from '../../../common-ui/uIInput';
-
-const mealTypes = [
-  { id: 'breakfast', label: 'Breakfast', emoji: '🌅' },
-  { id: 'lunch', label: 'Lunch', emoji: '☀️' },
-  { id: 'dinner', label: 'Dinner', emoji: '🌙' },
-  { id: 'snack', label: 'Snacks', emoji: '🍎' },
-];
+import { mealTypes } from '../../../constants/mealConstants';
 
 const categories = [
   { id: 'salad', label: 'Salad', emoji: '🥗' },

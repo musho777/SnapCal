@@ -5,12 +5,7 @@ import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
 import { CaloriesCard } from '../../../components/cards/CaloriesCard';
 import UIInput from '../../../common-ui/uIInput';
-
-const macroConfig = [
-  { type: 'Carbs', color: '#4CAF50', icon: '🌾' },
-  { type: 'Protein', color: '#2196F3', icon: '🥩' },
-  { type: 'Fat', color: '#FF9800', icon: '🥑' },
-];
+import { macroConfig } from '../../../constants/mealConstants';
 
 export const Step2Nutrition = ({ data, setData }) => {
   const updateCalories = calories => {

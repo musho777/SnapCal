@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, ScrollView, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, Alert, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { WizardHeader } from './components/WizardHeader';
 import { SuccessScreen } from './components/SuccessScreen';
@@ -15,13 +15,12 @@ import { resetDishState } from '../../features/dishes/dishesSlice';
 
 const CreateMealScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { loading, error, success, createdDish } = useSelector(
-    state => state.dishes,
-  );
+  const { loading } = useSelector(state => state.dishes);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [createdRecipe, setCreatedRecipe] = useState(null);
+  const [validationError, setValidationError] = useState('');
 
   const [data, setData] = useState({
     name: '',
@@ -44,26 +43,26 @@ const CreateMealScreen = ({ navigation }) => {
     cookingSteps: [''],
   });
 
-  const canProceed = useMemo(() => {
+  const getValidationError = useMemo(() => {
     if (currentStep === 1) {
-      return data.name.trim() && data.mealType && data.category;
+      if (!data.name.trim()) return 'Please enter a dish name';
+      if (!data.mealType) return 'Please select a meal type';
+      if (!data.category) return 'Please select a category';
     }
     if (currentStep === 2) {
-      return data.totalCalories > 0;
+      if (!data.totalCalories || data.totalCalories <= 0) {
+        return 'Please enter total calories (must be greater than 0)';
+      }
     }
-    if (currentStep === 3) {
-      return data.recipeInfo.description.trim();
-    }
-    if (currentStep === 4) {
-      return data.ingredients.some(i => i.name.trim());
-    }
-    if (currentStep === 5) {
-      return data.cookingSteps.some(s => s.trim());
-    }
-    return true;
+    return null;
   }, [currentStep, data]);
 
+  const canProceed = useMemo(() => {
+    return getValidationError === null;
+  }, [getValidationError]);
+
   const handleBack = () => {
+    setValidationError('');
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1);
     } else {
@@ -72,6 +71,13 @@ const CreateMealScreen = ({ navigation }) => {
   };
 
   const handleContinue = async () => {
+    setValidationError('');
+
+    if (currentStep < 6 && !canProceed) {
+      setValidationError(getValidationError);
+      return;
+    }
+
     if (currentStep < 6) {
       setCurrentStep(prev => prev + 1);
     } else {
@@ -81,7 +87,6 @@ const CreateMealScreen = ({ navigation }) => {
 
   const handleCreateMeal = async () => {
     try {
-      // Get macros values
       const carbsWeight =
         data.macros.find(m => m.type === 'Carbs')?.weight || 0;
       const proteinWeight =
@@ -125,9 +130,16 @@ const CreateMealScreen = ({ navigation }) => {
         setSubmitted(true);
       }
     } catch (err) {
-      Alert.alert('Error', err || 'Failed to create dish. Please try again.', [
-        { text: 'OK' },
-      ]);
+      console.error('Create dish error:', err);
+      const errorMessage =
+        err?.message ||
+        err?.error ||
+        (typeof err === 'string'
+          ? err
+          : 'Failed to create dish. Please try again.');
+
+      setValidationError(errorMessage);
+      Alert.alert('Error Creating Dish', errorMessage, [{ text: 'OK' }]);
     }
   };
 
@@ -217,6 +229,12 @@ const CreateMealScreen = ({ navigation }) => {
       </ScrollView>
 
       <View style={localStyles.gradient}>
+        {validationError ? (
+          <View style={localStyles.errorContainer}>
+            <Text style={localStyles.errorText}>{validationError}</Text>
+          </View>
+        ) : null}
+
         <UIButton
           onPress={handleContinue}
           backgroundColor="#272727"
@@ -224,7 +242,6 @@ const CreateMealScreen = ({ navigation }) => {
           style={localStyles.buttonStyles}
           title={currentStep < 6 ? 'Continue' : '🎉 Create Meal'}
           loading={loading}
-          disabled={loading || (currentStep < 6 && !canProceed)}
         />
       </View>
     </View>
@@ -250,6 +267,19 @@ const localStyles = StyleSheet.create({
     right: 0,
     padding: 16,
     paddingBottom: 32,
+  },
+  errorContainer: {
+    backgroundColor: '#FEE2E2',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#EF4444',
+  },
+  errorText: {
+    color: '#991B1B',
+    fontSize: 14,
+    fontWeight: '600',
   },
   buttonStyles: {
     paddingVertical: 20,

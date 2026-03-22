@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
 import { CaloriesCard } from '../../../components/cards/CaloriesCard';
+import { macroConfig } from '../../../constants/mealConstants';
 
 const categoryEmojis = {
   salad: '🥗',
@@ -16,12 +17,6 @@ const categoryEmojis = {
   dessert: '🍰',
   other: '🍽',
 };
-
-const macroConfig = [
-  { type: 'Carbs', color: '#4CAF50', icon: '🌾' },
-  { type: 'Protein', color: '#2196F3', icon: '🥩' },
-  { type: 'Fat', color: '#FF9800', icon: '🥑' },
-];
 
 const editButtons = [
   { step: 1, icon: '✏️', label: 'Basic Info' },
