@@ -65,6 +65,7 @@ const UIInput = ({
             variantStyles.input,
             (showSearchIcon || icon) && localStyles.inputWithIcon,
             inputStyle,
+            multiline && variant === 'meal' && localStyles.mealMultiline,
           ]}
           placeholder={placeholder}
           placeholderTextColor="#999"
@@ -139,7 +140,7 @@ const localStyles = StyleSheet.create({
     borderColor: '#272727',
   },
   mealMultiline: {
-    minHeight: 110,
+    minHeight: 90,
     alignItems: 'flex-start',
   },
   iconContainer: {

@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { useCreateMeal } from '../../contexts/CreateMealContext';
 import UIInput from '../../common-ui/uIInput';
 import { UIButton } from '../../common-ui/uIButton';
@@ -34,11 +40,11 @@ export const Step3RecipeInfoScreen = ({ navigation }) => {
       >
         <View style={localStyles.componentContainer}>
           <View style={localStyles.card}>
-            <Text style={localStyles.label}>Description</Text>
             <UIInput
               variant="meal"
               placeholder="Describe your meal..."
               multiline={true}
+              label={'Description'}
               numberOfLines={4}
               value={data.recipeInfo.description}
               onChangeText={value => updateRecipeInfo('description', value)}
@@ -71,7 +77,7 @@ export const Step3RecipeInfoScreen = ({ navigation }) => {
           </View>
 
           <View style={localStyles.card}>
-            <Text style={localStyles.label}>Servings</Text>
+            <Text style={localStyles.servingLabel}>Servings</Text>
             <View style={localStyles.servingsRow}>
               {servingsOptions.map(serving => {
                 const isActive = data.recipeInfo.servings === serving;
@@ -143,6 +149,12 @@ const localStyles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
+  },
+  servingLabel: {
+    fontSize: 11,
+    color: '#999',
+    fontWeight: '600',
+    marginBottom: 8,
   },
   label: {
     fontSize: 12,
