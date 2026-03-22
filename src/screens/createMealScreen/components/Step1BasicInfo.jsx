@@ -64,19 +64,16 @@ export const Step1BasicInfo = ({ data, setData }) => {
     setData(prev => {
       const currentTags = prev.diet_tag_ids || [];
       if (tagId === 'none') {
-        // If "No Restrictions" is selected, clear all tags
         return { ...prev, diet_tag_ids: [] };
       }
 
       const isSelected = currentTags.includes(tagId);
       if (isSelected) {
-        // Remove the tag
         return {
           ...prev,
           diet_tag_ids: currentTags.filter(id => id !== tagId),
         };
       } else {
-        // Add the tag
         return {
           ...prev,
           diet_tag_ids: [...currentTags, tagId],
@@ -105,9 +102,9 @@ export const Step1BasicInfo = ({ data, setData }) => {
       </TouchableOpacity>
 
       <View style={localStyles.card}>
-        <Text style={localStyles.label}>Meal Name</Text>
         <UIInput
           variant="meal"
+          label="Meal Name"
           placeholder="e.g. Chicken Salad"
           value={data.name}
           onChangeText={updateName}
@@ -263,12 +260,10 @@ const localStyles = StyleSheet.create({
     elevation: 1,
   },
   label: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#272727',
-    marginBottom: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontSize: 11,
+    color: '#999',
+    fontWeight: '600',
+    marginBottom: 8,
   },
   helperText: {
     fontSize: 11,
