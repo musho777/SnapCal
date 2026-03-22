@@ -40,7 +40,12 @@ export const Step2NutritionScreen = ({ navigation }) => {
   };
 
   const healthData = useMemo(() => {
-    return calculateHealthScore(data.macros);
+    const nutritionData = {
+      carbs_g: data.macros.find(m => m.type === 'Carbs')?.weight || 0,
+      protein_g: data.macros.find(m => m.type === 'Protein')?.weight || 0,
+      fat_g: data.macros.find(m => m.type === 'Fat')?.weight || 0,
+    };
+    return calculateHealthScore(nutritionData);
   }, [data.macros]);
 
   const handleContinue = () => {
