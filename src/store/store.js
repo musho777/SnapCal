@@ -7,6 +7,7 @@ import notificationsReducer from '../features/notifications/notificationsSlice';
 import homeReducer from '../features/home/homeSlice';
 import singleCategoryReducer from '../features/singleCategory/singleCategorySlice';
 import savedDishesReducer from '../features/savedDishes/savedDishesSlice';
+import dishesReducer from '../features/dishes/dishesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     home: homeReducer,
     singleCategory: singleCategoryReducer,
     savedDishes: savedDishesReducer,
+    dishes: dishesReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

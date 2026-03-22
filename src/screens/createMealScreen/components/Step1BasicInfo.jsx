@@ -14,7 +14,7 @@ const mealTypes = [
   { id: 'breakfast', label: 'Breakfast', emoji: '🌅' },
   { id: 'lunch', label: 'Lunch', emoji: '☀️' },
   { id: 'dinner', label: 'Dinner', emoji: '🌙' },
-  { id: 'snacks', label: 'Snacks', emoji: '🍎' },
+  { id: 'snack', label: 'Snacks', emoji: '🍎' },
 ];
 
 const categories = [
@@ -31,7 +31,6 @@ const categories = [
 ];
 
 export const Step1BasicInfo = ({ data, setData }) => {
-
   const handleSelectPhoto = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
