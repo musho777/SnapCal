@@ -17,6 +17,7 @@ const UIInput = ({
   inputStyle,
   error = false,
   errorText = '',
+  required = false,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -36,7 +37,12 @@ const UIInput = ({
 
   return (
     <View style={style}>
-      {label && <Text style={localStyles.label}>{label}</Text>}
+      {label && (
+        <Text style={localStyles.label}>
+          {label}
+          {required && <Text style={localStyles.required}> *</Text>}
+        </Text>
+      )}
       <View
         style={[
           variantStyles.container,
@@ -87,6 +93,10 @@ const localStyles = StyleSheet.create({
     color: '#999',
     fontWeight: '600',
     marginBottom: 8,
+  },
+  required: {
+    color: '#FF6B6B',
+    fontWeight: '700',
   },
   container: {
     flexDirection: 'row',

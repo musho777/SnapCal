@@ -105,6 +105,7 @@ export const Step1BasicInfo = ({ data, setData }) => {
         <UIInput
           variant="meal"
           label="Meal Name"
+          required={true}
           placeholder="e.g. Chicken Salad"
           value={data.name}
           onChangeText={updateName}
@@ -112,7 +113,10 @@ export const Step1BasicInfo = ({ data, setData }) => {
       </View>
 
       <View style={localStyles.card}>
-        <Text style={localStyles.label}>Meal Type</Text>
+        <Text style={localStyles.label}>
+          Meal Type
+          <Text style={localStyles.required}> *</Text>
+        </Text>
         <View style={localStyles.buttonsRow}>
           {mealTypes.map(type => {
             const isActive = data.mealType === type.id;
@@ -336,5 +340,9 @@ const localStyles = StyleSheet.create({
   },
   categoryTextActive: {
     color: '#fff',
+  },
+  required: {
+    color: '#FF6B6B',
+    fontWeight: '700',
   },
 });

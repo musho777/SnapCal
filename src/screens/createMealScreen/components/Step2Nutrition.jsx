@@ -30,7 +30,10 @@ export const Step2Nutrition = ({ data, setData }) => {
   return (
     <View style={localStyles.container}>
       <View style={localStyles.card}>
-        <Text style={localStyles.label}>Total Calories</Text>
+        <Text style={localStyles.label}>
+          Total Calories
+          <Text style={localStyles.required}> *</Text>
+        </Text>
         <View style={localStyles.caloriesRow}>
           <View style={localStyles.caloriesLabelContainer}>
             <Text style={localStyles.caloriesLabel}>Total</Text>
@@ -115,12 +118,14 @@ const localStyles = StyleSheet.create({
     elevation: 2,
   },
   label: {
-    fontSize: 12,
+    fontSize: 11,
+    color: '#999',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  required: {
+    color: '#FF6B6B',
     fontWeight: '700',
-    color: '#272727',
-    marginBottom: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
   },
   caloriesRow: {
     flexDirection: 'row',
