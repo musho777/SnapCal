@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, ScrollView, StyleSheet, Text, Alert, TouchableOpacity, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Alert, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCreateMeal } from '../../contexts/CreateMealContext';
 import { UIButton } from '../../common-ui/uIButton';
@@ -7,29 +7,11 @@ import { createDish } from '../../features/dishes/dishesActions';
 import { HealthScoreBar } from '../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../utils/healthScore';
 import { CaloriesCard } from '../../components/cards/CaloriesCard';
-import { macroConfig } from '../../constants/constants';
-import { DIET_OPTIONS } from '../onboardingScreen/constants';
-
-const categoryEmojis = {
-  salad: '🥗',
-  soup: '🍲',
-  grill: '🍗',
-  pasta: '🍝',
-  bowl: '🥣',
-  wrap: '🌯',
-  smoothie: '🥤',
-  snack: '🍿',
-  dessert: '🍰',
-  other: '🍽',
-};
-
-const editButtons = [
-  { step: 1, icon: '✏️', label: 'Basic Info' },
-  { step: 2, icon: '🔥', label: 'Nutrition' },
-  { step: 3, icon: '⏱', label: 'Recipe' },
-  { step: 4, icon: '🥦', label: 'Ingredients' },
-  { step: 5, icon: '👨‍🍳', label: 'Steps' },
-];
+import { RecipeInfo } from '../recipeScreen/components/RecipeInfo';
+import { Ingredients } from '../recipeScreen/components/Ingredients';
+import { CookingSteps } from '../recipeScreen/components/CookingSteps';
+import { FireIcon } from '../../assets/Icons';
+import { styles } from '../../themes';
 
 export const Step6ReviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -38,30 +20,13 @@ export const Step6ReviewScreen = ({ navigation }) => {
   const [validationError, setValidationError] = useState('');
 
   const healthData = useMemo(() => {
-    return calculateHealthScore(data.macros);
-  }, [data.macros]);
-
-  const categoryEmoji = categoryEmojis[data.category] || '🍽';
-
-  const selectedDietTags = useMemo(() => {
-    if (!data.diet_tag_ids || data.diet_tag_ids.length === 0) {
-      return [];
-    }
-    return DIET_OPTIONS.filter(opt =>
-      opt.id !== 'none' && data.diet_tag_ids.includes(opt.id)
-    );
-  }, [data.diet_tag_ids]);
-
-  const handleEdit = step => {
-    const stepRoutes = {
-      1: 'Step1BasicInfo',
-      2: 'Step2Nutrition',
-      3: 'Step3RecipeInfo',
-      4: 'Step4Ingredients',
-      5: 'Step5CookingSteps',
+    const macrosForCalc = {
+      carbs_g: data.macros.find(m => m.type === 'Carbs')?.weight || 0,
+      protein_g: data.macros.find(m => m.type === 'Protein')?.weight || 0,
+      fat_g: data.macros.find(m => m.type === 'Fat')?.weight || 0,
     };
-    navigation.navigate(stepRoutes[step]);
-  };
+    return calculateHealthScore(macrosForCalc);
+  }, [data.macros]);
 
   const handleCreateMeal = async () => {
     try {
@@ -123,82 +88,86 @@ export const Step6ReviewScreen = ({ navigation }) => {
 
   return (
     <View style={localStyles.container}>
+      <View style={localStyles.imageContainer}>
+        <Image
+          style={localStyles.img}
+          source={
+            data.image
+              ? { uri: data.image }
+              : require('../../assets/greekYogurt.png')
+          }
+        />
+      </View>
       <ScrollView
         style={localStyles.scrollView}
-        contentContainerStyle={localStyles.scrollContent}
         showsVerticalScrollIndicator={false}
+        bounces={false}
       >
-        <View style={localStyles.componentContainer}>
-          <View style={localStyles.heroPreview}>
-            {data.image ? (
-              <Image source={{ uri: data.image }} style={localStyles.heroImage} />
-            ) : (
-              <Text style={localStyles.heroEmoji}>{categoryEmoji}</Text>
-            )}
-          </View>
-
-          <View style={localStyles.card}>
-            <View style={localStyles.headerRow}>
-              <Text style={localStyles.mealName}>
-                {data.name || 'Untitled Meal'}
-              </Text>
-              <View style={localStyles.newBadge}>
-                <Text style={localStyles.newBadgeText}>New</Text>
-              </View>
-            </View>
-
-            <View style={localStyles.caloriesRow}>
-              <Text style={localStyles.caloriesValue}>
-                {data.totalCalories || '0'}
-              </Text>
-              <Text style={localStyles.caloriesUnit}>Kcal 🔥</Text>
-            </View>
-
-            <View style={localStyles.macroCardsRow}>
-              {macroConfig.map((macro, index) => {
-                return (
-                  <CaloriesCard
-                    key={macro.type}
-                    type={macro.type}
-                    themes="dark"
-                    data={10}
-                  />
-                );
-              })}
+        <View style={localStyles.spacer} />
+        <View style={localStyles.details}>
+          <View style={localStyles.titleWrapper}>
+            <Text style={styles.title}>{data.name || 'Untitled Meal'}</Text>
+            <View style={localStyles.newBadge}>
+              <Text style={localStyles.newBadgeText}>New</Text>
             </View>
           </View>
-
+          <View style={localStyles.kcal}>
+            <Text style={styles.captionPrimary}>
+              Total {data.totalCalories || '0'} Kcal
+            </Text>
+            <FireIcon />
+          </View>
+          <View style={localStyles.row}>
+            <CaloriesCard
+              type="Carbs"
+              data={+(data.macros.find(m => m.type === 'Carbs')?.weight || 0)}
+            />
+            <CaloriesCard
+              type="Protein"
+              data={+(data.macros.find(m => m.type === 'Protein')?.weight || 0)}
+            />
+            <CaloriesCard
+              type="Fat"
+              data={+(data.macros.find(m => m.type === 'Fat')?.weight || 0)}
+            />
+          </View>
           <HealthScoreBar score={healthData.score} />
 
-          {selectedDietTags.length > 0 && (
-            <View style={localStyles.card}>
-              <Text style={localStyles.sectionLabel}>Dietary Tags</Text>
-              <View style={localStyles.dietTagsWrap}>
-                {selectedDietTags.map(tag => (
-                  <View key={tag.id} style={localStyles.dietTag}>
-                    <Text style={localStyles.dietTagIcon}>{tag.icon}</Text>
-                    <Text style={localStyles.dietTagText}>{tag.title}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
+          <RecipeInfo
+            description={data.recipeInfo?.description || ''}
+            prepTime={data.recipeInfo?.prepTime || 0}
+            cookTime={data.recipeInfo?.cookTime || 0}
+            servings={data.recipeInfo?.servings || 1}
+          />
 
-          <View style={localStyles.card}>
-            <Text style={localStyles.sectionLabel}>Quick Edit</Text>
-            <View style={localStyles.editButtonsWrap}>
-              {editButtons.map(btn => (
-                <TouchableOpacity
-                  key={btn.step}
-                  style={localStyles.editButton}
-                  onPress={() => handleEdit(btn.step)}
-                >
-                  <Text style={localStyles.editButtonIcon}>{btn.icon}</Text>
-                  <Text style={localStyles.editButtonText}>{btn.label}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
+          {data.ingredients &&
+            data.ingredients.length > 0 &&
+            data.ingredients[0].name && (
+              <Ingredients
+                ingredients={data.ingredients
+                  .filter(ing => ing.name.trim())
+                  .map((ing, index) => ({
+                    name: ing.name,
+                    quantity: ing.amount || '0',
+                    unit: 'g',
+                    sort_order: index + 1,
+                  }))}
+              />
+            )}
+
+          {data.cookingSteps &&
+            data.cookingSteps.length > 0 &&
+            data.cookingSteps[0].trim() && (
+              <CookingSteps
+                steps={data.cookingSteps
+                  .filter(step => step.trim())
+                  .map((step, index) => ({
+                    instruction: step,
+                    step_number: index + 1,
+                  }))}
+                cookTime={data.recipeInfo?.cookTime || 0}
+              />
+            )}
         </View>
       </ScrollView>
 
@@ -225,55 +194,54 @@ export const Step6ReviewScreen = ({ navigation }) => {
 const localStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    position: 'relative',
+  },
+  imageContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 450,
+    alignItems: 'center',
+    zIndex: 0,
+  },
+  img: {
+    width: 300,
+    height: 300,
+    objectFit: 'contain',
   },
   scrollView: {
     flex: 1,
+    zIndex: 1,
+    marginBottom: 20,
   },
-  scrollContent: {
-    padding: 10,
-    paddingBottom: 120,
+  spacer: {
+    height: 300,
   },
-  componentContainer: {
-    gap: 12,
+  details: {
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    paddingTop: 15,
+    paddingHorizontal: 15,
+    minHeight: 300,
+    borderWidth: 4,
+    borderColor: 'white',
+    backgroundColor: '#F9FAFB',
+    shadowColor: '#1f1f1f',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.17,
+    shadowRadius: 3.05,
+    elevation: 5,
+    gap: 10,
+    paddingBottom: 80,
   },
-  heroPreview: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 20,
-    height: 180,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  heroImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  heroEmoji: {
-    fontSize: 80,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  headerRow: {
+  titleWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-  },
-  mealName: {
-    fontSize: 20,
-    fontWeight: '900',
-    color: '#272727',
-    flex: 1,
   },
   newBadge: {
     backgroundColor: '#6B39F4',
@@ -286,79 +254,25 @@ const localStyles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
   },
-  caloriesRow: {
+  kcal: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    marginBottom: 16,
-  },
-  caloriesValue: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: '#272727',
-    marginRight: 8,
-  },
-  caloriesUnit: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
-  },
-  macroCardsRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  sectionLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#272727',
-    marginBottom: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  editButtonsWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  editButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    backgroundColor: '#F9FAFB',
+    shadowColor: '#1f1f1f',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.17,
+    shadowRadius: 3.05,
+    elevation: 1,
+    padding: 10,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#EEEEEE',
-    backgroundColor: '#F5F5F5',
-  },
-  editButtonIcon: {
-    fontSize: 14,
-  },
-  editButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#272727',
-  },
-  dietTagsWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  dietTag: {
-    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    backgroundColor: '#272727',
   },
-  dietTagIcon: {
-    fontSize: 14,
-  },
-  dietTagText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#fff',
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   gradient: {
     position: 'absolute',
@@ -367,6 +281,7 @@ const localStyles = StyleSheet.create({
     right: 0,
     padding: 16,
     paddingBottom: 32,
+    zIndex: 2,
   },
   errorContainer: {
     backgroundColor: '#FEE2E2',
