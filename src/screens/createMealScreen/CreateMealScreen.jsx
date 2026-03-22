@@ -28,6 +28,7 @@ const CreateMealScreen = ({ navigation }) => {
     mealType: '',
     totalCalories: '',
     image: null,
+    diet_tag_ids: [],
     macros: [
       { weight: 0, type: 'Carbs' },
       { weight: 0, type: 'Protein' },
@@ -121,6 +122,7 @@ const CreateMealScreen = ({ navigation }) => {
           })),
         dish_type: data.mealType ? [data.mealType] : [],
         category_ids: data.category ? [data.category] : [],
+        diet_tag_ids: data.diet_tag_ids || [],
       };
 
       const result = await dispatch(createDish(dishPayload)).unwrap();
@@ -154,6 +156,7 @@ const CreateMealScreen = ({ navigation }) => {
       mealType: '',
       totalCalories: '',
       image: null,
+      diet_tag_ids: [],
       macros: [
         { weight: 0, type: 'Carbs' },
         { weight: 0, type: 'Protein' },

@@ -4,6 +4,7 @@ import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
 import { CaloriesCard } from '../../../components/cards/CaloriesCard';
 import { macroConfig } from '../../../constants/constants';
+import { DIET_OPTIONS } from '../../onboardingScreen/constants';
 
 const categoryEmojis = {
   salad: '🥗',
@@ -32,6 +33,15 @@ export const Step6Review = ({ data, onEdit }) => {
   }, [data.macros]);
 
   const categoryEmoji = categoryEmojis[data.category] || '🍽';
+
+  const selectedDietTags = useMemo(() => {
+    if (!data.diet_tag_ids || data.diet_tag_ids.length === 0) {
+      return [];
+    }
+    return DIET_OPTIONS.filter(opt =>
+      opt.id !== 'none' && data.diet_tag_ids.includes(opt.id)
+    );
+  }, [data.diet_tag_ids]);
 
   return (
     <View style={localStyles.container}>
@@ -75,6 +85,20 @@ export const Step6Review = ({ data, onEdit }) => {
       </View>
 
       <HealthScoreBar score={healthData.score} />
+
+      {selectedDietTags.length > 0 && (
+        <View style={localStyles.card}>
+          <Text style={localStyles.sectionLabel}>Dietary Tags</Text>
+          <View style={localStyles.dietTagsWrap}>
+            {selectedDietTags.map(tag => (
+              <View key={tag.id} style={localStyles.dietTag}>
+                <Text style={localStyles.dietTagIcon}>{tag.icon}</Text>
+                <Text style={localStyles.dietTagText}>{tag.title}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
 
       <View style={localStyles.card}>
         <Text style={localStyles.sectionLabel}>Quick Edit</Text>
@@ -236,5 +260,27 @@ const localStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#272727',
+  },
+  dietTagsWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  dietTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: '#272727',
+  },
+  dietTagIcon: {
+    fontSize: 14,
+  },
+  dietTagText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#fff',
   },
 });

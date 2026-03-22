@@ -10,6 +10,7 @@ import {
 import { launchImageLibrary } from 'react-native-image-picker';
 import UIInput from '../../../common-ui/uIInput';
 import { mealTypes } from '../../../constants/constants';
+import { DIET_OPTIONS } from '../../onboardingScreen/constants';
 
 const categories = [
   { id: 'salad', label: 'Salad', emoji: '🥗' },
@@ -57,6 +58,31 @@ export const Step1BasicInfo = ({ data, setData }) => {
 
   const updateName = name => {
     setData(prev => ({ ...prev, name }));
+  };
+
+  const toggleDietTag = tagId => {
+    setData(prev => {
+      const currentTags = prev.diet_tag_ids || [];
+      if (tagId === 'none') {
+        // If "No Restrictions" is selected, clear all tags
+        return { ...prev, diet_tag_ids: [] };
+      }
+
+      const isSelected = currentTags.includes(tagId);
+      if (isSelected) {
+        // Remove the tag
+        return {
+          ...prev,
+          diet_tag_ids: currentTags.filter(id => id !== tagId),
+        };
+      } else {
+        // Add the tag
+        return {
+          ...prev,
+          diet_tag_ids: [...currentTags, tagId],
+        };
+      }
+    });
   };
 
   return (
@@ -152,6 +178,39 @@ export const Step1BasicInfo = ({ data, setData }) => {
           })}
         </View>
       </View>
+
+      <View style={localStyles.card}>
+        <Text style={localStyles.label}>Dietary Tags (Optional)</Text>
+        <View style={localStyles.categoriesWrap}>
+          {DIET_OPTIONS.map(diet => {
+            const isNoRestrictions = diet.id === 'none';
+            const isActive = isNoRestrictions
+              ? !data.diet_tag_ids || data.diet_tag_ids.length === 0
+              : (data.diet_tag_ids || []).includes(diet.id);
+
+            return (
+              <TouchableOpacity
+                key={diet.id}
+                style={[
+                  localStyles.categoryPill,
+                  isActive && localStyles.categoryPillActive,
+                ]}
+                onPress={() => toggleDietTag(diet.id)}
+              >
+                <Text style={localStyles.categoryEmoji}>{diet.icon}</Text>
+                <Text
+                  style={[
+                    localStyles.categoryText,
+                    isActive && localStyles.categoryTextActive,
+                  ]}
+                >
+                  {diet.title}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
     </View>
   );
 };
@@ -210,6 +269,12 @@ const localStyles = StyleSheet.create({
     marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+  },
+  helperText: {
+    fontSize: 11,
+    color: '#999',
+    marginBottom: 12,
+    lineHeight: 16,
   },
   buttonsRow: {
     flexDirection: 'row',
