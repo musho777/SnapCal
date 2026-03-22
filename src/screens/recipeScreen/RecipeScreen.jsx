@@ -52,9 +52,9 @@ const RecipeScreen = ({ route }) => {
     message: '',
   });
   const healthScoreData = calculateHealthScore({
-    carbs_g: singleData.carbs_g,
-    protein_g: singleData.protein_g,
-    fats_g: singleData.fats_g,
+    carbs_g: +singleData.carbs_g,
+    protein_g: +singleData.protein_g,
+    fat_g: +singleData.fats_g,
   });
 
   const onToggleSave = () => {
@@ -132,9 +132,9 @@ const RecipeScreen = ({ route }) => {
             <FireIcon />
           </View>
           <View style={localStyles.row}>
-            <CaloriesCard type="Carbs" data={singleData.carbs_g} />
-            <CaloriesCard type="Protein" data={singleData.protein_g} />
-            <CaloriesCard type="Fat" data={singleData.fats_g} />
+            <CaloriesCard type="Carbs" data={+singleData.carbs_g} />
+            <CaloriesCard type="Protein" data={+singleData.protein_g} />
+            <CaloriesCard type="Fat" data={+singleData.fats_g} />
           </View>
           <HealthScoreBar score={healthScoreData.score} />
 
