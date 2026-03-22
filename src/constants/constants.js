@@ -1,3 +1,19 @@
+// Meal Types
+export const mealTypes = [
+  { id: 'breakfast', label: 'Breakfast', emoji: '🌅' },
+  { id: 'lunch', label: 'Lunch', emoji: '☀️' },
+  { id: 'dinner', label: 'Dinner', emoji: '🌙' },
+  { id: 'snack', label: 'Snacks', emoji: '🍎' },
+];
+
+// Macro Configuration
+export const macroConfig = [
+  { type: 'Carbs', color: '#4CAF50', icon: '🌾' },
+  { type: 'Protein', color: '#2196F3', icon: '🥩' },
+  { type: 'Fat', color: '#FF9800', icon: '🥑' },
+];
+
+// Notification Types
 export const NOTIFICATION_TYPES = {
   MEAL_REMINDER: 'meal_reminder',
   WATER: 'water',
@@ -6,6 +22,7 @@ export const NOTIFICATION_TYPES = {
   AI: 'ai',
 };
 
+// Notification Channels
 export const NOTIFICATION_CHANNELS = {
   DEFAULT: {
     id: 'snapcal_default_channel',

@@ -1,4 +1,4 @@
-import { DEEP_LINK_SCREENS } from '../../constants/notificationConstants';
+// import { DEEP_LINK_SCREENS } from '../../constants/constants';
 import { navigate } from '../../api/navigationService';
 
 export const handleNotificationNavigation = notificationData => {
@@ -10,12 +10,13 @@ export const handleNotificationNavigation = notificationData => {
       return;
     }
 
-    const defaultScreen = DEEP_LINK_SCREENS[type];
-    if (defaultScreen) {
-      navigate(defaultScreen, { notificationType: type, ...params });
-    } else {
-      navigate('MainScreen');
-    }
+    // const defaultScreen = DEEP_LINK_SCREENS[type];
+    // if (defaultScreen) {
+    //   navigate(defaultScreen, { notificationType: type, ...params });
+    // } else {
+    //   navigate('MainScreen');
+    // }
+    navigate('MainScreen');
   } catch (error) {}
 };
 

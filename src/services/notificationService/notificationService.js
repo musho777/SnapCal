@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { handleNotificationNavigation } from './notificationDeepLink';
-import { NOTIFICATION_CHANNELS } from '../../constants/notificationConstants';
+import { NOTIFICATION_CHANNELS } from '../../constants/constants';
 
 class NotificationService {
   constructor() {

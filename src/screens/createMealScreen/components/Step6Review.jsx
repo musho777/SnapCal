@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
 import { CaloriesCard } from '../../../components/cards/CaloriesCard';
-import { macroConfig } from '../../../constants/mealConstants';
+import { macroConfig } from '../../../constants/constants';
 
 const categoryEmojis = {
   salad: '🥗',

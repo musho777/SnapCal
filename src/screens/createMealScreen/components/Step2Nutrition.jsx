@@ -5,7 +5,7 @@ import { HealthScoreBar } from '../../recipeScreen/components/HealthScoreBar';
 import { calculateHealthScore } from '../../../utils/healthScore';
 import { CaloriesCard } from '../../../components/cards/CaloriesCard';
 import UIInput from '../../../common-ui/uIInput';
-import { macroConfig } from '../../../constants/mealConstants';
+import { macroConfig } from '../../../constants/constants';
 
 export const Step2Nutrition = ({ data, setData }) => {
   const updateCalories = calories => {
