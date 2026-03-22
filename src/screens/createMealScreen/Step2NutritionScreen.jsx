@@ -90,12 +90,13 @@ export const Step2NutritionScreen = ({ navigation }) => {
             <Text style={localStyles.label}>Macronutrients</Text>
             <View style={localStyles.macroCardsRow}>
               {macroConfig.map((macro, index) => {
+                console.log(macro);
                 return (
                   <CaloriesCard
                     key={macro.type}
                     themes="dark"
                     type={macro.type}
-                    data={10}
+                    data={data.macros[index]?.weight}
                   />
                 );
               })}
@@ -109,7 +110,10 @@ export const Step2NutritionScreen = ({ navigation }) => {
                     <View style={localStyles.sliderHeader}>
                       <Text style={localStyles.sliderLabel}>{macro.type}</Text>
                       <Text
-                        style={[localStyles.sliderValue, { color: macro.color }]}
+                        style={[
+                          localStyles.sliderValue,
+                          { color: macro.color },
+                        ]}
                       >
                         {macroData?.weight}g
                       </Text>
