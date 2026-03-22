@@ -39,7 +39,7 @@ export const WizardHeader = ({ currentStep, onBack, totalSteps = 6 }) => {
     });
   };
 
-  const currentStepInfo = stepInfo[currentStep - 1];
+  const currentStepInfo = stepInfo[currentStep - 1] || stepInfo[0];
 
   return (
     <View style={localStyles.container}>

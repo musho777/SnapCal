@@ -9,7 +9,7 @@ import ProfileScreen from '../screens/profileScreen';
 import CustomTabBar from '../components/customTabBar';
 import HomeStack from './homeStack';
 import ExploreStack from './exploreStack';
-import CreateMealScreen from '../screens/createMealScreen';
+import CreateMealStack from './createMealStack';
 import OnboardingFlow from '../screens/onboardingScreen';
 import LoginScreen from '../screens/authScreens/login/LoginScreen.jsx';
 import RegisterScreen from '../screens/authScreens/register/RegisterScreen.jsx';
@@ -93,7 +93,7 @@ export const MainNavigation = () => {
 
       <RootStack.Screen
         name="CreateMeal"
-        component={CreateMealScreen}
+        component={CreateMealStack}
         options={{
           presentation: 'modal',
           animation: 'slide_from_bottom',
