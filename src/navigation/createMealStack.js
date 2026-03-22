@@ -37,10 +37,18 @@ const CustomHeader = ({ route, navigation }) => {
     }
   };
 
+  const handleClose = () => {
+    const parent = navigation.getParent();
+    if (parent) {
+      parent.goBack();
+    }
+  };
+
   return (
     <WizardHeader
       currentStep={currentStep}
       onBack={handleBack}
+      onClose={handleClose}
       totalSteps={6}
     />
   );

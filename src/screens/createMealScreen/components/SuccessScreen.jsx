@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { LinearGradient } from 'react-native-linear-gradient';
 
-export const SuccessScreen = ({ mealName, onCreateAnother, onViewRecipe }) => {
+export const SuccessScreen = ({ mealName, onCreateAnother, onClose }) => {
   return (
     <View style={localStyles.container}>
       {/* Decorative Circles */}
@@ -63,18 +63,18 @@ export const SuccessScreen = ({ mealName, onCreateAnother, onViewRecipe }) => {
         <View style={localStyles.buttonContainer}>
           <TouchableOpacity
             style={localStyles.primaryButton}
-            onPress={onViewRecipe}
+            onPress={onCreateAnother}
             activeOpacity={0.8}
           >
-            <Text style={localStyles.primaryButtonText}>👁️ View Recipe</Text>
+            <Text style={localStyles.primaryButtonText}>+ Create Another</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={localStyles.secondaryButton}
-            onPress={onCreateAnother}
+            onPress={onClose}
             activeOpacity={0.8}
           >
-            <Text style={localStyles.secondaryButtonText}>+ Create Another</Text>
+            <Text style={localStyles.secondaryButtonText}>Done</Text>
           </TouchableOpacity>
         </View>
       </View>

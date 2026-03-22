@@ -15,12 +15,10 @@ export const SuccessScreen = ({ navigation, route }) => {
     navigation.navigate('Step1BasicInfo');
   };
 
-  const handleViewRecipe = () => {
-    if (recipe) {
-      navigation.navigate('Home', {
-        screen: 'Recipient',
-        params: { recipeId: recipe.id },
-      });
+  const handleClose = () => {
+    const parent = navigation.getParent();
+    if (parent) {
+      parent.goBack();
     }
   };
 
@@ -28,7 +26,7 @@ export const SuccessScreen = ({ navigation, route }) => {
     <SuccessScreenComponent
       mealName={mealName}
       onCreateAnother={handleCreateAnother}
-      onViewRecipe={handleViewRecipe}
+      onClose={handleClose}
     />
   );
 };

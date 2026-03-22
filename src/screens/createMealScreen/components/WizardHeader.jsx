@@ -17,7 +17,7 @@ const stepInfo = [
   { icon: '✅', label: 'Review' },
 ];
 
-export const WizardHeader = ({ currentStep, onBack, totalSteps = 6 }) => {
+export const WizardHeader = ({ currentStep, onBack, onClose, totalSteps = 6 }) => {
   const renderProgressDots = () => {
     return Array.from({ length: totalSteps }, (_, index) => {
       const stepNumber = index + 1;
@@ -52,9 +52,9 @@ export const WizardHeader = ({ currentStep, onBack, totalSteps = 6 }) => {
 
         <Text style={localStyles.title}>Create Meal</Text>
 
-        <Text style={localStyles.stepCounter}>
-          {currentStep}/{totalSteps}
-        </Text>
+        <TouchableOpacity style={localStyles.closeButton} onPress={onClose}>
+          <Text style={localStyles.closeText}>✕</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={localStyles.dotsRow}>{renderProgressDots()}</View>
@@ -116,6 +116,19 @@ const localStyles = StyleSheet.create({
     fontWeight: '600',
     width: 36,
     textAlign: 'right',
+  },
+  closeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeText: {
+    fontSize: 20,
+    color: '#272727',
+    fontWeight: '600',
   },
   dotsRow: {
     flexDirection: 'row',
