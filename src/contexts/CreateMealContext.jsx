@@ -13,7 +13,7 @@ export const useCreateMeal = () => {
 export const CreateMealProvider = ({ children }) => {
   const [data, setData] = useState({
     name: '',
-    category: '4439d330-2a2e-46f5-b4ac-e2fab645218c',
+    category: '',
     mealType: '',
     totalCalories: '',
     image: null,
@@ -36,7 +36,7 @@ export const CreateMealProvider = ({ children }) => {
   const resetData = () => {
     setData({
       name: '',
-      category: '4439d330-2a2e-46f5-b4ac-e2fab645218c',
+      category: '',
       mealType: '',
       totalCalories: '',
       image: null,

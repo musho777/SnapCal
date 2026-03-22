@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -8,29 +8,32 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useCreateMeal } from '../../contexts/CreateMealContext';
 import UIInput from '../../common-ui/uIInput';
 import { UIButton } from '../../common-ui/uIButton';
 import { mealTypes } from '../../constants/constants';
 import { DIET_OPTIONS } from '../onboardingScreen/constants';
-
-const categories = [
-  { id: 'salad', label: 'Salad', emoji: '🥗' },
-  { id: 'soup', label: 'Soup', emoji: '🍲' },
-  { id: 'grill', label: 'Grill', emoji: '🍗' },
-  { id: 'pasta', label: 'Pasta', emoji: '🍝' },
-  { id: 'bowl', label: 'Bowl', emoji: '🥣' },
-  { id: 'wrap', label: 'Wrap', emoji: '🌯' },
-  { id: 'smoothie', label: 'Smoothie', emoji: '🥤' },
-  { id: 'snack', label: 'Snack', emoji: '🍿' },
-  { id: 'dessert', label: 'Dessert', emoji: '🍰' },
-  { id: 'other', label: 'Other', emoji: '🍽' },
-];
+import {
+  selectCategoryData,
+  selectCategoryLoading,
+} from '../../features/home/homeSlice';
+import { getCategoryForHome } from '../../features/home/homeAction';
 
 export const Step1BasicInfoScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { data, setData } = useCreateMeal();
   const [validationError, setValidationError] = useState('');
+
+  const categories = useSelector(selectCategoryData);
+  const categoriesLoading = useSelector(selectCategoryLoading);
+
+  useEffect(() => {
+    if (!categories || categories.length === 0) {
+      dispatch(getCategoryForHome({ limit: 50, offset: 0 }));
+    }
+  }, [dispatch, categories]);
 
   const getValidationError = useMemo(() => {
     if (!data.name.trim()) return 'Please enter a dish name';
@@ -187,31 +190,50 @@ export const Step1BasicInfoScreen = ({ navigation }) => {
 
           <View style={localStyles.card}>
             <Text style={localStyles.label}>Category</Text>
-            <View style={localStyles.categoriesWrap}>
-              {categories.map(cat => {
-                const isActive = data.category === cat.id;
-                return (
-                  <TouchableOpacity
-                    key={cat.id}
-                    style={[
-                      localStyles.categoryPill,
-                      isActive && localStyles.categoryPillActive,
-                    ]}
-                    onPress={() => updateCategory(cat.id)}
-                  >
-                    <Text style={localStyles.categoryEmoji}>{cat.emoji}</Text>
-                    <Text
-                      style={[
-                        localStyles.categoryText,
-                        isActive && localStyles.categoryTextActive,
-                      ]}
-                    >
-                      {cat.label}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+            {categoriesLoading ? (
+              <Text style={localStyles.loadingText}>Loading categories...</Text>
+            ) : (
+              <View style={localStyles.categoriesWrap}>
+                {categories && categories.length > 0 ? (
+                  categories.map(cat => {
+                    const isActive = data.category === cat.id;
+                    return (
+                      <TouchableOpacity
+                        key={cat.id}
+                        style={[
+                          localStyles.categoryPill,
+                          isActive && localStyles.categoryPillActive,
+                        ]}
+                        onPress={() => updateCategory(cat.id)}
+                      >
+                        {cat.icon_url ? (
+                          <Image
+                            source={{
+                              uri: `https://snapcal-back-production.up.railway.app${cat.icon_url}`,
+                            }}
+                            style={localStyles.categoryIcon}
+                          />
+                        ) : (
+                          <Text style={localStyles.categoryEmoji}>🍽</Text>
+                        )}
+                        <Text
+                          style={[
+                            localStyles.categoryText,
+                            isActive && localStyles.categoryTextActive,
+                          ]}
+                        >
+                          {cat.name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })
+                ) : (
+                  <Text style={localStyles.loadingText}>
+                    No categories available
+                  </Text>
+                )}
+              </View>
+            )}
           </View>
 
           <View style={localStyles.card}>
@@ -390,6 +412,11 @@ const localStyles = StyleSheet.create({
   categoryEmoji: {
     fontSize: 14,
   },
+  categoryIcon: {
+    width: 18,
+    height: 18,
+    resizeMode: 'contain',
+  },
   categoryText: {
     fontSize: 12,
     fontWeight: '600',
@@ -397,6 +424,12 @@ const localStyles = StyleSheet.create({
   },
   categoryTextActive: {
     color: '#fff',
+  },
+  loadingText: {
+    fontSize: 13,
+    color: '#999',
+    textAlign: 'center',
+    paddingVertical: 12,
   },
   required: {
     color: '#FF6B6B',
