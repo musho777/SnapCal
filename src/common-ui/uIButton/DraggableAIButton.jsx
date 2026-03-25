@@ -3,8 +3,8 @@ import {
   Animated,
   PanResponder,
   Dimensions,
-  TouchableOpacity,
   StyleSheet,
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
@@ -27,35 +27,27 @@ const DraggableAIButton = ({ onPress }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [isDragging, setIsDragging] = useState(false);
 
-  const handlePressIn = () => {
-    if (!isDragging) {
-      Animated.spring(scaleAnim, {
-        toValue: 0.92,
-        useNativeDriver: true,
-        speed: 50,
-        bounciness: 4,
-      }).start();
-    }
-  };
-
-  const handlePressOut = () => {
-    if (!isDragging) {
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        useNativeDriver: true,
-        speed: 50,
-        bounciness: 4,
-      }).start();
-    }
-  };
-
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gesture) => {
+        // Only start pan if moved more than 5 pixels
+        const moved = Math.abs(gesture.dx) > 5 || Math.abs(gesture.dy) > 5;
+        if (moved && !isDragging) {
+          setIsDragging(true);
+        }
+        return moved;
+      },
 
       onPanResponderGrant: () => {
-        setIsDragging(true);
+        // Animate button press
+        Animated.spring(scaleAnim, {
+          toValue: 0.92,
+          useNativeDriver: true,
+          speed: 50,
+          bounciness: 4,
+        }).start();
+
         pan.setOffset({
           x: pan.x._value,
           y: pan.y._value,
@@ -68,41 +60,64 @@ const DraggableAIButton = ({ onPress }) => {
       }),
 
       onPanResponderRelease: (_, gesture) => {
-        pan.flattenOffset();
-        setIsDragging(false);
+        // Animate button release
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          useNativeDriver: true,
+          speed: 50,
+          bounciness: 4,
+        }).start();
 
-        const currentX = pan.x._value;
-        const currentY = pan.y._value;
+        const wasDragged = Math.abs(gesture.dx) > 5 || Math.abs(gesture.dy) > 5;
 
-        const minX = 0;
-        const maxX = screenWidth - BUTTON_SIZE;
-        const minY = insets.top;
-        const maxY = screenHeight - BUTTON_SIZE - insets.bottom;
+        if (wasDragged) {
+          pan.flattenOffset();
 
-        let finalX = Math.max(minX, Math.min(currentX, maxX));
-        let finalY = Math.max(minY, Math.min(currentY, maxY));
+          const currentX = pan.x._value;
+          const currentY = pan.y._value;
 
-        if (Math.abs(gesture.dx) > 5 || Math.abs(gesture.dy) > 5) {
+          const minX = 0;
+          const maxX = screenWidth - BUTTON_SIZE;
+          const minY = insets.top;
+          const maxY = screenHeight - BUTTON_SIZE - insets.bottom;
+
+          let finalX = Math.max(minX, Math.min(currentX, maxX));
+          let finalY = Math.max(minY, Math.min(currentY, maxY));
+
           const centerX = finalX + BUTTON_RADIUS;
           if (centerX < screenWidth / 2) {
             finalX = minX + 16; // Snap to left with padding
           } else {
             finalX = maxX - 16; // Snap to right with padding
           }
+
+          // Animate to final position
+          Animated.spring(pan, {
+            toValue: { x: finalX, y: finalY },
+            useNativeDriver: false,
+            friction: 7,
+            tension: 40,
+          }).start();
+        } else {
+          // Reset any small movements
+          pan.flattenOffset();
+          Animated.spring(pan, {
+            toValue: { x: pan.x._value, y: pan.y._value },
+            useNativeDriver: false,
+            friction: 7,
+            tension: 40,
+          }).start();
+
+          // Tap detected - call onPress
+          console.log('Button tapped - calling onPress');
+          if (onPress) {
+            onPress();
+          } else {
+            console.log('onPress is undefined!');
+          }
         }
 
-        // Animate to final position
-        Animated.spring(pan, {
-          toValue: { x: finalX, y: finalY },
-          useNativeDriver: false,
-          friction: 7,
-          tension: 40,
-        }).start();
-
-        // If no significant drag happened, treat as tap
-        if (Math.abs(gesture.dx) < 5 && Math.abs(gesture.dy) < 5) {
-          onPress?.();
-        }
+        setIsDragging(false);
       },
     }),
   ).current;
@@ -122,19 +137,14 @@ const DraggableAIButton = ({ onPress }) => {
           transform: [{ scale: scaleAnim }],
         }}
       >
-        <TouchableOpacity
-          activeOpacity={1}
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
-          style={styles.button}
-        >
+        <View style={styles.button}>
           <LottieView
             source={aiAnimation}
             autoPlay
             loop
             style={styles.lottie}
           />
-        </TouchableOpacity>
+        </View>
       </Animated.View>
     </Animated.View>
   );

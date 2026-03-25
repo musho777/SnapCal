@@ -18,6 +18,11 @@ import { useDispatch } from 'react-redux';
 import { getUserInfo } from '../features/auth/authActions.js';
 import RecipeScreen from '../screens/recipeScreen/RecipeScreen.jsx';
 import WeightProgressScreen from '../screens/weightProgressScreen';
+import FoodScanScreen from '../screens/foodScanScreen/FoodScanScreen.jsx';
+import { View } from 'react-native';
+import DraggableAIButton from '../common-ui/uIButton/DraggableAIButton.jsx';
+import { styles } from '../themes/index.js';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const RootStack = createNativeStackNavigator();
@@ -45,6 +50,7 @@ const TabNavigator = () => {
 export const MainNavigation = () => {
   const [isReady, setIsReady] = useState(false);
   const [initialRoute, setInitialRoute] = useState('Onboarding');
+  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -72,33 +78,40 @@ export const MainNavigation = () => {
     dispatch(getUserInfo());
   }, [dispatch]);
 
+  const handleAIButtonPress = () => {
+    console.log('222');
+    navigation.navigate('FoodScan');
+  };
   if (!isReady) {
     return <Loading />;
   }
 
   return (
-    <RootStack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={initialRoute}
-    >
-      <RootStack.Screen name="Onboarding" component={OnboardingFlow} />
-      <RootStack.Screen name="LoginScreen" component={LoginScreen} />
-      <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <RootStack.Screen name="MainApp" component={TabNavigator} />
-      <RootStack.Screen name="Recipient" component={RecipeScreen} />
-      <RootStack.Screen
-        name="WeightProgress"
-        component={WeightProgressScreen}
-      />
-
-      <RootStack.Screen
-        name="CreateMeal"
-        component={CreateMealStack}
-        options={{
-          presentation: 'modal',
-          animation: 'slide_from_bottom',
-        }}
-      />
-    </RootStack.Navigator>
+    <View style={styles.flex}>
+      <RootStack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={initialRoute}
+      >
+        <RootStack.Screen name="Onboarding" component={OnboardingFlow} />
+        <RootStack.Screen name="LoginScreen" component={LoginScreen} />
+        <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <RootStack.Screen name="MainApp" component={TabNavigator} />
+        <RootStack.Screen name="Recipient" component={RecipeScreen} />
+        <RootStack.Screen
+          name="WeightProgress"
+          component={WeightProgressScreen}
+        />
+        <RootStack.Screen name="FoodScan" component={FoodScanScreen} />
+        <RootStack.Screen
+          name="CreateMeal"
+          component={CreateMealStack}
+          options={{
+            presentation: 'modal',
+            animation: 'slide_from_bottom',
+          }}
+        />
+      </RootStack.Navigator>
+      <DraggableAIButton onPress={handleAIButtonPress} />
+    </View>
   );
 };

@@ -42,7 +42,6 @@ function App() {
               </Provider>
             </View>
           </NavigationContainer>
-          <DraggableAIButton onPress={handleAIButtonPress} />
         </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

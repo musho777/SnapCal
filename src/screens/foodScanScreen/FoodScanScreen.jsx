@@ -194,7 +194,7 @@ const FoodScanScreen = ({ route }) => {
         <Header />
         <View style={localStyles.emptyContent}>
           <Text style={styles.title}>Scan Your Food</Text>
-          <Text style={styles.body}>
+          <Text style={[styles.body, localStyles.centre]}>
             Take or upload a photo of your food to get instant nutritional
             information powered by AI.
           </Text>
@@ -353,6 +353,9 @@ const localStyles = StyleSheet.create({
   },
   emptyContainer: {
     flex: 1,
+  },
+  centre: {
+    textAlign: 'center',
   },
   emptyContent: {
     flex: 1,
