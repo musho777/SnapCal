@@ -8,6 +8,7 @@ import homeReducer from '../features/home/homeSlice';
 import singleCategoryReducer from '../features/singleCategory/singleCategorySlice';
 import savedDishesReducer from '../features/savedDishes/savedDishesSlice';
 import dishesReducer from '../features/dishes/dishesSlice';
+import foodScanReducer from '../features/foodScan/foodScanSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     singleCategory: singleCategoryReducer,
     savedDishes: savedDishesReducer,
     dishes: dishesReducer,
+    foodScan: foodScanReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

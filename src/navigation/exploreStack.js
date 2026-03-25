@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RecipeScreen from '../screens/recipeScreen';
 import ExploreScreen from '../screens/exploreScreen';
+import FoodScanScreen from '../screens/foodScanScreen';
 
 const ExploreStack = () => {
   const Stack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ const ExploreStack = () => {
     >
       <Stack.Screen name="Search" component={ExploreScreen} />
       <Stack.Screen name="ExploreRecipient" component={RecipeScreen} />
+      <Stack.Screen name="FoodScan" component={FoodScanScreen} />
     </Stack.Navigator>
   );
 };

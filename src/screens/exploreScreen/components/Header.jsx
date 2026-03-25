@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import UIInput from '../../../common-ui/uIInput';
+import { Camera } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export const Header = ({ onSearchChange }) => {
+  const navigation = useNavigation();
+
   return (
     <View style={localStyles.header}>
       <View style={localStyles.headerTop}>
@@ -10,6 +14,13 @@ export const Header = ({ onSearchChange }) => {
           <Text style={localStyles.title}>Explore</Text>
           <Text style={localStyles.subtitle}>Discover meals for your day</Text>
         </View>
+
+        <TouchableOpacity
+          style={localStyles.scanButton}
+          onPress={() => navigation.navigate('FoodScan')}
+        >
+          <Camera size={22} color="#10B981" />
+        </TouchableOpacity>
       </View>
       <View style={localStyles.searchContainer}>
         <UIInput
@@ -72,5 +83,21 @@ const localStyles = StyleSheet.create({
   },
   input: {
     width: '100%',
+  },
+  scanButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#ECFDF5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#10B981',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
 });
