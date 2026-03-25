@@ -175,7 +175,7 @@ const FoodScanScreen = ({ route }) => {
       });
     }
   };
-
+  console.log(currentScan);
   const healthScoreData = currentScan
     ? calculateHealthScore({
         carbs_g: currentScan.totalCarbs || 0,
@@ -241,9 +241,6 @@ const FoodScanScreen = ({ route }) => {
                     ? currentScan.foodItems[0].name
                     : 'Food Analysis'}
                 </Text>
-                <TouchableOpacity onPress={handleSaveToHistory}>
-                  <Text style={styles.captionPrimary}>Save</Text>
-                </TouchableOpacity>
               </View>
 
               <View style={localStyles.kcal}>
@@ -352,6 +349,7 @@ const localStyles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
+    marginBottom: 75,
   },
   emptyContainer: {
     flex: 1,
