@@ -1,12 +1,12 @@
 import Anthropic from '@anthropic-ai/sdk';
-import {CLAUDE_API_KEY} from '@env';
+import ENV from '../config/env';
 
-// API key is loaded from .env file
+// API key is loaded from src/config/env.js
 // Get your API key from: https://console.anthropic.com/
-// Add CLAUDE_API_KEY=your_key_here to .env file
+// The env.js file is gitignored for security
 
 const anthropic = new Anthropic({
-  apiKey: CLAUDE_API_KEY,
+  apiKey: ENV.CLAUDE_API_KEY,
 });
 
 /**
