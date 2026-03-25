@@ -5,6 +5,7 @@ import {
   Dimensions,
   StyleSheet,
   View,
+  InteractionManager,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
@@ -60,17 +61,17 @@ const DraggableAIButton = ({ onPress }) => {
       }),
 
       onPanResponderRelease: (_, gesture) => {
-        // Animate button release
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          useNativeDriver: true,
-          speed: 50,
-          bounciness: 4,
-        }).start();
-
         const wasDragged = Math.abs(gesture.dx) > 5 || Math.abs(gesture.dy) > 5;
 
         if (wasDragged) {
+          // Animate button release
+          Animated.spring(scaleAnim, {
+            toValue: 1,
+            useNativeDriver: true,
+            speed: 50,
+            bounciness: 4,
+          }).start();
+
           pan.flattenOffset();
 
           const currentX = pan.x._value;
@@ -108,12 +109,17 @@ const DraggableAIButton = ({ onPress }) => {
             tension: 40,
           }).start();
 
-          // Tap detected - call onPress
-          console.log('Button tapped - calling onPress');
+          // Animate button release
+          Animated.spring(scaleAnim, {
+            toValue: 1,
+            useNativeDriver: true,
+            speed: 50,
+            bounciness: 4,
+          }).start();
+
+          // Tap detected - navigate immediately
           if (onPress) {
             onPress();
-          } else {
-            console.log('onPress is undefined!');
           }
         }
 

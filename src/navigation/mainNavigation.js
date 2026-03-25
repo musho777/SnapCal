@@ -29,28 +29,35 @@ const RootStack = createNativeStackNavigator();
 
 const TabNavigator = () => {
   const renderTabBar = useCallback(props => <CustomTabBar {...props} />, []);
+  const navigation = useNavigation();
+
+  const handleAIButtonPress = () => {
+    navigation.navigate('FoodScan');
+  };
 
   return (
-    <Tab.Navigator
-      tabBar={renderTabBar}
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName="Home"
-    >
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Explore" component={ExploreStack} />
-      <Tab.Screen name="Track" component={TrackScreen} />
-      <Tab.Screen name="MealPlan" component={MealPlanScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
-    </Tab.Navigator>
+    <View style={styles.flex}>
+      <Tab.Navigator
+        tabBar={renderTabBar}
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="Home"
+      >
+        <Tab.Screen name="Home" component={HomeStack} />
+        <Tab.Screen name="Explore" component={ExploreStack} />
+        <Tab.Screen name="Track" component={TrackScreen} />
+        <Tab.Screen name="MealPlan" component={MealPlanScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
+      <DraggableAIButton onPress={handleAIButtonPress} />
+    </View>
   );
 };
 
 export const MainNavigation = () => {
   const [isReady, setIsReady] = useState(false);
   const [initialRoute, setInitialRoute] = useState('Onboarding');
-  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -78,40 +85,40 @@ export const MainNavigation = () => {
     dispatch(getUserInfo());
   }, [dispatch]);
 
-  const handleAIButtonPress = () => {
-    console.log('222');
-    navigation.navigate('FoodScan');
-  };
   if (!isReady) {
     return <Loading />;
   }
 
   return (
-    <View style={styles.flex}>
-      <RootStack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName={initialRoute}
-      >
-        <RootStack.Screen name="Onboarding" component={OnboardingFlow} />
-        <RootStack.Screen name="LoginScreen" component={LoginScreen} />
-        <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
-        <RootStack.Screen name="MainApp" component={TabNavigator} />
-        <RootStack.Screen name="Recipient" component={RecipeScreen} />
-        <RootStack.Screen
-          name="WeightProgress"
-          component={WeightProgressScreen}
-        />
-        <RootStack.Screen name="FoodScan" component={FoodScanScreen} />
-        <RootStack.Screen
-          name="CreateMeal"
-          component={CreateMealStack}
-          options={{
-            presentation: 'modal',
-            animation: 'slide_from_bottom',
-          }}
-        />
-      </RootStack.Navigator>
-      <DraggableAIButton onPress={handleAIButtonPress} />
-    </View>
+    <RootStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={initialRoute}
+    >
+      <RootStack.Screen name="Onboarding" component={OnboardingFlow} />
+      <RootStack.Screen name="LoginScreen" component={LoginScreen} />
+      <RootStack.Screen name="RegisterScreen" component={RegisterScreen} />
+      <RootStack.Screen name="MainApp" component={TabNavigator} />
+      <RootStack.Screen name="Recipient" component={RecipeScreen} />
+      <RootStack.Screen
+        name="WeightProgress"
+        component={WeightProgressScreen}
+      />
+      <RootStack.Screen
+        name="FoodScan"
+        component={FoodScanScreen}
+        options={{
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
+        }}
+      />
+      <RootStack.Screen
+        name="CreateMeal"
+        component={CreateMealStack}
+        options={{
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
+        }}
+      />
+    </RootStack.Navigator>
   );
 };
