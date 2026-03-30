@@ -47,8 +47,9 @@ const WeightProgressScreen = ({ navigation }) => {
     () => filterEntries(allEntries, filter),
     [allEntries, filter],
   );
-  const current = parseFloat(allEntries[allEntries.length - 1]?.weight_kg) || 0;
-  const startWeight = parseFloat(allEntries[0]?.weight_kg) || 0;
+  const current = parseFloat(allEntries[0]?.weight_kg) || 0;
+  const startWeight =
+    parseFloat(allEntries[allEntries.length - 1]?.weight_kg) || 0;
 
   const chartWidth = screenWidth - 100;
   const barWidth = filtered.length > 30 ? 6 : filtered.length > 14 ? 10 : 14;
