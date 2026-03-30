@@ -11,6 +11,7 @@ import {
 } from '../../../features/user/userSlice';
 import Loading from '../../../components/loading/Loading';
 import { useNavigation } from '@react-navigation/native';
+import { useTabBarHeight } from '../../../hooks';
 
 const MyRecipesTab = ({ onAdd }) => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const MyRecipesTab = ({ onAdd }) => {
   const hasMore = useSelector(selectMyDishesHasMore);
   const data = useSelector(selectMyDishes);
   const navigation = useNavigation();
+  const tabBarHeight = useTabBarHeight();
 
   const handleNavigation = item => {
     navigation.navigate('Recipient', {
@@ -78,7 +80,10 @@ const MyRecipesTab = ({ onAdd }) => {
       keyExtractor={item => item.id.toString()}
       numColumns={2}
       columnWrapperStyle={localStyles.columnWrapper}
-      contentContainerStyle={localStyles.listContent}
+      contentContainerStyle={[
+        localStyles.listContent,
+        { paddingBottom: tabBarHeight + 16 },
+      ]}
       showsVerticalScrollIndicator={false}
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
@@ -90,7 +95,6 @@ const MyRecipesTab = ({ onAdd }) => {
 const localStyles = StyleSheet.create({
   listContent: {
     padding: 16,
-    paddingBottom: 100,
     gap: 12,
   },
   columnWrapper: {

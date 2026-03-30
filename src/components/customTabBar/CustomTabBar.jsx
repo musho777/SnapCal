@@ -80,7 +80,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
     <View
       style={[
         localStyles.container,
-        { paddingBottom: Math.max(insets.bottom, 24) },
+        { paddingBottom: Math.max(insets.bottom + 5, 24) },
       ]}
     >
       <View style={localStyles.tabBar}>

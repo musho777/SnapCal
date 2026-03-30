@@ -17,6 +17,7 @@ import { CookingSteps } from './components/CookingSteps';
 import { calculateHealthScore } from '../../utils/healthScore';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   getSingleDeash,
   addDishToMeal,
@@ -43,6 +44,7 @@ const RecipeScreen = ({ route }) => {
   const addToMealLoading = useSelector(selectAddToMealLoading);
   const recipeId = route?.params?.recipeId;
   const [save, setSaved] = useState();
+  const insets = useSafeAreaInsets();
 
   const [showModal, setShowModal] = useState(false);
   const [alertModal, setAlertModal] = useState({
@@ -159,7 +161,7 @@ const RecipeScreen = ({ route }) => {
       </ScrollView>
 
       <TouchableOpacity
-        style={localStyles.fab}
+        style={[localStyles.fab, { bottom: Math.max(insets.bottom + 5, 25) }]}
         onPress={() => setShowModal(true)}
         activeOpacity={0.8}
       >

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDeash } from '../../features/explore/exploreAction';
 import { selectData, selectLoading } from '../../features/explore/exploreSlice';
 import Loading from '../../components/loading/Loading';
-import { useDebounce } from '../../hooks';
+import { useDebounce, useTabBarHeight } from '../../hooks';
 
 const MEAL_TABS = [
   { id: 'all', label: 'All', emoji: '✨', time: '' },
@@ -28,6 +28,7 @@ const ExploreScreen = ({ navigation }) => {
 
   // Debounce the search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const tabBarHeight = useTabBarHeight();
 
   useEffect(() => {
     const params = {};
@@ -89,7 +90,10 @@ const ExploreScreen = ({ navigation }) => {
           style={styles.flex}
           keyboardDismissMode="on-drag"
           columnWrapperStyle={localStyles.columnWrapper}
-          contentContainerStyle={localStyles.listContent}
+          contentContainerStyle={[
+            localStyles.listContent,
+            { paddingBottom: tabBarHeight + 16 },
+          ]}
           ListHeaderComponent={renderListHeader}
           ListEmptyComponent={<NoResult />}
           showsVerticalScrollIndicator={false}
@@ -117,7 +121,6 @@ const localStyles = StyleSheet.create({
   },
   listContent: {
     paddingTop: 16,
-    paddingBottom: 100,
   },
   columnWrapper: {
     gap: 12,

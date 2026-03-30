@@ -17,6 +17,7 @@ import {
 } from '../../../features/savedDishes/savedDishesSlice';
 import Loading from '../../../components/loading/Loading';
 import { useNavigation } from '@react-navigation/native';
+import { useTabBarHeight } from '../../../hooks';
 
 const SavedTab = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const SavedTab = () => {
   const hasMore = useSelector(selectSavedDishesHasMore);
   const data = useSelector(selectSavedDishes);
   const navigation = useNavigation();
+  const tabBarHeight = useTabBarHeight();
 
   const handleNavigation = item => {
     navigation.navigate('Recipient', {
@@ -94,7 +96,10 @@ const SavedTab = () => {
       keyExtractor={item => item?.id.toString()}
       numColumns={2}
       columnWrapperStyle={localStyles.columnWrapper}
-      contentContainerStyle={localStyles.listContent}
+      contentContainerStyle={[
+        localStyles.listContent,
+        { paddingBottom: tabBarHeight + 16 },
+      ]}
       ListEmptyComponent={renderEmptyState}
       showsVerticalScrollIndicator={false}
       onEndReached={handleLoadMore}
@@ -107,7 +112,6 @@ const SavedTab = () => {
 const localStyles = StyleSheet.create({
   listContent: {
     padding: 16,
-    paddingBottom: 100,
     gap: 12,
   },
   columnWrapper: {

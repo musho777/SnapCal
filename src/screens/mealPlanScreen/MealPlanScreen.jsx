@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
+import { useTabBarHeight } from '../../hooks';
 import {
   Header,
   DaySelector,
@@ -26,6 +27,7 @@ const MealPlanScreen = ({ navigation }) => {
   const data = useSelector(selectMainPlan);
   const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
+  const tabBarHeight = useTabBarHeight();
 
   const weeklyData = useMemo(() => {
     const newData = [];
@@ -187,7 +189,10 @@ const MealPlanScreen = ({ navigation }) => {
         currentMonth={currentMonth}
       />
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={{ paddingBottom: tabBarHeight }}
+      >
         {viewMode === 'week' ? (
           <DaySelector
             key="week-selector"
@@ -250,7 +255,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 100,
   },
 });
 

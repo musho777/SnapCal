@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { UIOptionRow } from '../../../common-ui/UIOptionRow';
 import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useTabBarHeight } from '../../../hooks';
 import WeightModal from '../../../components/weightModal';
 import HeightModal from '../../../components/heightModal';
 import AlertModal from '../../../components/alertModal/AlertModal';
@@ -49,6 +50,7 @@ const SettingsTab = ({
   const notificationPreference = useSelector(selectPreference);
   const preferencesLoading = useSelector(selectLoadingPreference);
   const { measurementsLoading } = useSelector(state => state.auth);
+  const tabBarHeight = useTabBarHeight();
   const handleLogout = async () => {
     dispatch(deleteFCMToken());
 
@@ -145,7 +147,10 @@ const SettingsTab = ({
   return (
     <ScrollView
       style={localStyles.container}
-      contentContainerStyle={localStyles.contentContainer}
+      contentContainerStyle={[
+        localStyles.contentContainer,
+        { paddingBottom: tabBarHeight + 16 },
+      ]}
       showsVerticalScrollIndicator={false}
     >
       {/* Notifications Section */}
@@ -265,7 +270,6 @@ const localStyles = StyleSheet.create({
   },
   contentContainer: {
     padding: 16,
-    paddingBottom: 100,
   },
   section: {
     marginBottom: 20,

@@ -21,6 +21,7 @@ import {
   checkAndResetWaterData,
 } from '../../utils/waterStorage';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTabBarHeight } from '../../hooks';
 import { getNotifications } from '../../features/notifications/notificationsAction';
 import {
   getCategoryForHome,
@@ -40,6 +41,7 @@ const MainScreen = ({ navigation }) => {
   const loading = useSelector(selectedRecommendedLoading);
   const [waterIntake, setWaterIntake] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const tabBarHeight = useTabBarHeight();
 
   const handleShowRecipients = recipeId => {
     navigation.navigate('Recipient', { recipeId });
@@ -83,7 +85,10 @@ const MainScreen = ({ navigation }) => {
 
   return (
     <ScrollView
-      contentContainerStyle={localStyles.contentContainerStyle}
+      contentContainerStyle={[
+        localStyles.contentContainerStyle,
+        { paddingBottom: tabBarHeight + 20 },
+      ]}
       style={[styles.page, localStyles.page]}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -146,7 +151,6 @@ const localStyles = StyleSheet.create({
     width: 175,
   },
   contentContainerStyle: {
-    paddingBottom: 140,
     gap: 20,
   },
   paddingLeft: {
